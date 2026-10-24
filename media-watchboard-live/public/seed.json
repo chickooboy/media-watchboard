@@ -1,0 +1,233 @@
+[
+ {
+  "id": "ig-goanewshub-gnh",
+  "name": "Goa News Hub",
+  "platform": "instagram",
+  "url": "https://www.instagram.com/goanewshub_gnh/",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "ig-goemkarponn",
+  "name": "Goemkarponn",
+  "platform": "instagram",
+  "url": "https://www.instagram.com/goemkarponn/",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "ig-ingoa24x7",
+  "name": "In Goa24x7",
+  "platform": "instagram",
+  "url": "https://www.instagram.com/ingoa24x7/",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "ig-primetvgoa",
+  "name": "Prime Media Goa",
+  "platform": "instagram",
+  "url": "https://www.instagram.com/primetvgoa/",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "ig-prudentmediagoa",
+  "name": "Prudent Goa",
+  "platform": "instagram",
+  "url": "https://www.instagram.com/prudentmediagoa/",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "ig-thevoice-forgoem",
+  "name": "The Voice - for Goem",
+  "platform": "instagram",
+  "url": "https://www.instagram.com/thevoice_forgoem/",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "x-goanewshub",
+  "name": "Goa News Hub",
+  "platform": "x",
+  "url": "https://x.com/goanewshub",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "x-goemkarponnlive",
+  "name": "Goemkarponn",
+  "platform": "x",
+  "url": "https://x.com/goemkarponnlive",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "x-ingoa24x7",
+  "name": "In Goa24x7",
+  "platform": "x",
+  "url": "https://x.com/InGoa24x7",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "x-primetvgoa",
+  "name": "Prime Media Goa",
+  "platform": "x",
+  "url": "https://x.com/PrimeTVGoa",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "x-prudentgoa",
+  "name": "Prudent Goa",
+  "platform": "x",
+  "url": "https://x.com/prudentgoa",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "x-rdxgoa",
+  "name": "RDX GOA",
+  "platform": "x",
+  "url": "https://x.com/rdxgoa",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "x-thevoiceforgoem",
+  "name": "The Voice - for Goem",
+  "platform": "x",
+  "url": "https://x.com/thevoiceforgoem",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-digitalgoatv",
+  "name": "Digital Goa",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@DigitalGoaTV/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-goa365tv",
+  "name": "Goa 365",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@Goa365TV",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-goan-varta-live",
+  "name": "Goan Varta Live",
+  "platform": "youtube",
+  "url": "",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-goanewshub",
+  "name": "Goa News Hub",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@goanewshub/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-goanewslink",
+  "name": "Goa News Link",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@goanewslink/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-goannarrative",
+  "name": "Goan Narrative",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@goannarrative/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-goanreporternews",
+  "name": "Goan Reporter",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@goanreporternews/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-goaplusnewschannel",
+  "name": "Goa Plus News",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@goaplusnewschannel/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-goaprism",
+  "name": "Goa Prism",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@goaprism/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-goemkarponntv",
+  "name": "GoenkarponnTV",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@GoemkarponnTV/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-gomantak-times",
+  "name": "Gomantak Times",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@gomantak_times/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-gomantaktv",
+  "name": "Gomantak TV",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@GomantakTV/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-ingoanews",
+  "name": "In Goa 24X7 News",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@ingoanews/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-inkmedia-goa",
+  "name": "INK Goa",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@INKMEDIA_GOA",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-navhind-times",
+  "name": "Navhind Times",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@navhind_times/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-oheraldogoa",
+  "name": "OHeraldo Goa",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@oheraldogoa/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-prudentmediagoatv",
+  "name": "Prudent Media",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@PrudentMediaGoaTV/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-rdxgoa",
+  "name": "RDX Goa",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@RDXGOA/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-thegoanonline",
+  "name": "The Goan",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@TheGoanOnline/videos",
+  "tag": "Electronic media"
+ },
+ {
+  "id": "yt-thevoiceforgoem",
+  "name": "The Voice for Goem",
+  "platform": "youtube",
+  "url": "https://www.youtube.com/@thevoiceforgoem/videos",
+  "tag": "Electronic media"
+ }
+]

@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Media Watchboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f8;--panel:#fff;--ink:#14171f;--mute:#5d6577;--line:#e2e5ec;--accent:#3b46c9;--accent-ink:#fff;
+  --live:#d6232f;--live-bg:#fde8ea;--new:#1d6fd8;--new-bg:#e4f0fd;--due:#b26a00;--due-bg:#fdf1dc;--ok:#1f8a4c;--ok-bg:#e3f5ea;--idle:#6b7280;--idle-bg:#eceef2;
+  --sans:'Barlow',system-ui,sans-serif;--cond:'Barlow Condensed','Barlow',sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#0f1218;--panel:#171b24;--ink:#eceff6;--mute:#9aa3b6;--line:#272d3a;--accent:#8c96ff;--accent-ink:#0f1218;
+  --live:#ff6b75;--live-bg:#3a161b;--new:#6aaeff;--new-bg:#14283f;--due:#f0b04c;--due-bg:#36290f;--ok:#4cc884;--ok-bg:#13301f;--idle:#9aa3b6;--idle-bg:#222836;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--sans)}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 48px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:20px 0 14px}
+h1{font:700 30px/1 var(--cond);letter-spacing:.3px;margin:0}
+.sub{color:var(--mute);font-size:13px;margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.beat{width:9px;height:9px;border-radius:50%;background:var(--ok);display:inline-block}
+.beat.bad{background:var(--live)}
+.btn{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.sm{padding:4px 9px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:6px 0 14px}
+@media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left;cursor:pointer}
+.tile.on{outline:2px solid var(--accent)}
+.tile b{display:block;font:700 34px/1 var(--cond)}
+.tile span{font-size:13px;color:var(--mute)}
+.tile.live b{color:var(--live)}.tile.new b{color:var(--new)}.tile.overdue b{color:var(--due)}.tile.ok b{color:var(--ok)}
+.bar{display:flex;height:8px;border-radius:6px;overflow:hidden;background:var(--idle-bg);margin-bottom:14px}
+.bar i{display:block;height:100%}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tools input,.tools select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.tools input{flex:1;min-width:180px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:5px 11px;cursor:pointer;font-size:13px}
+.chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.item{display:grid;grid-template-columns:104px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+@media(max-width:700px){.item{grid-template-columns:1fr;gap:8px}}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font:600 12px/1.4 var(--sans);text-transform:uppercase;letter-spacing:.4px;text-align:center}
+.pill.live{background:var(--live-bg);color:var(--live)}.pill.new{background:var(--new-bg);color:var(--new)}
+.pill.overdue{background:var(--due-bg);color:var(--due)}.pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.unchecked{background:var(--idle-bg);color:var(--idle)}
+.pill.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--live);margin-right:6px;animation:p 1.2s infinite}
+@keyframes p{50%{opacity:.25}}
+.nm{font-weight:600;font-size:16px}
+.meta{color:var(--mute);font-size:13px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.meta a{color:var(--accent)}
+.plat{font:500 11px var(--mono);padding:1px 6px;border-radius:5px;background:var(--idle-bg);color:var(--mute);text-transform:uppercase}
+.auto{font:500 11px var(--mono);color:var(--ok)}
+.vid{margin-top:3px;font-size:14px}
+.vid a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--mute)}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.panel{padding:14px;margin-bottom:14px}
+.panel textarea{width:100%;min-height:110px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font:13px var(--mono)}
+.panel label{display:block;font-size:13px;color:var(--mute);margin:8px 0 3px}
+.panel input,.panel select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.hide{display:none!important}
+.empty{padding:28px;text-align:center;color:var(--mute)}
+.login{max-width:360px;margin:18vh auto;padding:22px}
+.login h1{margin-bottom:12px}.login input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);margin-bottom:10px}
+.err{color:var(--live);font-size:13px;margin-top:6px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:9px;font-size:14px;z-index:9}
+footer{color:var(--mute);font-size:12.5px;margin-top:18px}
+</style>
+</head>
+<body>
+<div id="login" class="card login hide">
+  <h1>Media Watchboard</h1>
+  <input id="pw" type="password" placeholder="Desk password" autocomplete="current-password">
+  <button class="btn pri" id="go" style="width:100%">Open dashboard</button>
+  <div class="err" id="lerr"></div>
+</div>
+
+<div id="app" class="wrap hide">
+  <header>
+    <div>
+      <h1>Media Watchboard</h1>
+      <div class="sub"><span class="beat" id="beat"></span><span id="beatTxt">Connecting…</span></div>
+    </div>
+    <div class="row">
+      <button class="btn sm" id="snd" title="Beep when something goes live or new">Sound: off</button>
+      <button class="btn sm" id="csv">Export CSV</button>
+      <button class="btn pri" id="addBtn">Add channels</button>
+    </div>
+  </header>
+
+  <div id="addPanel" class="card panel hide">
+    <b>Paste links, one per line</b> <span class="meta">(optional name first: <code>Name, https://…</code>)</span>
+    <textarea id="addTxt" placeholder="https://www.youtube.com/@channel&#10;Goa Daily, https://x.com/goadaily"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn pri" id="addGo">Add</button><button class="btn" id="addCancel">Cancel</button><span class="meta" id="addMsg"></span></div>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+  <div class="bar" id="bar"></div>
+  <div class="tools">
+    <input id="q" type="search" placeholder="Search channels">
+    <select id="tag"><option value="">All tags</option></select>
+    <span class="row" id="plats"></span>
+  </div>
+  <div class="row" style="margin-bottom:10px"><button class="btn sm hide" id="ackAll"></button></div>
+  <div class="card" id="list"></div>
+  <footer>YouTube channels are checked automatically every few minutes. X and Instagram can't be read automatically, so use Mark checked after you look at them.</footer>
+</div>
+
+<div id="edit" class="card panel hide" style="position:fixed;inset:auto 16px 16px auto;width:min(420px,calc(100vw - 32px));z-index:5;box-shadow:0 8px 30px rgba(0,0,0,.25)"></div>
+<div id="toast" class="toast hide"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
+const PLAT={youtube:'YouTube',x:'X',instagram:'Instagram',facebook:'Facebook',tiktok:'TikTok',linkedin:'LinkedIn',telegram:'Telegram',reddit:'Reddit',other:'Other'};
+const ST={live:'Live now',new:'New activity',overdue:'Check due',unchecked:'Not checked',ok:'Up to date'};
+const RANK={live:0,new:1,overdue:2,unchecked:3,ok:4};
+let KEY=localStorage.getItem('mw.key')||'';
+let D={channels:[],auto:{},meta:null,now:Date.now()},F={status:'',tag:'',plat:'',q:''},sound=localStorage.getItem('mw.sound')==='1',prevAlert=null;
+
+function detect(u){try{const h=new URL(u).hostname.replace(/^www\./,'');if(/youtube\.com$|^youtu\.be$/.test(h))return'youtube';if(/instagram\.com$/.test(h))return'instagram';if(/(^|\.)(x|twitter)\.com$/.test(h))return'x';if(/facebook\.com$/.test(h))return'facebook'}catch{}return'other'}
+function nameFrom(u){try{const p=new URL(u).pathname.split('/').filter(Boolean);return(p[0]||'').replace(/^@/,'')||new URL(u).hostname}catch{return u}}
+function rel(t,now){if(!t)return'never';const s=Math.max(0,(now-t)/1000);if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' h ago';return Math.floor(s/86400)+' d ago'}
+function api(path,body){return fetch(path,{method:body?'POST':'GET',headers:{'x-key':KEY,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined}).then(async r=>{const j=await r.json().catch(()=>({}));if(r.status===401)throw Object.assign(new Error('auth'),{auth:true});if(!r.ok)throw new Error(j.error||r.status);return j})}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.remove('hide');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hide'),2600)}
+
+function status(c,now){
+  const a=D.auto[c.id];
+  if(a&&a.live)return'live';
+  if(c.flag==='live')return'live';
+  if(a&&a.newVideo&&a.newVideo.detectedAt>(c.ackAt||0))return'new';
+  if(c.flag==='new')return'new';
+  if(isAuto(c,now))return'ok';
+  if(!c.lastChecked)return'unchecked';
+  if(now-c.lastChecked>(c.intervalH||6)*3600e3)return'overdue';
+  return'ok';
+}
+function isAuto(c,now){const a=D.auto[c.id];return c.platform==='youtube'&&a&&a.checkedAt&&now-a.checkedAt<20*60e3}
+
+async function load(){
+  try{
+    const j=await api('/api/state');D=j;
+    $('#login').classList.add('hide');$('#app').classList.remove('hide');
+    if(!j.channels.length&&!load.seeded){load.seeded=1;const s=await fetch('/seed.json').then(r=>r.json()).catch(()=>[]);if(s.length){await api('/api/channels',{action:'import',channels:s});toast('Loaded your 33 starter channels');return load()}}
+    render();
+  }catch(e){
+    if(e.auth){$('#app').classList.add('hide');$('#login').classList.remove('hide');if(KEY)$('#lerr').textContent='Wrong password.';return}
+    $('#beat').className='beat bad';$('#beatTxt').textContent='Can’t reach the server: '+e.message;
+  }
+}
+
+function render(){
+  const now=Date.now();D.now=now;
+  const list=D.channels.map(c=>({c,s:status(c,now),a:D.auto[c.id]}));
+  const counts={live:0,new:0,overdue:0,unchecked:0,ok:0};list.forEach(x=>counts[x.s]++);
+  // heartbeat
+  const m=D.meta,age=m&&m.lastRun?now-m.lastRun:null;
+  const bad=!m||age>15*60e3||m.fatal;
+  $('#beat').className='beat'+(bad?' bad':'');
+  $('#beatTxt').textContent=!m?'Checker has not run yet':m.fatal?'Checker error: '+m.fatal:(bad?'Checker stopped: last ran ':'Checker ran ')+rel(m.lastRun,now)+' · '+m.channels+' YouTube channels'+(m.telegram?' · Telegram on':' · Telegram off');
+  // title + sound
+  document.title=(counts.live?`(${counts.live} LIVE) `:'')+(counts.new?`(${counts.new} new) `:'')+'Media Watchboard';
+  const sig=list.filter(x=>x.s==='live'||x.s==='new').map(x=>x.c.id+x.s+((x.a&&x.a.newVideo&&x.a.newVideo.id)||'')).sort().join('|');
+  if(prevAlert!==null&&sig!==prevAlert&&sig&&sound)beep();
+  prevAlert=sig;
+  // tiles
+  $('#tiles').innerHTML=['live','new','overdue','unchecked','ok'].map(k=>`<button class="tile ${k} ${F.status===k?'on':''}" data-s="${k}"><b>${counts[k]}</b><span>${ST[k]}</span></button>`).join('');
+  const tot=list.length||1,col={live:'var(--live)',new:'var(--new)',overdue:'var(--due)',unchecked:'var(--idle)',ok:'var(--ok)'};
+  $('#bar').innerHTML=['live','new','overdue','unchecked','ok'].map(k=>`<i style="width:${counts[k]/tot*100}%;background:${col[k]}"></i>`).join('');
+  // filters
+  const tags=[...new Set(D.channels.map(c=>c.tag).filter(Boolean))].sort();
+  const ts=$('#tag');const tv=ts.value;ts.innerHTML='<option value="">All tags</option>'+tags.map(t=>`<option ${t===F.tag?'selected':''}>${esc(t)}</option>`).join('');
+  const plats=[...new Set(D.channels.map(c=>c.platform))];
+  $('#plats').innerHTML=plats.map(p=>`<button class="chip ${F.plat===p?'on':''}" data-p="${p}">${PLAT[p]||p}</button>`).join('');
+  let vis=list.filter(x=>(!F.status||x.s===F.status)&&(!F.tag||x.c.tag===F.tag)&&(!F.plat||x.c.platform===F.plat)&&(!F.q||(x.c.name+' '+x.c.url+' '+(x.c.note||'')).toLowerCase().includes(F.q)));
+  vis.sort((a,b)=>RANK[a.s]-RANK[b.s]||a.c.name.localeCompare(b.c.name));
+  const manual=vis.filter(x=>!isAuto(x.c,now));
+  const ab=$('#ackAll');ab.classList.toggle('hide',!manual.length);ab.textContent=`Mark ${manual.length} manual channel${manual.length===1?'':'s'} as checked`;ab.dataset.ids=JSON.stringify(manual.map(x=>x.c.id));
+  $('#list').innerHTML=vis.length?vis.map(row(now)).join(''):'<div class="empty">No channels match.</div>';
+}
+const row=now=>({c,s,a})=>{
+  const auto=isAuto(c,now),u=safeUrl(c.url);
+  let vid='';
+  if(a&&a.live)vid=`<div class="vid">🔴 <a href="https://www.youtube.com/watch?v=${esc(a.live.id)}" target="_blank" rel="noopener">${esc(a.live.title)}</a> · live since ${rel(a.live.startedAt,now)}</div>`;
+  else if(a&&a.newVideo&&s==='new')vid=`<div class="vid">🆕 <a href="https://www.youtube.com/watch?v=${esc(a.newVideo.id)}" target="_blank" rel="noopener">${esc(a.newVideo.title)}</a> · seen ${rel(a.newVideo.detectedAt,now)}</div>`;
+  else if(a&&a.upcoming)vid=`<div class="vid">⏰ Scheduled: <a href="https://www.youtube.com/watch?v=${esc(a.upcoming.id)}" target="_blank" rel="noopener">${esc(a.upcoming.title)}</a></div>`;
+  else if(a&&a.latest)vid=`<div class="vid" style="color:var(--mute)">Latest: ${esc(a.latest.title)} · ${rel(a.latest.publishedAt,now)}</div>`;
+  const err=a&&a.error&&c.platform==='youtube'?`<div class="meta" style="color:var(--live)">Auto-check problem: ${esc(a.error)}</div>`:'';
+  const noLink=c.platform==='youtube'&&!c.url?'<div class="meta" style="color:var(--due)">No link yet. Edit to add the YouTube link.</div>':'';
+  return `<div class="item"><div><span class="pill ${s}">${ST[s]}</span></div>
+  <div><div class="nm">${esc(c.name)}</div>
+  <div class="meta"><span class="plat">${esc(PLAT[c.platform]||c.platform)}</span>${auto?'<span class="auto">● auto-checked '+rel(a.checkedAt,now)+'</span>':'<span>manual · checked '+rel(c.lastChecked,now)+'</span>'}${c.tag?'<span>'+esc(c.tag)+'</span>':''}${c.note?'<span>“'+esc(c.note)+'”</span>':''}</div>${vid}${err}${noLink}</div>
+  <div class="acts">${u?`<a class="btn sm" href="${esc(u)}" target="_blank" rel="noopener">Open</a>`:''}<button class="btn sm" data-ack="${esc(c.id)}">Mark checked</button><button class="btn sm" data-edit="${esc(c.id)}">Manage</button></div></div>`;
+};
+
+function beep(){try{const x=new (window.AudioContext||window.webkitAudioContext)(),o=x.createOscillator(),g=x.createGain();o.connect(g);g.connect(x.destination);o.frequency.value=880;g.gain.setValueAtTime(.2,x.currentTime);g.gain.exponentialRampToValueAtTime(.001,x.currentTime+.6);o.start();o.stop(x.currentTime+.6)}catch{}}
+
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('[data-s],[data-p],[data-ack],[data-edit]');if(!t)return;
+  if(t.dataset.s!==undefined){F.status=F.status===t.dataset.s?'':t.dataset.s;render()}
+  else if(t.dataset.p){F.plat=F.plat===t.dataset.p?'':t.dataset.p;render()}
+  else if(t.dataset.ack){await api('/api/channels',{action:'ack',id:t.dataset.ack});toast('Marked as checked');load()}
+  else if(t.dataset.edit)openEdit(t.dataset.edit);
+});
+$('#q').oninput=e=>{F.q=e.target.value.toLowerCase();render()};
+$('#tag').onchange=e=>{F.tag=e.target.value;render()};
+$('#ackAll').onclick=async e=>{const ids=JSON.parse(e.target.dataset.ids||'[]');if(!ids.length)return;if(!confirm(`Mark ${ids.length} channels as checked now?`))return;await api('/api/channels',{action:'ack',ids});toast('Marked '+ids.length+' as checked');load()};
+$('#snd').onclick=()=>{sound=!sound;localStorage.setItem('mw.sound',sound?'1':'0');$('#snd').textContent='Sound: '+(sound?'on':'off');if(sound)beep()};
+$('#snd').textContent='Sound: '+(sound?'on':'off');
+$('#addBtn').onclick=()=>$('#addPanel').classList.toggle('hide');
+$('#addCancel').onclick=()=>$('#addPanel').classList.add('hide');
+$('#addGo').onclick=async()=>{
+  const have=new Set(D.channels.map(c=>c.url.toLowerCase().replace(/\/(videos|streams)?\/?$/,'')));
+  const out=[];let dup=0;
+  for(const line of $('#addTxt').value.split('\n')){
+    const l=line.trim();if(!l)continue;
+    const m=l.match(/^(.*?)[,\t]\s*(https?:\/\/\S+)$/)||l.match(/^()(https?:\/\/\S+)$/);if(!m)continue;
+    const url=m[2],key=url.toLowerCase().replace(/\/(videos|streams)?\/?$/,'');
+    if(have.has(key)){dup++;continue}have.add(key);
+    out.push({name:m[1].trim()||nameFrom(url),url,platform:detect(url),tag:'',intervalH:6});
+  }
+  if(!out.length){$('#addMsg').textContent=dup?`${dup} already on the board.`:'No valid links found.';return}
+  await api('/api/channels',{action:'import',channels:out});
+  $('#addTxt').value='';$('#addMsg').textContent='';$('#addPanel').classList.add('hide');toast(`Added ${out.length}${dup?` (${dup} already there)`:''}`);load();
+};
+function openEdit(id){
+  const c=D.channels.find(x=>x.id===id);if(!c)return;const e=$('#edit');
+  e.innerHTML=`<b>Manage channel</b>
+  <label>Name</label><input id="eN" value="${esc(c.name)}">
+  <label>Link</label><input id="eU" value="${esc(c.url)}">
+  <div class="grid2"><div><label>Platform</label><select id="eP">${Object.keys(PLAT).map(p=>`<option value="${p}" ${p===c.platform?'selected':''}>${PLAT[p]}</option>`).join('')}</select></div>
+  <div><label>Check every (hours, manual)</label><input id="eI" type="number" min="0.25" step="0.25" value="${c.intervalH||6}"></div></div>
+  <label>Tag</label><input id="eT" value="${esc(c.tag||'')}">
+  <label>Note</label><input id="eNo" value="${esc(c.note||'')}">
+  <label>Flag by hand</label><select id="eF"><option value="none">None</option><option value="new" ${c.flag==='new'?'selected':''}>New activity</option><option value="live" ${c.flag==='live'?'selected':''}>Live now</option></select>
+  <div class="row" style="margin-top:12px"><button class="btn pri" id="eS">Save</button><button class="btn" id="eC">Close</button><button class="btn" id="eD" style="margin-left:auto;color:var(--live)">Remove</button></div>`;
+  e.classList.remove('hide');
+  $('#eC').onclick=()=>e.classList.add('hide');
+  $('#eS').onclick=async()=>{await api('/api/channels',{action:'upsert',channel:{id,name:$('#eN').value,url:$('#eU').value,platform:$('#eP').value,intervalH:$('#eI').value,tag:$('#eT').value,note:$('#eNo').value,flag:$('#eF').value}});e.classList.add('hide');toast('Saved');load()};
+  $('#eD').onclick=async()=>{if(!confirm('Remove "'+c.name+'" from the board?'))return;await api('/api/channels',{action:'delete',id});e.classList.add('hide');toast('Removed');load()};
+}
+$('#csv').onclick=()=>{
+  const now=Date.now(),q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const rows=[['Name','Platform','Link','Tag','Status','Last checked (auto/manual)','Note']].concat(D.channels.map(c=>{const a=D.auto[c.id];return[c.name,PLAT[c.platform]||c.platform,c.url,c.tag,ST[status(c,now)],new Date((a&&a.checkedAt)||c.lastChecked||0).toISOString(),c.note]}));
+  const blob=new Blob([rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='channels.csv';a.click();
+};
+$('#go').onclick=()=>{KEY=$('#pw').value;localStorage.setItem('mw.key',KEY);$('#lerr').textContent='';load()};
+$('#pw').onkeydown=e=>{if(e.key==='Enter')$('#go').click()};
+load();setInterval(load,15000);
+</script>
+</body>
+</html>

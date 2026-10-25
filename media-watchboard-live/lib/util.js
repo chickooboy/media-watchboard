@@ -49,6 +49,9 @@ function safeParse(s) { try { return JSON.parse(s); } catch { return null; } }
 
 // ---- access checks -------------------------------------------------------
 export function dashAuthed(req) {
+  // The dashboard is open (no password) unless REQUIRE_PASSWORD=1 is set on the project.
+  // To bring the password back: set REQUIRE_PASSWORD=1 and DASH_PASSWORD in Vercel and redeploy.
+  if (process.env.REQUIRE_PASSWORD !== '1') return true;
   const pw = process.env.DASH_PASSWORD;
   return !!pw && (req.headers['x-key'] || '') === pw;
 }

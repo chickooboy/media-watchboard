@@ -6,3 +6,4 @@ Settings (Vercel > Settings > Environment Variables): DASH_PASSWORD, CRON_SECRET
 ## Sync with the Claude board
 `api/sync.js` mirrors the Claude board's channels (flags, notes, last activity, history) into this site's database. The Claude board is the master copy.
 Push with `SYNC_URL=https://<your-app>.vercel.app/api/sync SYNC_SECRET=<CRON_SECRET> node scripts/sync-to-vercel.mjs channels.json`.
+Pull direction: `api/export.js` lists the site's channels; `scripts/pull-from-vercel.mjs` turns site edits (Mark checked, renames, notes) into updates for the Claude board.

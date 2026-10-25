@@ -18,6 +18,7 @@ function build(c, old = {}) {
     platform: PLATFORMS.includes(c.platform) ? c.platform : detectPlatform(url),
     url,
     tag: clean(c.tag, 60),
+    inclination: clean(c.inclination ?? old.inclination, 60),
     intervalH: Math.min(168, Math.max(0.25, Number(c.intervalH) || 6)),
     note: clean(c.note, 500),
     flag: ['none', 'new', 'live'].includes(c.flag) ? c.flag : 'none',

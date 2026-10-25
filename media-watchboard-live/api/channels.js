@@ -13,6 +13,7 @@ function sanitize(c, old = {}) {
     tag: clean(c.tag ?? old.tag ?? '', 60),
     intervalH: Math.min(168, Math.max(0.25, Number(c.intervalH ?? old.intervalH ?? 6) || 6)),
     note: clean(c.note ?? old.note ?? '', 500),
+    inclination: clean(old.inclination ?? '', 60),
     flag: ['none', 'new', 'live'].includes(c.flag) ? c.flag : (old.flag || 'none'),
     lastChecked: old.lastChecked ?? null,
     ackAt: old.ackAt ?? 0,

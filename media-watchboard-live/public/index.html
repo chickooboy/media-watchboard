@@ -4,118 +4,194 @@
 <meta name="robots" content="noindex,nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Media Watchboard</title>
+<title>Goa Media Watch</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f5f6f8;--panel:#fff;--ink:#14171f;--mute:#5d6577;--line:#e2e5ec;--accent:#3b46c9;--accent-ink:#fff;
-  --live:#d6232f;--live-bg:#fde8ea;--new:#1d6fd8;--new-bg:#e4f0fd;--due:#b26a00;--due-bg:#fdf1dc;--ok:#1f8a4c;--ok-bg:#e3f5ea;--idle:#6b7280;--idle-bg:#eceef2;
-  --sans:'Barlow',system-ui,sans-serif;--cond:'Barlow Condensed','Barlow',sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;
+  --bg:#f4f5f7;--panel:#fff;--panel2:#f8f9fb;--ink:#12151c;--mute:#586074;--line:#e3e6ee;--accent:#2b3a8f;--accent-ink:#fff;
+  --nda:#c2570c;--opp:#2457c5;--oth:#0b8a6f;
+  --nda-bg:#fdeee0;--opp-bg:#e5edfc;--oth-bg:#def4ee;
+  --live:#c8202c;--live-bg:#fde8ea;--new:#1d6fd8;--new-bg:#e4f0fd;--due:#a35f00;--due-bg:#fdf1dc;--ok:#1f8a4c;--ok-bg:#e3f5ea;--idle:#6b7280;--idle-bg:#eceef2;
+  --sh:0 1px 2px rgba(18,21,28,.06),0 4px 14px rgba(18,21,28,.05);
+  --sans:'Inter',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
-  --bg:#0f1218;--panel:#171b24;--ink:#eceff6;--mute:#9aa3b6;--line:#272d3a;--accent:#8c96ff;--accent-ink:#0f1218;
-  --live:#ff6b75;--live-bg:#3a161b;--new:#6aaeff;--new-bg:#14283f;--due:#f0b04c;--due-bg:#36290f;--ok:#4cc884;--ok-bg:#13301f;--idle:#9aa3b6;--idle-bg:#222836;}}
+:root[data-theme=dark]{
+  --bg:#0e1118;--panel:#161a23;--panel2:#1b2030;--ink:#eceff6;--mute:#9aa3b6;--line:#272d3a;--accent:#9aa5ff;--accent-ink:#0e1118;
+  --nda:#d9772f;--opp:#5b8def;--oth:#26a085;
+  --nda-bg:#3a2411;--opp-bg:#16264a;--oth-bg:#0f2f29;
+  --live:#ff6b75;--live-bg:#3a161b;--new:#6aaeff;--new-bg:#14283f;--due:#f0b04c;--due-bg:#36290f;--ok:#4cc884;--ok-bg:#13301f;--idle:#9aa3b6;--idle-bg:#222836;--sh:none;}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--sans)}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
-.wrap{max-width:1180px;margin:0 auto;padding:0 16px 48px}
-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:20px 0 14px}
-h1{font:700 30px/1 var(--cond);letter-spacing:.3px;margin:0}
-.sub{color:var(--mute);font-size:13px;margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.beat{width:9px;height:9px;border-radius:50%;background:var(--ok);display:inline-block}
-.beat.bad{background:var(--live)}
-.btn{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:500}
-.btn:hover{border-color:var(--accent)}
+button{cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1280px;margin:0 auto;padding:0 18px 56px}
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .in{max-width:1280px;margin:0 auto;padding:10px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700}
+.brand h1{font-size:17px;margin:0;line-height:1.1;letter-spacing:-.2px}
+.brand small{display:block;color:var(--mute);font-size:12px}
+.pulse{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--mute);background:var(--panel);border:1px solid var(--line);padding:5px 11px;border-radius:99px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);position:relative;flex:none}
+.dot.ok::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--ok);opacity:0;animation:ring 2.4s infinite}
+.dot.bad{background:var(--live)}.dot.warn{background:var(--due)}
+@keyframes ring{0%{opacity:.6;transform:scale(.6)}100%{opacity:0;transform:scale(1.5)}}
+.btn{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:9px;font-weight:500;font-size:13px;display:inline-flex;gap:6px;align-items:center;text-decoration:none;transition:.15s}
+.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
 .btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.btn.sm{padding:4px 9px;font-size:13px}
+.btn.sm{padding:4px 9px;font-size:12.5px}
+.btn.ghost{background:transparent}
+.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:6px 0 14px}
-@media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
-.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left;cursor:pointer}
-.tile.on{outline:2px solid var(--accent)}
-.tile b{display:block;font:700 34px/1 var(--cond)}
-.tile span{font-size:13px;color:var(--mute)}
-.tile.live b{color:var(--live)}.tile.new b{color:var(--new)}.tile.overdue b{color:var(--due)}.tile.ok b{color:var(--ok)}
-.bar{display:flex;height:8px;border-radius:6px;overflow:hidden;background:var(--idle-bg);margin-bottom:14px}
-.bar i{display:block;height:100%}
-.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.tools input,.tools select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
-.tools input{flex:1;min-width:180px}
-.chip{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:5px 11px;cursor:pointer;font-size:13px}
+/* hero summary */
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin:18px 0 14px}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh)}
+.card h2{font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:var(--mute);margin:0;font-weight:600}
+.pad{padding:16px 18px}
+.big{display:flex;align-items:baseline;gap:10px;margin:6px 0 12px}
+.big b{font-size:44px;line-height:1;letter-spacing:-1.5px}
+.big span{color:var(--mute)}
+.camp{display:grid;grid-template-columns:92px 1fr 54px;gap:10px;align-items:center;padding:6px 0;border-radius:8px;cursor:pointer}
+.camp:hover{background:var(--panel2)}
+.camp.on{background:var(--panel2);outline:1px solid var(--line)}
+.camp .nm{font-weight:600;display:flex;align-items:center;gap:7px}
+.sw{width:10px;height:10px;border-radius:3px;flex:none}
+.bars{display:flex;height:14px;border-radius:5px;overflow:hidden;gap:2px;background:var(--idle-bg)}
+.bars i{display:block;height:100%;min-width:0;transition:width .5s}
+.bars i.neg{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.55) 0 2px,transparent 2px 5px)}
+.camp .n{text-align:right;font:500 12.5px var(--mono);color:var(--mute)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:18px;height:9px;border-radius:3px;background:var(--mute);vertical-align:middle;margin-right:5px}
+.legend i.neg{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.7) 0 2px,transparent 2px 5px)}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+.kpi{border:1px solid var(--line);border-radius:11px;padding:10px 12px;text-align:left;background:var(--panel2);transition:.15s}
+.kpi:hover{border-color:var(--accent)}
+.kpi.on{outline:2px solid var(--accent)}
+.kpi b{display:block;font-size:26px;line-height:1.1;letter-spacing:-.6px}
+.kpi span{font-size:12px;color:var(--mute);display:flex;gap:5px;align-items:center}
+/* toolbar */
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:5px 12px;border-radius:7px;font-weight:500;font-size:13px;color:var(--mute)}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:4px 11px;font-size:12.5px;display:inline-flex;gap:6px;align-items:center;transition:.15s}
+.chip:hover{border-color:var(--accent)}
 .chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px}
-.item{display:grid;grid-template-columns:104px 1fr auto;gap:12px;align-items:center;padding:12px 14px;border-top:1px solid var(--line)}
-.item:first-child{border-top:0}
-@media(max-width:700px){.item{grid-template-columns:1fr;gap:8px}}
-.pill{display:inline-block;padding:3px 10px;border-radius:99px;font:600 12px/1.4 var(--sans);text-transform:uppercase;letter-spacing:.4px;text-align:center}
-.pill.live{background:var(--live-bg);color:var(--live)}.pill.new{background:var(--new-bg);color:var(--new)}
-.pill.overdue{background:var(--due-bg);color:var(--due)}.pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.unchecked{background:var(--idle-bg);color:var(--idle)}
-.pill.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--live);margin-right:6px;animation:p 1.2s infinite}
-@keyframes p{50%{opacity:.25}}
-.nm{font-weight:600;font-size:16px}
-.meta{color:var(--mute);font-size:13px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.meta a{color:var(--accent)}
-.plat{font:500 11px var(--mono);padding:1px 6px;border-radius:5px;background:var(--idle-bg);color:var(--mute);text-transform:uppercase}
-.auto{font:500 11px var(--mono);color:var(--ok)}
-.vid{margin-top:3px;font-size:14px}
-.vid a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--mute)}
-.acts{display:flex;gap:6px;flex-wrap:wrap}
-.panel{padding:14px;margin-bottom:14px}
-.panel textarea{width:100%;min-height:110px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font:13px var(--mono)}
-.panel label{display:block;font-size:13px;color:var(--mute);margin:8px 0 3px}
-.panel input,.panel select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.search{flex:1;min-width:160px;max-width:340px;padding:8px 12px 8px 34px;border:1px solid var(--line);border-radius:10px;background:var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%239aa3b6' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") 10px 50% no-repeat}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+/* main grid */
+.main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+@media(max-width:980px){.main{grid-template-columns:1fr}.main>section.hidem{display:none}}
+.mtabs{display:none;margin-bottom:12px}
+@media(max-width:980px){.mtabs{display:inline-flex}}
+.sechead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px 10px}
+.sechead b{font-size:15px}
+.cnt{font:500 12px var(--mono);color:var(--mute)}
+/* feed */
+.feed{padding:0 10px 10px}
+.fi{display:grid;grid-template-columns:4px 1fr;gap:12px;padding:12px 10px;border-radius:11px;text-decoration:none;color:inherit;transition:.15s;animation:in .35s both}
+.fi:hover{background:var(--panel2)}
+@keyframes in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.fi .stripe{border-radius:4px}
+.fi .hl{font-weight:600;font-size:15px;line-height:1.35;margin:4px 0 5px}
+.fi .m{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--mute)}
+.fresh{font:600 10.5px var(--sans);letter-spacing:.5px;text-transform:uppercase;background:var(--new-bg);color:var(--new);padding:1px 7px;border-radius:99px}
+.badge{display:inline-flex;align-items:center;gap:5px;font-weight:600;font-size:12px;padding:2px 9px;border-radius:99px}
+.badge.nda{background:var(--nda-bg);color:var(--nda)}.badge.opp{background:var(--opp-bg);color:var(--opp)}.badge.oth{background:var(--oth-bg);color:var(--oth)}
+.badge.none{background:var(--idle-bg);color:var(--idle)}
+.tone{font-weight:600;font-size:12px;color:var(--ink);display:inline-flex;gap:3px;align-items:center}
+.plat{font:500 10.5px var(--mono);padding:1px 6px;border-radius:5px;background:var(--idle-bg);color:var(--mute);text-transform:uppercase}
+.daysep{font:600 11px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--mute);padding:12px 10px 4px}
+/* channels */
+.chl{padding:0 8px 8px;max-height:calc(100vh - 220px);min-height:200px;overflow:auto}
+.ch{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center;padding:9px 10px;border-radius:10px}
+.ch:hover{background:var(--panel2)}
+.sd{width:10px;height:10px;border-radius:50%}
+.sd.live{background:var(--live)}.sd.new{background:var(--new)}.sd.overdue{background:var(--due)}.sd.unchecked{background:var(--idle)}.sd.ok{background:var(--ok)}
+.sd.live{animation:bl 1.2s infinite}@keyframes bl{50%{opacity:.3}}
+.ch .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch .s{font-size:12px;color:var(--mute);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ch .a{display:flex;gap:4px;opacity:.0;transition:.15s}
+.ch:hover .a,.ch:focus-within .a{opacity:1}
+@media(hover:none){.ch .a{opacity:1}}
+.ico{border:1px solid var(--line);background:var(--panel);border-radius:8px;width:30px;height:30px;display:grid;place-items:center;text-decoration:none;font-size:14px}
+.ico:hover{border-color:var(--accent)}
+.stt{font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:99px}
+.stt.live{background:var(--live-bg);color:var(--live)}.stt.new{background:var(--new-bg);color:var(--new)}.stt.overdue{background:var(--due-bg);color:var(--due)}.stt.unchecked{background:var(--idle-bg);color:var(--idle)}.stt.ok{background:var(--ok-bg);color:var(--ok)}
+/* panels */
+.panel{padding:16px 18px;margin-bottom:14px}
+.panel textarea{width:100%;min-height:110px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font:13px var(--mono)}
+.panel label{display:block;font-size:12.5px;color:var(--mute);margin:9px 0 3px}
+.panel input,.panel select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--bg)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:600px){.grid2{grid-template-columns:1fr}}
 .hide{display:none!important}
-.empty{padding:28px;text-align:center;color:var(--mute)}
-.login{max-width:360px;margin:18vh auto;padding:22px}
-.login h1{margin-bottom:12px}.login input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);margin-bottom:10px}
-.err{color:var(--live);font-size:13px;margin-top:6px}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:9px;font-size:14px;z-index:9}
-footer{color:var(--mute);font-size:12.5px;margin-top:18px}
+.empty{padding:34px 18px;text-align:center;color:var(--mute)}
+.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:3px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:13.5px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.drawer{position:fixed;right:16px;bottom:16px;width:min(420px,calc(100vw - 32px));z-index:40;box-shadow:0 12px 40px rgba(0,0,0,.3);max-height:calc(100vh - 32px);overflow:auto}
+footer{color:var(--mute);font-size:12px;margin-top:18px;text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div id="login" class="card login hide">
-  <h1>Media Watchboard</h1>
-  <input id="pw" type="password" placeholder="Desk password" autocomplete="current-password">
-  <button class="btn pri" id="go" style="width:100%">Open dashboard</button>
-  <div class="err" id="lerr"></div>
-</div>
+<div class="top"><div class="in">
+  <div class="brand"><div class="logo" aria-hidden="true">G</div><div><h1>Goa Media Watch</h1><small>Political news monitor · YouTube · X · Instagram</small></div></div>
+  <div class="pulse" id="pulse" title="Last scan"><span class="dot" id="dot"></span><span id="pulseTxt">Connecting…</span></div>
+  <div class="row">
+    <button class="btn sm" id="snd" title="Beep when something new arrives">🔔 Sound off</button>
+    <button class="btn sm" id="theme" title="Light / dark">◐ Theme</button>
+    <button class="btn sm" id="csv">⬇ Export</button>
+    <button class="btn pri sm" id="addBtn">+ Add channels</button>
+  </div>
+</div></div>
 
-<div id="app" class="wrap hide">
-  <header>
-    <div>
-      <h1>Media Watchboard</h1>
-      <div class="sub"><span class="beat" id="beat"></span><span id="beatTxt">Connecting…</span></div>
-    </div>
-    <div class="row">
-      <button class="btn sm" id="snd" title="Beep when something goes live or new">Sound: off</button>
-      <button class="btn sm" id="csv">Export CSV</button>
-      <button class="btn pri" id="addBtn">Add channels</button>
-    </div>
-  </header>
-
-  <div id="addPanel" class="card panel hide">
-    <b>Paste links, one per line</b> <span class="meta">(optional name first: <code>Name, https://…</code>)</span>
+<div id="app" class="wrap">
+  <div id="addPanel" class="card panel hide" style="margin-top:16px">
+    <b>Add channels</b> <span class="cnt">one link per line · optional name first: <code>Name, https://…</code></span>
     <textarea id="addTxt" placeholder="https://www.youtube.com/@channel&#10;Goa Daily, https://x.com/goadaily"></textarea>
-    <div class="row" style="margin-top:8px"><button class="btn pri" id="addGo">Add</button><button class="btn" id="addCancel">Cancel</button><span class="meta" id="addMsg"></span></div>
+    <div class="row" style="margin-top:8px"><button class="btn pri" id="addGo">Add</button><button class="btn" id="addCancel">Cancel</button><span class="cnt" id="addMsg"></span></div>
   </div>
 
-  <div class="tiles" id="tiles"></div>
-  <div class="bar" id="bar"></div>
-  <div class="tools">
-    <input id="q" type="search" placeholder="Search channels">
-    <select id="tag"><option value="">All tags</option></select>
-    <span class="row" id="plats"></span>
+  <div class="hero">
+    <div class="card pad">
+      <h2>Political coverage by camp</h2>
+      <div class="big"><b id="totItems">0</b><span id="totLbl">items in range</span></div>
+      <div id="camps"></div>
+      <div class="legend"><span><i></i>Positive</span><span><i class="neg"></i>Negative</span><span>Click a camp to filter</span></div>
+    </div>
+    <div class="card pad">
+      <h2>Channel status</h2>
+      <div class="kpis" id="kpis"></div>
+    </div>
   </div>
-  <div class="row" style="margin-bottom:10px"><button class="btn sm hide" id="ackAll"></button></div>
-  <div class="card" id="list"></div>
-  <footer>YouTube channels are checked automatically every few minutes. X and Instagram can't be read automatically, so use Mark checked after you look at them.</footer>
+
+  <div class="toolbar">
+    <div class="seg" id="range" role="group" aria-label="Time range"><button data-r="6">6 h</button><button data-r="24" class="on">24 h</button><button data-r="168">7 days</button><button data-r="0">All</button></div>
+    <input class="search" id="q" type="search" placeholder="Search headlines or channels" aria-label="Search">
+    <div class="row" id="tones"></div>
+    <div class="row" id="plats"></div>
+    <button class="btn sm ghost hide" id="clear">✕ Clear filters</button>
+  </div>
+  <div class="mtabs seg" id="mtabs"><button data-v="feed" class="on">Political feed</button><button data-v="chan">Channels</button></div>
+
+  <div class="main">
+    <section class="card" id="secFeed">
+      <div class="sechead"><b>Political feed</b><span class="cnt" id="feedCnt"></span></div>
+      <div class="feed" id="feed"></div>
+    </section>
+    <section class="card hidem" id="secChan">
+      <div class="sechead"><b>Channels</b><span class="row"><span class="cnt" id="chCnt"></span><button class="btn sm hide" id="ackAll"></button></span></div>
+      <div class="chl" id="list"></div>
+    </section>
+  </div>
+  <footer>Auto-refreshes every 15 seconds. Labels (camp and tone) are the monitor's judgement — spot-check before you quote them.</footer>
 </div>
 
-<div id="edit" class="card panel hide" style="position:fixed;inset:auto 16px 16px auto;width:min(420px,calc(100vw - 32px));z-index:5;box-shadow:0 8px 30px rgba(0,0,0,.25)"></div>
+<div id="edit" class="card panel drawer hide"></div>
 <div id="toast" class="toast hide"></div>
 
 <script>
@@ -125,13 +201,21 @@ const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
 const PLAT={youtube:'YouTube',x:'X',instagram:'Instagram',facebook:'Facebook',tiktok:'TikTok',linkedin:'LinkedIn',telegram:'Telegram',reddit:'Reddit',other:'Other'};
 const ST={live:'Live now',new:'New activity',overdue:'Check due',unchecked:'Not checked',ok:'Up to date'};
 const RANK={live:0,new:1,overdue:2,unchecked:3,ok:4};
-let KEY=localStorage.getItem('mw.key')||'';
-let D={channels:[],auto:{},meta:null,now:Date.now()},F={status:'',tag:'',plat:'',q:''},sound=localStorage.getItem('mw.sound')==='1',prevAlert=null;
+const CAMPS=[['nda','NDA'],['opp','Opposition'],['oth','Others']];
+const KEY=''; // dashboard is open
+const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
+let D={channels:[],auto:{},meta:null},F={status:'',tag:'',plat:'',q:'',camp:'',tone:'',range:+(ls.get('mw.range')||24)},sound=ls.get('mw.sound')==='1',prevSig=null,SYNC=null;
+
+function theme(t){document.documentElement.dataset.theme=t;ls.set('mw.theme',t)}
+theme(ls.get('mw.theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+$('#theme').onclick=()=>theme(document.documentElement.dataset.theme==='dark'?'light':'dark');
 
 function detect(u){try{const h=new URL(u).hostname.replace(/^www\./,'');if(/youtube\.com$|^youtu\.be$/.test(h))return'youtube';if(/instagram\.com$/.test(h))return'instagram';if(/(^|\.)(x|twitter)\.com$/.test(h))return'x';if(/facebook\.com$/.test(h))return'facebook'}catch{}return'other'}
 function nameFrom(u){try{const p=new URL(u).pathname.split('/').filter(Boolean);return(p[0]||'').replace(/^@/,'')||new URL(u).hostname}catch{return u}}
 function rel(t,now){if(!t)return'never';const s=Math.max(0,(now-t)/1000);if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' h ago';return Math.floor(s/86400)+' d ago'}
-function api(path,body){return fetch(path,{method:body?'POST':'GET',headers:{'x-key':KEY,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined}).then(async r=>{const j=await r.json().catch(()=>({}));if(r.status===401)throw Object.assign(new Error('auth'),{auth:true});if(!r.ok)throw new Error(j.error||r.status);return j})}
+function clock(t){return new Date(t).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
+function dayLabel(t,now){const d=new Date(t),n=new Date(now);const k=x=>x.toDateString();if(k(d)===k(n))return'Today';const y=new Date(n);y.setDate(y.getDate()-1);if(k(d)===k(y))return'Yesterday';return d.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'})}
+function api(path,body){return fetch(path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||r.status);return j})}
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.remove('hide');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hide'),2600)}
 
 function status(c,now){
@@ -147,76 +231,133 @@ function status(c,now){
 }
 function isAuto(c,now){const a=D.auto[c.id];return c.platform==='youtube'&&a&&a.checkedAt&&now-a.checkedAt<20*60e3}
 
+/* ---- labels: "NDA Positive" / "[Opposition Negative] headline" ---- */
+function parseIncl(s){
+  s=String(s||'').trim();if(!s)return{camp:'',tone:''};
+  const l=s.toLowerCase();
+  const camp=/^nda/.test(l)?'nda':/^opp/.test(l)?'opp':/^oth/.test(l)?'oth':'';
+  const tone=/positive/.test(l)?'pos':/negative/.test(l)?'neg':/twist/.test(l)?'twist':'';
+  return{camp,tone};
+}
+function items(){
+  const out=[],seen=new Set();
+  for(const c of D.channels){
+    for(const h of (c.history||[])){
+      if(h.type==='checked')continue;
+      const note=String(h.note||'').trim();if(!note)continue;
+      const m=note.match(/^\[([^\]]+)\]\s*(.*)$/);
+      const lab=parseIncl(h.incl||(m&&m[1])||'');
+      const key=c.id+'|'+note;if(seen.has(key))continue;seen.add(key);
+      out.push({c,t:h.t||0,hl:(m?m[2]:note)||note,...lab,raw:h.incl||(m&&m[1])||''});
+    }
+  }
+  return out.sort((a,b)=>b.t-a.t);
+}
+const campName=k=>(CAMPS.find(x=>x[0]===k)||[,'Unlabelled'])[1];
+const toneTxt=t=>t==='pos'?'▲ Positive':t==='neg'?'▼ Negative':t==='twist'?'◆ Twisted':'';
+
 async function load(){
   try{
-    const j=await api('/api/state');D=j;
-    $('#login').classList.add('hide');$('#app').classList.remove('hide');
-    if(!j.channels.length&&!load.seeded){load.seeded=1;const s=await fetch('/seed.json').then(r=>r.json()).catch(()=>[]);if(s.length){await api('/api/channels',{action:'import',channels:s});toast('Loaded your 33 starter channels');return load()}}
-    render();
+    const j=await api('/api/state');D=j;render();
+    if(!j.channels.length&&!load.seeded){load.seeded=1;const s=await fetch('/seed.json').then(r=>r.json()).catch(()=>[]);if(s.length){await api('/api/channels',{action:'import',channels:s});toast('Loaded starter channels');return load()}}
   }catch(e){
-    if(e.auth){$('#app').classList.add('hide');$('#login').classList.remove('hide');if(KEY)$('#lerr').textContent='Wrong password.';return}
-    $('#beat').className='beat bad';$('#beatTxt').textContent='Can’t reach the server: '+e.message;
+    $('#dot').className='dot bad';$('#pulseTxt').textContent='Can’t reach the server: '+e.message;
   }
 }
 
+function filtered(now){
+  const q=F.q;
+  const all=items();
+  const inRange=all.filter(x=>!F.range||now-x.t<F.range*3600e3);
+  const base=inRange.filter(x=>(!F.plat||x.c.platform===F.plat)&&(!F.q||(x.hl+' '+x.c.name).toLowerCase().includes(q)));
+  return{all,inRange,base};
+}
 function render(){
   const now=Date.now();D.now=now;
   const list=D.channels.map(c=>({c,s:status(c,now),a:D.auto[c.id]}));
   const counts={live:0,new:0,overdue:0,unchecked:0,ok:0};list.forEach(x=>counts[x.s]++);
-  // heartbeat
-  const m=D.meta,age=m&&m.lastRun?now-m.lastRun:null;
-  const bad=!m||age>15*60e3||m.fatal;
-  $('#beat').className='beat'+(bad?' bad':'');
-  $('#beatTxt').textContent=!m?'Checker has not run yet':m.fatal?'Checker error: '+m.fatal:(bad?'Checker stopped: last ran ':'Checker ran ')+rel(m.lastRun,now)+' · '+m.channels+' YouTube channels'+(m.telegram?' · Telegram on':' · Telegram off');
-  // title + sound
-  document.title=(counts.live?`(${counts.live} LIVE) `:'')+(counts.new?`(${counts.new} new) `:'')+'Media Watchboard';
-  const sig=list.filter(x=>x.s==='live'||x.s==='new').map(x=>x.c.id+x.s+((x.a&&x.a.newVideo&&x.a.newVideo.id)||'')).sort().join('|');
-  if(prevAlert!==null&&sig!==prevAlert&&sig&&sound)beep();
-  prevAlert=sig;
-  // tiles
-  $('#tiles').innerHTML=['live','new','overdue','unchecked','ok'].map(k=>`<button class="tile ${k} ${F.status===k?'on':''}" data-s="${k}"><b>${counts[k]}</b><span>${ST[k]}</span></button>`).join('');
-  const tot=list.length||1,col={live:'var(--live)',new:'var(--new)',overdue:'var(--due)',unchecked:'var(--idle)',ok:'var(--ok)'};
-  $('#bar').innerHTML=['live','new','overdue','unchecked','ok'].map(k=>`<i style="width:${counts[k]/tot*100}%;background:${col[k]}"></i>`).join('');
-  // filters
-  const tags=[...new Set(D.channels.map(c=>c.tag).filter(Boolean))].sort();
-  const ts=$('#tag');const tv=ts.value;ts.innerHTML='<option value="">All tags</option>'+tags.map(t=>`<option ${t===F.tag?'selected':''}>${esc(t)}</option>`).join('');
+  // pulse
+  const lastScan=Math.max(0,...D.channels.map(c=>c.lastChecked||0),(D.meta&&D.meta.lastRun)||0);
+  const age=lastScan?now-lastScan:null;
+  const cls=age===null?'warn':age>25*60e3?'bad':'ok';
+  $('#dot').className='dot '+cls;
+  $('#pulseTxt').textContent=age===null?'No scan yet':`Last scan ${rel(lastScan,now)}${age>25*60e3?' · scans may have paused':''} · ${D.channels.length} channels`;
+  document.title=(counts.live?`(${counts.live} LIVE) `:'')+'Goa Media Watch';
+  // political items
+  const {inRange,base}=filtered(now);
+  const vis=base.filter(x=>(!F.camp||x.camp===F.camp)&&(!F.tone||x.tone===F.tone));
+  // camp summary uses base (so selecting a camp doesn't hide the others)
+  const tot=base.length;
+  $('#totItems').textContent=tot;
+  $('#totLbl').textContent=`political item${tot===1?'':'s'} · ${F.range?'last '+(F.range>=168?'7 days':F.range+' h'):'all time'}`;
+  const mx=Math.max(1,...CAMPS.map(([k])=>base.filter(x=>x.camp===k).length));
+  $('#camps').innerHTML=CAMPS.map(([k,n])=>{
+    const a=base.filter(x=>x.camp===k),p=a.filter(x=>x.tone==='pos').length,g=a.filter(x=>x.tone==='neg').length,o=a.length-p-g;
+    const w=v=>(v/mx*100)+'%';
+    return`<div class="camp ${F.camp===k?'on':''}" data-camp="${k}" role="button" tabindex="0" aria-label="${n}: ${p} positive, ${g} negative">
+      <div class="nm"><span class="sw" style="background:var(--${k})"></span>${n}</div>
+      <div class="bars" title="${n}: ${p} positive · ${g} negative${o?' · '+o+' other':''}"><i style="width:${w(p)};background:var(--${k})"></i><i class="neg" style="width:${w(g)};background-color:var(--${k})"></i>${o?`<i style="width:${w(o)};background:var(--idle)"></i>`:''}</div>
+      <div class="n">${p}▲ ${g}▼</div></div>`}).join('');
+  // status kpis
+  $('#kpis').innerHTML=['live','new','overdue','unchecked','ok'].map(k=>`<button class="kpi ${F.status===k?'on':''}" data-s="${k}"><b>${counts[k]}</b><span><i class="sd ${k}" style="display:inline-block"></i>${ST[k]}</span></button>`).join('')
+    +`<button class="kpi" data-s="" style="grid-column:span 1"><b>${list.length}</b><span>All channels</span></button>`;
+  // filter chips
   const plats=[...new Set(D.channels.map(c=>c.platform))];
   $('#plats').innerHTML=plats.map(p=>`<button class="chip ${F.plat===p?'on':''}" data-p="${p}">${PLAT[p]||p}</button>`).join('');
-  let vis=list.filter(x=>(!F.status||x.s===F.status)&&(!F.tag||x.c.tag===F.tag)&&(!F.plat||x.c.platform===F.plat)&&(!F.q||(x.c.name+' '+x.c.url+' '+(x.c.note||'')).toLowerCase().includes(F.q)));
-  vis.sort((a,b)=>RANK[a.s]-RANK[b.s]||a.c.name.localeCompare(b.c.name));
-  const manual=vis.filter(x=>!isAuto(x.c,now));
-  const ab=$('#ackAll');ab.classList.toggle('hide',!manual.length);ab.textContent=`Mark ${manual.length} manual channel${manual.length===1?'':'s'} as checked`;ab.dataset.ids=JSON.stringify(manual.map(x=>x.c.id));
-  $('#list').innerHTML=vis.length?vis.map(row(now)).join(''):'<div class="empty">No channels match.</div>';
+  $('#tones').innerHTML=[['pos','▲ Positive'],['neg','▼ Negative'],['twist','◆ Twisted']].map(([k,l])=>`<button class="chip ${F.tone===k?'on':''}" data-t="${k}">${l}</button>`).join('');
+  $('#clear').classList.toggle('hide',!(F.camp||F.tone||F.plat||F.q||F.status));
+  $('#range').querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.r===F.range));
+  // feed
+  $('#feedCnt').textContent=`${vis.length} shown`;
+  let html='',day='';
+  for(const x of vis.slice(0,120)){
+    const d=dayLabel(x.t,now);if(d!==day){day=d;html+=`<div class="daysep">${esc(d)}</div>`}
+    const u=safeUrl(x.c.url),fresh=now-x.t<2*3600e3;
+    html+=`<a class="fi" ${u?`href="${esc(u)}" target="_blank" rel="noopener"`:''}><span class="stripe" style="background:var(--${x.camp||'idle'})"></span><div>
+      <div class="hl">${esc(x.hl)}</div>
+      <div class="m"><span class="badge ${x.camp||'none'}">${esc(campName(x.camp))}</span><span class="tone">${toneTxt(x.tone)}</span><span>${esc(x.c.name)}</span><span class="plat">${esc(PLAT[x.c.platform]||x.c.platform)}</span><span>${clock(x.t)} · ${rel(x.t,now)}</span>${fresh?'<span class="fresh">New</span>':''}</div></div></a>`;
+  }
+  $('#feed').innerHTML=html||`<div class="empty"><b>No political items here yet</b>${F.range&&inRange.length===0?'Try a wider time range — scans run every 12 minutes, 8 am to 10 pm.':'Nothing matches these filters.'}</div>`;
+  // channels
+  let ch=list.filter(x=>(!F.status||x.s===F.status)&&(!F.plat||x.c.platform===F.plat)&&(!F.q||(x.c.name+' '+x.c.url+' '+(x.c.note||'')).toLowerCase().includes(F.q)));
+  ch.sort((a,b)=>RANK[a.s]-RANK[b.s]||a.c.name.localeCompare(b.c.name));
+  $('#chCnt').textContent=`${ch.length} of ${list.length}`;
+  const manual=ch.filter(x=>!isAuto(x.c,now)&&x.s!=='ok'||x.s==='new'||x.s==='live');
+  const ab=$('#ackAll');ab.classList.toggle('hide',!manual.length);ab.textContent=`✓ Mark ${manual.length} checked`;ab.dataset.ids=JSON.stringify(manual.map(x=>x.c.id));
+  $('#list').innerHTML=ch.length?ch.map(chRow(now)).join(''):'<div class="empty"><b>No channels match</b>Clear filters to see all.</div>';
+  // alert sound
+  const sig=items().filter(x=>now-x.t<30*60e3).map(x=>x.t).join(',')+list.filter(x=>x.s==='live').map(x=>x.c.id).join(',');
+  if(prevSig!==null&&sig!==prevSig&&sound)beep();prevSig=sig;
 }
-const row=now=>({c,s,a})=>{
-  const auto=isAuto(c,now),u=safeUrl(c.url);
-  let vid='';
-  if(a&&a.live)vid=`<div class="vid">🔴 <a href="https://www.youtube.com/watch?v=${esc(a.live.id)}" target="_blank" rel="noopener">${esc(a.live.title)}</a> · live since ${rel(a.live.startedAt,now)}</div>`;
-  else if(a&&a.newVideo&&s==='new')vid=`<div class="vid">🆕 <a href="https://www.youtube.com/watch?v=${esc(a.newVideo.id)}" target="_blank" rel="noopener">${esc(a.newVideo.title)}</a> · seen ${rel(a.newVideo.detectedAt,now)}</div>`;
-  else if(a&&a.upcoming)vid=`<div class="vid">⏰ Scheduled: <a href="https://www.youtube.com/watch?v=${esc(a.upcoming.id)}" target="_blank" rel="noopener">${esc(a.upcoming.title)}</a></div>`;
-  else if(a&&a.latest)vid=`<div class="vid" style="color:var(--mute)">Latest: ${esc(a.latest.title)} · ${rel(a.latest.publishedAt,now)}</div>`;
-  const err=a&&a.error&&c.platform==='youtube'?`<div class="meta" style="color:var(--live)">Auto-check problem: ${esc(a.error)}</div>`:'';
-  const noLink=c.platform==='youtube'&&!c.url?'<div class="meta" style="color:var(--due)">No link yet. Edit to add the YouTube link.</div>':'';
-  return `<div class="item"><div><span class="pill ${s}">${ST[s]}</span></div>
-  <div><div class="nm">${esc(c.name)}</div>
-  <div class="meta"><span class="plat">${esc(PLAT[c.platform]||c.platform)}</span>${auto?'<span class="auto">● auto-checked '+rel(a.checkedAt,now)+'</span>':'<span>manual · checked '+rel(c.lastChecked,now)+'</span>'}${c.tag?'<span>'+esc(c.tag)+'</span>':''}${c.note?'<span>“'+esc(c.note)+'”</span>':''}</div>${vid}${err}${noLink}</div>
-  <div class="acts">${u?`<a class="btn sm" href="${esc(u)}" target="_blank" rel="noopener">Open</a>`:''}<button class="btn sm" data-ack="${esc(c.id)}">Mark checked</button><button class="btn sm" data-edit="${esc(c.id)}">Manage</button></div></div>`;
+const chRow=now=>({c,s,a})=>{
+  const u=safeUrl(c.url),auto=isAuto(c,now);
+  const lc=(c.inclination||'');const p=parseIncl(lc);
+  return`<div class="ch"><span class="sd ${s}" title="${ST[s]}"></span>
+  <div style="min-width:0"><div class="t">${esc(c.name)}</div>
+  <div class="s"><span class="plat">${esc(PLAT[c.platform]||c.platform)}</span><span class="stt ${s}">${ST[s]}</span>${p.camp?`<span class="badge ${p.camp}" style="padding:0 7px;font-size:11px">${campName(p.camp)}</span>`:''}<span>${auto?'auto ':''}${rel(auto?a.checkedAt:c.lastChecked,now)}</span></div></div>
+  <div class="a">${u?`<a class="ico" href="${esc(u)}" target="_blank" rel="noopener" title="Open channel" aria-label="Open ${esc(c.name)}">↗</a>`:''}<button class="ico" data-ack="${esc(c.id)}" title="Mark checked" aria-label="Mark ${esc(c.name)} checked">✓</button><button class="ico" data-edit="${esc(c.id)}" title="Manage" aria-label="Manage ${esc(c.name)}">⚙</button></div></div>`;
 };
 
 function beep(){try{const x=new (window.AudioContext||window.webkitAudioContext)(),o=x.createOscillator(),g=x.createGain();o.connect(g);g.connect(x.destination);o.frequency.value=880;g.gain.setValueAtTime(.2,x.currentTime);g.gain.exponentialRampToValueAtTime(.001,x.currentTime+.6);o.start();o.stop(x.currentTime+.6)}catch{}}
 
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-s],[data-p],[data-ack],[data-edit]');if(!t)return;
-  if(t.dataset.s!==undefined){F.status=F.status===t.dataset.s?'':t.dataset.s;render()}
-  else if(t.dataset.p){F.plat=F.plat===t.dataset.p?'':t.dataset.p;render()}
-  else if(t.dataset.ack){await api('/api/channels',{action:'ack',id:t.dataset.ack});toast('Marked as checked');load()}
-  else if(t.dataset.edit)openEdit(t.dataset.edit);
+  const t=e.target.closest('[data-s],[data-p],[data-t],[data-camp],[data-ack],[data-edit],[data-r],[data-v]');if(!t)return;
+  const d=t.dataset;
+  if(d.camp){F.camp=F.camp===d.camp?'':d.camp;render()}
+  else if(d.s!==undefined){F.status=F.status===d.s?'':d.s;render()}
+  else if(d.p){F.plat=F.plat===d.p?'':d.p;render()}
+  else if(d.t){F.tone=F.tone===d.t?'':d.t;render()}
+  else if(d.r!==undefined){F.range=+d.r;ls.set('mw.range',d.r);render()}
+  else if(d.v){document.querySelectorAll('#mtabs button').forEach(b=>b.classList.toggle('on',b===t));$('#secFeed').classList.toggle('hidem',d.v!=='feed');$('#secChan').classList.toggle('hidem',d.v!=='chan')}
+  else if(d.ack){await api('/api/channels',{action:'ack',id:d.ack});toast('Marked as checked');load()}
+  else if(d.edit)openEdit(d.edit);
 });
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset&&e.target.dataset.camp){e.preventDefault();e.target.click()}if(e.key==='Escape')$('#edit').classList.add('hide')});
+$('#clear').onclick=()=>{F={...F,status:'',tag:'',plat:'',q:'',camp:'',tone:''};$('#q').value='';render()};
 $('#q').oninput=e=>{F.q=e.target.value.toLowerCase();render()};
-$('#tag').onchange=e=>{F.tag=e.target.value;render()};
 $('#ackAll').onclick=async e=>{const ids=JSON.parse(e.target.dataset.ids||'[]');if(!ids.length)return;if(!confirm(`Mark ${ids.length} channels as checked now?`))return;await api('/api/channels',{action:'ack',ids});toast('Marked '+ids.length+' as checked');load()};
-$('#snd').onclick=()=>{sound=!sound;localStorage.setItem('mw.sound',sound?'1':'0');$('#snd').textContent='Sound: '+(sound?'on':'off');if(sound)beep()};
-$('#snd').textContent='Sound: '+(sound?'on':'off');
+$('#snd').onclick=()=>{sound=!sound;ls.set('mw.sound',sound?'1':'0');$('#snd').textContent='🔔 Sound '+(sound?'on':'off');if(sound)beep()};
+$('#snd').textContent='🔔 Sound '+(sound?'on':'off');
 $('#addBtn').onclick=()=>$('#addPanel').classList.toggle('hide');
 $('#addCancel').onclick=()=>$('#addPanel').classList.add('hide');
 $('#addGo').onclick=async()=>{
@@ -235,15 +376,15 @@ $('#addGo').onclick=async()=>{
 };
 function openEdit(id){
   const c=D.channels.find(x=>x.id===id);if(!c)return;const e=$('#edit');
-  e.innerHTML=`<b>Manage channel</b>
+  e.innerHTML=`<div class="row" style="justify-content:space-between"><b>Manage channel</b><button class="ico" id="eC" aria-label="Close">✕</button></div>
   <label>Name</label><input id="eN" value="${esc(c.name)}">
   <label>Link</label><input id="eU" value="${esc(c.url)}">
   <div class="grid2"><div><label>Platform</label><select id="eP">${Object.keys(PLAT).map(p=>`<option value="${p}" ${p===c.platform?'selected':''}>${PLAT[p]}</option>`).join('')}</select></div>
-  <div><label>Check every (hours, manual)</label><input id="eI" type="number" min="0.25" step="0.25" value="${c.intervalH||6}"></div></div>
+  <div><label>Check every (hours)</label><input id="eI" type="number" min="0.25" step="0.25" value="${c.intervalH||6}"></div></div>
   <label>Tag</label><input id="eT" value="${esc(c.tag||'')}">
   <label>Note</label><input id="eNo" value="${esc(c.note||'')}">
   <label>Flag by hand</label><select id="eF"><option value="none">None</option><option value="new" ${c.flag==='new'?'selected':''}>New activity</option><option value="live" ${c.flag==='live'?'selected':''}>Live now</option></select>
-  <div class="row" style="margin-top:12px"><button class="btn pri" id="eS">Save</button><button class="btn" id="eC">Close</button><button class="btn" id="eD" style="margin-left:auto;color:var(--live)">Remove</button></div>`;
+  <div class="row" style="margin-top:14px"><button class="btn pri" id="eS">Save</button><button class="btn" id="eD" style="margin-left:auto;color:var(--live)">Remove</button></div>`;
   e.classList.remove('hide');
   $('#eC').onclick=()=>e.classList.add('hide');
   $('#eS').onclick=async()=>{await api('/api/channels',{action:'upsert',channel:{id,name:$('#eN').value,url:$('#eU').value,platform:$('#eP').value,intervalH:$('#eI').value,tag:$('#eT').value,note:$('#eNo').value,flag:$('#eF').value}});e.classList.add('hide');toast('Saved');load()};
@@ -251,13 +392,11 @@ function openEdit(id){
 }
 $('#csv').onclick=()=>{
   const now=Date.now(),q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
-  const rows=[['Name','Platform','Link','Tag','Status','Last checked (auto/manual)','Note']].concat(D.channels.map(c=>{const a=D.auto[c.id];return[c.name,PLAT[c.platform]||c.platform,c.url,c.tag,ST[status(c,now)],new Date((a&&a.checkedAt)||c.lastChecked||0).toISOString(),c.note]}));
+  const rows=[['Time','Channel','Platform','Camp','Tone','Headline','Link']].concat(items().map(x=>[new Date(x.t).toISOString(),x.c.name,PLAT[x.c.platform]||x.c.platform,campName(x.camp),x.tone,x.hl,x.c.url]));
   const blob=new Blob([rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='channels.csv';a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='political-items.csv';a.click();
 };
-$('#go').onclick=()=>{KEY=$('#pw').value;localStorage.setItem('mw.key',KEY);$('#lerr').textContent='';load()};
-$('#pw').onkeydown=e=>{if(e.key==='Enter')$('#go').click()};
-load();setInterval(load,15000);
+load();setInterval(load,15000);setInterval(()=>{if(D.channels.length)render()},60000);
 </script>
 </body>
 </html>

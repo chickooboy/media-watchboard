@@ -16,6 +16,9 @@ function sanitize(c, old = {}) {
     flag: ['none', 'new', 'live'].includes(c.flag) ? c.flag : (old.flag || 'none'),
     lastChecked: old.lastChecked ?? null,
     ackAt: old.ackAt ?? 0,
+    lastActivity: old.lastActivity ?? null,
+    history: old.history ?? [],
+    probe: old.probe ?? null,
     createdAt: old.createdAt || Date.now(),
   };
 }

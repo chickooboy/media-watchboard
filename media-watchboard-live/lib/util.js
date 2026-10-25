@@ -3,8 +3,25 @@
 const DB_URL = () => process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const DB_TOKEN = () => process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 
+let _tcp;
+async function tcpClient() {
+  if (!_tcp) {
+    const { createClient } = await import('redis');
+    const c = createClient({ url: process.env.REDIS_URL });
+    c.on('error', () => {});
+    _tcp = c.connect().then(() => c);
+  }
+  return _tcp;
+}
+
 export async function redis(...cmd) {
-  if (!DB_URL() || !DB_TOKEN()) throw new Error('Database not connected (missing KV_REST_API_URL / KV_REST_API_TOKEN)');
+  if (!DB_URL() || !DB_TOKEN()) {
+    if (!process.env.REDIS_URL) throw new Error('Database not connected (missing KV_REST_API_URL / KV_REST_API_TOKEN / REDIS_URL)');
+    try {
+      const c = await tcpClient();
+      return await c.sendCommand(cmd.map(String));
+    } catch (e) { _tcp = undefined; throw new Error('Database error: ' + e.message); }
+  }
   const r = await fetch(DB_URL(), {
     method: 'POST',
     headers: { Authorization: `Bearer ${DB_TOKEN()}`, 'Content-Type': 'application/json' },

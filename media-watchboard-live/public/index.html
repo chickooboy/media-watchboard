@@ -105,6 +105,7 @@ a{color:inherit}
 .badge.none{background:var(--idle-bg);color:var(--idle)}
 .tone{font-weight:600;font-size:12px;color:var(--ink);display:inline-flex;gap:3px;align-items:center}
 .plat{font:500 10.5px var(--mono);padding:1px 6px;border-radius:5px;background:var(--idle-bg);color:var(--mute);text-transform:uppercase}
+.go{margin-left:auto;font-weight:600;font-size:12px;color:var(--accent)}.go.ch{color:var(--mute);font-weight:500}
 .daysep{font:600 11px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--mute);padding:12px 10px 4px}
 /* channels */
 .chl{padding:0 8px 8px;max-height:calc(100vh - 220px);min-height:200px;overflow:auto}
@@ -246,9 +247,9 @@ function items(){
       if(h.type==='checked')continue;
       const note=String(h.note||'').trim();if(!note)continue;
       const m=note.match(/^\[([^\]]+)\]\s*(.*)$/);
-      const lab=parseIncl(h.incl||(m&&m[1])||'');
+      const lab=parseIncl(h.incl||(m&&m[1])||'');if(!lab.camp)continue; // political items only
       const key=c.id+'|'+note;if(seen.has(key))continue;seen.add(key);
-      out.push({c,t:h.t||0,hl:(m?m[2]:note)||note,...lab,raw:h.incl||(m&&m[1])||''});
+      out.push({c,t:h.t||0,url:safeUrl(h.url),hl:(m?m[2]:note)||note,...lab,raw:h.incl||(m&&m[1])||''});
     }
   }
   return out.sort((a,b)=>b.t-a.t);
@@ -312,10 +313,10 @@ function render(){
   let html='',day='';
   for(const x of vis.slice(0,120)){
     const d=dayLabel(x.t,now);if(d!==day){day=d;html+=`<div class="daysep">${esc(d)}</div>`}
-    const u=safeUrl(x.c.url),fresh=now-x.t<2*3600e3;
+    const u=x.url||safeUrl(x.c.url),fresh=now-x.t<2*3600e3,exact=!!x.url;
     html+=`<a class="fi" ${u?`href="${esc(u)}" target="_blank" rel="noopener"`:''}><span class="stripe" style="background:var(--${x.camp||'idle'})"></span><div>
       <div class="hl">${esc(x.hl)}</div>
-      <div class="m"><span class="badge ${x.camp||'none'}">${esc(campName(x.camp))}</span><span class="tone">${toneTxt(x.tone)}</span><span>${esc(x.c.name)}</span><span class="plat">${esc(PLAT[x.c.platform]||x.c.platform)}</span><span>${clock(x.t)} · ${rel(x.t,now)}</span>${fresh?'<span class="fresh">New</span>':''}</div></div></a>`;
+      <div class="m"><span class="badge ${x.camp||'none'}">${esc(campName(x.camp))}</span><span class="tone">${toneTxt(x.tone)}</span><span>${esc(x.c.name)}</span><span class="plat">${esc(PLAT[x.c.platform]||x.c.platform)}</span><span>${clock(x.t)} · ${rel(x.t,now)}</span>${fresh?'<span class="fresh">New</span>':''}<span class="go ${exact?'':'ch'}">${exact?'Open post ↗':'Channel page ↗'}</span></div></div></a>`;
   }
   $('#feed').innerHTML=html||`<div class="empty"><b>No political items here yet</b>${F.range&&inRange.length===0?'Try a wider time range — scans run every 12 minutes, 8 am to 10 pm.':'Nothing matches these filters.'}</div>`;
   // channels
@@ -392,7 +393,7 @@ function openEdit(id){
 }
 $('#csv').onclick=()=>{
   const now=Date.now(),q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
-  const rows=[['Time','Channel','Platform','Camp','Tone','Headline','Link']].concat(items().map(x=>[new Date(x.t).toISOString(),x.c.name,PLAT[x.c.platform]||x.c.platform,campName(x.camp),x.tone,x.hl,x.c.url]));
+  const rows=[['Time','Channel','Platform','Camp','Tone','Headline','Link']].concat(items().map(x=>[new Date(x.t).toISOString(),x.c.name,PLAT[x.c.platform]||x.c.platform,campName(x.camp),x.tone,x.hl,x.url||x.c.url]));
   const blob=new Blob([rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='political-items.csv';a.click();
 };

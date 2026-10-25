@@ -141,7 +141,18 @@ export async function telegram(text) {
   } catch { return false; }
 }
 
-export const KEYS = { channels: 'mw:channels', auto: 'mw:auto', meta: 'mw:meta' };
+export const KEYS = { channels: 'mw:channels', auto: 'mw:auto', meta: 'mw:meta', items: 'mw:items', itemmeta: 'mw:itemmeta' };
+
+// Parse a board label like "NDA Positive" or a note like "[Opposition Negative] headline".
+export function parseLabel(h) {
+  const note = String(h?.note || '').trim();
+  const m = note.match(/^\[([^\]]+)\]\s*(.*)$/);
+  const raw = String(h?.incl || (m && m[1]) || '').trim();
+  const l = raw.toLowerCase();
+  const camp = /^nda/.test(l) ? 'nda' : /^opp/.test(l) ? 'opp' : /^oth/.test(l) ? 'oth' : '';
+  const tone = /positive/.test(l) ? 'pos' : /negative/.test(l) ? 'neg' : /twist/.test(l) ? 'twist' : '';
+  return { camp, tone, raw, hl: (m ? m[2] : note) || note };
+}
 
 export function detectPlatform(url) {
   let h = '';

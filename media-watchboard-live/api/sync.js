@@ -1,4 +1,4 @@
-import { cronAuthed, dashAuthed, readBody, hgetall, hset, redis, KEYS, detectPlatform } from '../lib/util.js';
+import { cronAuthed, dashAuthed, readBody, hgetall, hset, redis, KEYS, detectPlatform, parseLabel } from '../lib/util.js';
 
 // Receives the Claude board's channel documents and mirrors them into the database,
 // so the Vercel site shows the same channels, flags and notes. The Claude board is the master copy.
@@ -40,14 +40,31 @@ export default async function handler(req, res) {
     const b = await readBody(req);
     const incoming = (Array.isArray(b.channels) ? b.channels : []).filter(c => c && clean(c.id, 80)).slice(0, 500);
     const all = await hgetall(KEYS.channels);
-    let written = 0;
+    let written = 0, logged = 0;
+    // Permanent log of political items (the channel history only keeps the latest few).
+    let known = {};
+    try { known = await hgetall(KEYS.items); } catch {}
     for (const c of incoming) {
       const id = clean(c.id, 80);
-      await hset(KEYS.channels, id, build(c, all[id] || {}));
+      const next = build(c, all[id] || {});
+      await hset(KEYS.channels, id, next);
       written++;
+      for (const h of next.history) {
+        if (!h || h.type === 'checked' || !h.t) continue;
+        const lab = parseLabel(h);
+        if (!lab.camp || !lab.hl) continue;
+        const iid = `${id}|${h.t}`;
+        const prev = known[iid];
+        const url = clean(h.url, 500);
+        if (prev && prev.url === url) continue;
+        const rec = { id: iid, cid: id, name: next.name, platform: next.platform, t: Number(h.t), hl: clean(lab.hl, 240), camp: lab.camp, tone: lab.tone, raw: clean(lab.raw, 40), url, seen: prev?.seen || Date.now() };
+        await hset(KEYS.items, iid, rec);
+        known[iid] = rec;
+        logged++;
+      }
     }
     await redis('SET', 'mw:sync', JSON.stringify({ at: Date.now(), count: written }));
-    res.status(200).json({ ok: true, written });
+    res.status(200).json({ ok: true, written, logged });
   } catch (e) {
     res.status(500).json({ error: String(e.message || e) });
   }

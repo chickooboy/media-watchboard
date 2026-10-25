@@ -9,221 +9,294 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f4f5f7;--panel:#fff;--panel2:#f8f9fb;--ink:#12151c;--mute:#586074;--line:#e3e6ee;--accent:#2b3a8f;--accent-ink:#fff;
-  --nda:#c2570c;--opp:#2457c5;--oth:#0b8a6f;
+  --bg:#f3f4f8;--panel:#fff;--panel2:#f7f8fb;--ink:#12151c;--mute:#586074;--line:#e3e6ee;--accent:#2b3a8f;--accent-ink:#fff;--accent-soft:#e8ebfb;
+  --nda:#c2570c;--opp:#2457c5;--oth:#0b8a6f;--tw:#7a3fb5;
   --nda-bg:#fdeee0;--opp-bg:#e5edfc;--oth-bg:#def4ee;
   --live:#c8202c;--live-bg:#fde8ea;--new:#1d6fd8;--new-bg:#e4f0fd;--due:#a35f00;--due-bg:#fdf1dc;--ok:#1f8a4c;--ok-bg:#e3f5ea;--idle:#6b7280;--idle-bg:#eceef2;
+  --side:#10142b;--side-ink:#c9cfe8;--side-on:#ffffff14;
   --sh:0 1px 2px rgba(18,21,28,.06),0 4px 14px rgba(18,21,28,.05);
   --sans:'Inter',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,monospace;
 }
 :root[data-theme=dark]{
-  --bg:#0e1118;--panel:#161a23;--panel2:#1b2030;--ink:#eceff6;--mute:#9aa3b6;--line:#272d3a;--accent:#9aa5ff;--accent-ink:#0e1118;
-  --nda:#d9772f;--opp:#5b8def;--oth:#26a085;
+  --bg:#0b0e15;--panel:#151925;--panel2:#1a2030;--ink:#eceff6;--mute:#9aa3b6;--line:#262c3a;--accent:#9aa5ff;--accent-ink:#0e1118;--accent-soft:#1d2342;
+  --nda:#e08a45;--opp:#6b9bf2;--oth:#2fb094;--tw:#b88ae6;
   --nda-bg:#3a2411;--opp-bg:#16264a;--oth-bg:#0f2f29;
-  --live:#ff6b75;--live-bg:#3a161b;--new:#6aaeff;--new-bg:#14283f;--due:#f0b04c;--due-bg:#36290f;--ok:#4cc884;--ok-bg:#13301f;--idle:#9aa3b6;--idle-bg:#222836;--sh:none;}
+  --live:#ff6b75;--live-bg:#3a161b;--new:#6aaeff;--new-bg:#14283f;--due:#f0b04c;--due-bg:#36290f;--ok:#4cc884;--ok-bg:#13301f;--idle:#9aa3b6;--idle-bg:#222836;
+  --side:#0a0c14;--side-ink:#aab2cc;--sh:none;}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 a{color:inherit}
-.wrap{max-width:1280px;margin:0 auto;padding:0 18px 56px}
-/* top bar */
-.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.top .in{max-width:1280px;margin:0 auto;padding:10px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
-.logo{width:34px;height:34px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700}
-.brand h1{font-size:17px;margin:0;line-height:1.1;letter-spacing:-.2px}
-.brand small{display:block;color:var(--mute);font-size:12px}
-.pulse{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--mute);background:var(--panel);border:1px solid var(--line);padding:5px 11px;border-radius:99px}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);position:relative;flex:none}
+.hide{display:none!important}
+.mono{font-family:var(--mono)}
+/* ---------- shell ---------- */
+.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+.side{background:var(--side);color:var(--side-ink);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:16px 12px;gap:6px;z-index:30}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 14px}
+.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#6f7dff,#3a4bd0);color:#fff;display:grid;place-items:center;font-weight:700}
+.brand b{display:block;color:#fff;font-size:15px;line-height:1.15}
+.brand small{font-size:11.5px;color:#8c95b6}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:11px;border:0;background:transparent;color:var(--side-ink);padding:9px 11px;border-radius:9px;font-weight:500;font-size:13.5px;text-align:left;position:relative}
+.nav button:hover{background:var(--side-on);color:#fff}
+.nav button.on{background:var(--side-on);color:#fff}
+.nav button.on::before{content:"";position:absolute;left:-12px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:#8f9bff}
+.nav svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav .bd{margin-left:auto;font:600 11px var(--sans);background:#e0453a;color:#fff;border-radius:99px;padding:0 7px;min-width:20px;text-align:center}
+.nav .bd.soft{background:#ffffff22;color:#dfe3f7}
+.side .grow{flex:1}
+.pulse{display:flex;gap:9px;align-items:flex-start;padding:10px;border-radius:10px;background:var(--side-on);font-size:12px;color:#c3c9e2}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ok);position:relative;flex:none;margin-top:5px}
 .dot.ok::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--ok);opacity:0;animation:ring 2.4s infinite}
 .dot.bad{background:var(--live)}.dot.warn{background:var(--due)}
 @keyframes ring{0%{opacity:.6;transform:scale(.6)}100%{opacity:0;transform:scale(1.5)}}
+.sidebtns{display:flex;gap:6px}
+.sidebtns .sb{flex:1;border:1px solid #ffffff22;background:transparent;color:#c9cfe8;border-radius:9px;padding:7px;font-size:12.5px}
+.sidebtns .sb:hover{background:var(--side-on)}
+.main{min-width:0}
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .in{padding:12px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.topbar h1{font-size:19px;margin:0;letter-spacing:-.3px;margin-right:auto}
+.topbar h1 small{display:block;font-size:12px;font-weight:400;color:var(--mute);letter-spacing:0}
+.page{padding:20px 24px 64px;max-width:1440px}
+.menubtn{display:none}
+/* ---------- primitives ---------- */
 .btn{border:1px solid var(--line);background:var(--panel);padding:7px 12px;border-radius:9px;font-weight:500;font-size:13px;display:inline-flex;gap:6px;align-items:center;text-decoration:none;transition:.15s}
-.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.btn:hover{border-color:var(--accent)}
 .btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .btn.sm{padding:4px 9px;font-size:12.5px}
 .btn.ghost{background:transparent}
-.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn.bad{color:var(--live)}
+.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,input:focus-visible,select:focus-visible,.nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-/* hero summary */
-.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin:18px 0 14px}
-@media(max-width:900px){.hero{grid-template-columns:1fr}}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh)}
-.card h2{font-size:12px;letter-spacing:.7px;text-transform:uppercase;color:var(--mute);margin:0;font-weight:600}
+.card>h2,.card .hd h2{font-size:11.5px;letter-spacing:.7px;text-transform:uppercase;color:var(--mute);margin:0;font-weight:600}
 .pad{padding:16px 18px}
-.big{display:flex;align-items:baseline;gap:10px;margin:6px 0 12px}
-.big b{font-size:44px;line-height:1;letter-spacing:-1.5px}
-.big span{color:var(--mute)}
-.camp{display:grid;grid-template-columns:92px 1fr 54px;gap:10px;align-items:center;padding:6px 0;border-radius:8px;cursor:pointer}
-.camp:hover{background:var(--panel2)}
-.camp.on{background:var(--panel2);outline:1px solid var(--line)}
-.camp .nm{font-weight:600;display:flex;align-items:center;gap:7px}
-.sw{width:10px;height:10px;border-radius:3px;flex:none}
-.bars{display:flex;height:14px;border-radius:5px;overflow:hidden;gap:2px;background:var(--idle-bg)}
-.bars i{display:block;height:100%;min-width:0;transition:width .5s}
-.bars i.neg{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.55) 0 2px,transparent 2px 5px)}
-.camp .n{text-align:right;font:500 12.5px var(--mono);color:var(--mute)}
-.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:8px;flex-wrap:wrap}
-.legend i{display:inline-block;width:18px;height:9px;border-radius:3px;background:var(--mute);vertical-align:middle;margin-right:5px}
-.legend i.neg{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.7) 0 2px,transparent 2px 5px)}
-.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
-.kpi{border:1px solid var(--line);border-radius:11px;padding:10px 12px;text-align:left;background:var(--panel2);transition:.15s}
-.kpi:hover{border-color:var(--accent)}
-.kpi.on{outline:2px solid var(--accent)}
-.kpi b{display:block;font-size:26px;line-height:1.1;letter-spacing:-.6px}
-.kpi span{font-size:12px;color:var(--mute);display:flex;gap:5px;align-items:center}
-/* toolbar */
-.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.hd .sub{font-size:12px;color:var(--mute)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g21{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.g12{grid-template-columns:minmax(0,1fr) minmax(0,1.4fr)}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:1100px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g21,.g12{grid-template-columns:1fr}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
 .seg button{border:0;background:transparent;padding:5px 12px;border-radius:7px;font-weight:500;font-size:13px;color:var(--mute)}
 .seg button.on{background:var(--accent);color:var(--accent-ink)}
 .chip{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:4px 11px;font-size:12.5px;display:inline-flex;gap:6px;align-items:center;transition:.15s}
 .chip:hover{border-color:var(--accent)}
 .chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.search{flex:1;min-width:160px;max-width:340px;padding:8px 12px 8px 34px;border:1px solid var(--line);border-radius:10px;background:var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%239aa3b6' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") 10px 50% no-repeat}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-/* main grid */
-.main{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
-@media(max-width:980px){.main{grid-template-columns:1fr}.main>section.hidem{display:none}}
-.mtabs{display:none;margin-bottom:12px}
-@media(max-width:980px){.mtabs{display:inline-flex}}
-.sechead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px 10px}
-.sechead b{font-size:15px}
+.search{flex:1;min-width:160px;max-width:300px;padding:8px 12px 8px 34px;border:1px solid var(--line);border-radius:10px;background:var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%239aa3b6' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") 10px 50% no-repeat}
+input[type=text],input[type=number],input[type=search],select,textarea{border:1px solid var(--line);border-radius:9px;background:var(--bg);padding:8px 10px;width:100%}
+label{display:block;font-size:12.5px;color:var(--mute);margin:9px 0 3px}
+textarea{min-height:100px;font:13px var(--mono)}
 .cnt{font:500 12px var(--mono);color:var(--mute)}
-/* feed */
-.feed{padding:0 10px 10px}
-.fi{display:grid;grid-template-columns:4px 1fr;gap:12px;padding:12px 10px;border-radius:11px;text-decoration:none;color:inherit;transition:.15s;animation:in .35s both}
-.fi:hover{background:var(--panel2)}
-.fi.nolink{cursor:default}
-@keyframes in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-.fi .stripe{border-radius:4px}
-.fi .hl{font-weight:600;font-size:15px;line-height:1.35;margin:4px 0 5px}
-.fi .m{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--mute)}
-.fresh{font:600 10.5px var(--sans);letter-spacing:.5px;text-transform:uppercase;background:var(--new-bg);color:var(--new);padding:1px 7px;border-radius:99px}
+.empty{padding:30px 18px;text-align:center;color:var(--mute)}
+.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:3px}
 .badge{display:inline-flex;align-items:center;gap:5px;font-weight:600;font-size:12px;padding:2px 9px;border-radius:99px}
-.badge.nda{background:var(--nda-bg);color:var(--nda)}.badge.opp{background:var(--opp-bg);color:var(--opp)}.badge.oth{background:var(--oth-bg);color:var(--oth)}
-.badge.none{background:var(--idle-bg);color:var(--idle)}
-.tone{font-weight:600;font-size:12px;color:var(--ink);display:inline-flex;gap:3px;align-items:center}
+.badge.nda{background:var(--nda-bg);color:var(--nda)}.badge.opp{background:var(--opp-bg);color:var(--opp)}.badge.oth{background:var(--oth-bg);color:var(--oth)}.badge.none{background:var(--idle-bg);color:var(--idle)}
 .plat{font:500 10.5px var(--mono);padding:1px 6px;border-radius:5px;background:var(--idle-bg);color:var(--mute);text-transform:uppercase}
-.go{margin-left:auto;font-weight:600;font-size:12px;color:var(--accent)}.go.ch{color:var(--mute);font-weight:500}
-.daysep{font:600 11px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--mute);padding:12px 10px 4px}
-/* channels */
-.chl{padding:0 8px 8px;max-height:calc(100vh - 220px);min-height:200px;overflow:auto}
-.ch{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center;padding:9px 10px;border-radius:10px}
-.ch:hover{background:var(--panel2)}
-.sd{width:10px;height:10px;border-radius:50%}
-.sd.live{background:var(--live)}.sd.new{background:var(--new)}.sd.overdue{background:var(--due)}.sd.unchecked{background:var(--idle)}.sd.ok{background:var(--ok)}
-.sd.live{animation:bl 1.2s infinite}@keyframes bl{50%{opacity:.3}}
-.ch .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ch .s{font-size:12px;color:var(--mute);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.ch .a{display:flex;gap:4px;opacity:.0;transition:.15s}
-.ch:hover .a,.ch:focus-within .a{opacity:1}
-@media(hover:none){.ch .a{opacity:1}}
-.ico{border:1px solid var(--line);background:var(--panel);border-radius:8px;width:30px;height:30px;display:grid;place-items:center;text-decoration:none;font-size:14px}
-.ico:hover{border-color:var(--accent)}
+.tone{font-weight:600;font-size:12px}
+.fresh{font:600 10.5px var(--sans);letter-spacing:.5px;text-transform:uppercase;background:var(--new-bg);color:var(--new);padding:1px 7px;border-radius:99px}
+.sw{width:10px;height:10px;border-radius:3px;flex:none;display:inline-block}
+.sd{width:10px;height:10px;border-radius:50%;display:inline-block}
+.sd.live{background:var(--live);animation:bl 1.2s infinite}.sd.new{background:var(--new)}.sd.overdue{background:var(--due)}.sd.unchecked{background:var(--idle)}.sd.ok{background:var(--ok)}
+@keyframes bl{50%{opacity:.3}}
 .stt{font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:99px}
 .stt.live{background:var(--live-bg);color:var(--live)}.stt.new{background:var(--new-bg);color:var(--new)}.stt.overdue{background:var(--due-bg);color:var(--due)}.stt.unchecked{background:var(--idle-bg);color:var(--idle)}.stt.ok{background:var(--ok-bg);color:var(--ok)}
-/* panels */
-.panel{padding:16px 18px;margin-bottom:14px}
-.panel textarea{width:100%;min-height:110px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font:13px var(--mono)}
-.panel label{display:block;font-size:12.5px;color:var(--mute);margin:9px 0 3px}
-.panel input,.panel select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--bg)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.hide{display:none!important}
-.empty{padding:34px 18px;text-align:center;color:var(--mute)}
-.empty b{display:block;color:var(--ink);font-size:15px;margin-bottom:3px}
-.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:13.5px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.25)}
-.drawer{position:fixed;right:16px;bottom:16px;width:min(420px,calc(100vw - 32px));z-index:40;box-shadow:0 12px 40px rgba(0,0,0,.3);max-height:calc(100vh - 32px);overflow:auto}
-footer{color:var(--mute);font-size:12px;margin-top:18px;text-align:center}
+/* KPI */
+.kpi{padding:14px 16px}
+.kpi .lbl{font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--mute);font-weight:600}
+.kpi .val{font-size:32px;font-weight:700;letter-spacing:-1px;line-height:1.15;margin:3px 0}
+.kpi .dl{font-size:12.5px;color:var(--mute)}
+.up{color:var(--ok)}.down{color:var(--live)}
+.spark{display:block;width:100%;height:36px;margin-top:6px}
+/* camp bars */
+.camp{display:grid;grid-template-columns:96px 1fr 62px;gap:10px;align-items:center;padding:6px 6px;border-radius:8px;cursor:pointer}
+.camp:hover{background:var(--panel2)}.camp.on{background:var(--panel2);outline:1px solid var(--line)}
+.camp .nm{font-weight:600;display:flex;align-items:center;gap:7px}
+.bars{display:flex;height:14px;border-radius:5px;overflow:hidden;gap:2px;background:var(--idle-bg)}
+.bars i{display:block;height:100%;transition:width .5s}
+.bars i.neg{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.55) 0 2px,transparent 2px 5px)}
+.camp .n{text-align:right;font:500 12.5px var(--mono);color:var(--mute)}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:18px;height:9px;border-radius:3px;background:var(--mute);vertical-align:middle;margin-right:5px}
+.legend i.neg{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.7) 0 2px,transparent 2px 5px)}
+/* feed */
+.fi{display:grid;grid-template-columns:4px 1fr auto;gap:12px;padding:12px 10px;border-radius:11px;color:inherit;transition:.15s;animation:in .35s both;align-items:start}
+.fi:hover{background:var(--panel2)}
+@keyframes in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.fi .stripe{border-radius:4px;align-self:stretch}
+.fi .hl{font-weight:600;font-size:15px;line-height:1.35;margin:2px 0 5px;text-decoration:none;display:block}
+.fi .hl:hover{text-decoration:underline}
+.fi .m{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--mute)}
+.fi .acts{display:flex;gap:4px}
+.ico{border:1px solid var(--line);background:var(--panel);border-radius:8px;width:30px;height:30px;display:grid;place-items:center;text-decoration:none;font-size:14px;line-height:1}
+.ico:hover{border-color:var(--accent)}
+.ico.on{color:#e3a008;border-color:#e3a008}
+.tag{font-size:11.5px;padding:1px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:500}
+.daysep{font:600 11px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:var(--mute);padding:12px 10px 4px}
+/* tables */
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--mute);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-weight:600;white-space:nowrap;cursor:pointer;user-select:none}
+table.t th.nos{cursor:default}
+table.t td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.t tr:hover td{background:var(--panel2)}
+table.t td.num,table.t th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tscroll{overflow:auto}
+.mini{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--idle-bg);min-width:90px}
+.mini i{display:block;height:100%}
+.lean{position:relative;height:8px;background:var(--idle-bg);border-radius:4px;min-width:90px}
+.lean::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--mute)}
+.lean i{position:absolute;top:0;bottom:0;border-radius:4px}
+/* charts */
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart text{font:10.5px var(--sans);fill:var(--mute)}
+.chart .gl{stroke:var(--line);stroke-width:1}
+.heat{display:grid;gap:3px;font-size:12px}
+.heat .c{padding:7px 4px;text-align:center;border-radius:6px;font-variant-numeric:tabular-nums;background:var(--idle-bg);color:var(--mute)}
+.heat .h{background:transparent;font-weight:600;color:var(--mute);font-size:11px}
+.heat .r{text-align:left;background:transparent;color:var(--ink);padding-left:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* clusters, lists */
+.cl{padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--panel)}
+.cl .hl{font-weight:600;margin-bottom:6px}
+.cl .src{display:flex;gap:6px;flex-wrap:wrap}
+.cl .src a{font-size:12px;padding:2px 9px;border-radius:99px;border:1px solid var(--line);text-decoration:none;display:inline-flex;gap:5px;align-items:center}
+.cl .src a:hover{border-color:var(--accent)}
+.cl .src span.x{font-size:12px;padding:2px 9px;border-radius:99px;border:1px dashed var(--line);display:inline-flex;gap:5px;align-items:center;color:var(--mute)}
+.li{display:flex;gap:10px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line)}
+.li:last-child{border:0}
+.li .grow{flex:1;min-width:0}
+.li .nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank{font:600 12px var(--mono);color:var(--mute);width:22px}
+.warnbox{border:1px solid var(--due);background:var(--due-bg);color:var(--due);border-radius:12px;padding:10px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start}
+.okbox{border:1px solid var(--ok);background:var(--ok-bg);color:var(--ok);border-radius:12px;padding:10px 14px;font-size:13px}
+.drawer{position:fixed;right:16px;bottom:16px;width:min(420px,calc(100vw - 32px));z-index:60;box-shadow:0 12px 40px rgba(0,0,0,.3);max-height:calc(100vh - 32px);overflow:auto}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:13.5px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.report{padding:26px 30px;max-width:860px}
+.report h1{font-size:22px;margin:0 0 4px}.report h3{font-size:14px;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);margin:20px 0 6px}
+.report p,.report li{font-size:14px}.report ul{padding-left:20px;margin:6px 0}
+.report a{color:var(--accent)}
+/* responsive shell */
+@media(max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;width:250px;transform:translateX(-100%);transition:.2s}
+  .side.open{transform:none;box-shadow:0 0 0 100vw rgba(0,0,0,.45)}
+  .menubtn{display:inline-flex}
+  .page{padding:16px 14px 60px}.topbar .in{padding:10px 14px}
+}
+@media print{
+  .side,.topbar,.noprint{display:none!important}.shell{display:block}.page{padding:0}.card{box-shadow:none;border:0}body{background:#fff;color:#000}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="top"><div class="in">
-  <div class="brand"><div class="logo" aria-hidden="true">G</div><div><h1>Goa Media Watch</h1><small>Political news monitor · YouTube · X · Instagram</small></div></div>
-  <div class="pulse" id="pulse" title="Last scan"><span class="dot" id="dot"></span><span id="pulseTxt">Connecting…</span></div>
-  <div class="row">
-    <button class="btn sm" id="snd" title="Beep when something new arrives">🔔 Sound off</button>
-    <button class="btn sm" id="theme" title="Light / dark">◐ Theme</button>
-    <button class="btn sm" id="csv">⬇ Export</button>
-    <button class="btn pri sm" id="addBtn">+ Add channels</button>
-  </div>
-</div></div>
-
-<div id="app" class="wrap">
-  <div id="addPanel" class="card panel hide" style="margin-top:16px">
-    <b>Add channels</b> <span class="cnt">one link per line · optional name first: <code>Name, https://…</code></span>
-    <textarea id="addTxt" placeholder="https://www.youtube.com/@channel&#10;Goa Daily, https://x.com/goadaily"></textarea>
-    <div class="row" style="margin-top:8px"><button class="btn pri" id="addGo">Add</button><button class="btn" id="addCancel">Cancel</button><span class="cnt" id="addMsg"></span></div>
-  </div>
-
-  <div class="hero">
-    <div class="card pad">
-      <h2>Political coverage by camp</h2>
-      <div class="big"><b id="totItems">0</b><span id="totLbl">items in range</span></div>
-      <div id="camps"></div>
-      <div class="legend"><span><i></i>Positive</span><span><i class="neg"></i>Negative</span><span>Click a camp to filter</span></div>
-    </div>
-    <div class="card pad">
-      <h2>Channel status</h2>
-      <div class="kpis" id="kpis"></div>
-    </div>
-  </div>
-
-  <div class="toolbar">
-    <div class="seg" id="range" role="group" aria-label="Time range"><button data-r="6">6 h</button><button data-r="24" class="on">24 h</button><button data-r="168">7 days</button><button data-r="0">All</button></div>
-    <input class="search" id="q" type="search" placeholder="Search headlines or channels" aria-label="Search">
-    <div class="row" id="tones"></div>
-    <div class="row" id="plats"></div>
-    <button class="btn sm ghost hide" id="clear">✕ Clear filters</button>
-  </div>
-  <div class="mtabs seg" id="mtabs"><button data-v="feed" class="on">Political feed</button><button data-v="chan">Channels</button></div>
-
+<div class="shell">
+  <aside class="side" id="side" aria-label="Main navigation">
+    <div class="brand"><div class="logo" aria-hidden="true">G</div><div><b>Goa Media Watch</b><small>Political news monitor</small></div></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="grow"></div>
+    <div class="pulse" id="pulse"><span class="dot" id="dot"></span><span id="pulseTxt">Connecting…</span></div>
+    <div class="sidebtns"><button class="sb" id="snd" title="Beep when something new arrives">🔔 Sound off</button><button class="sb" id="theme" title="Light / dark">◐ Theme</button></div>
+  </aside>
   <div class="main">
-    <section class="card" id="secFeed">
-      <div class="sechead"><b>Political feed</b><span class="cnt" id="feedCnt"></span></div>
-      <div class="feed" id="feed"></div>
-    </section>
-    <section class="card hidem" id="secChan">
-      <div class="sechead"><b>Channels</b><span class="row"><span class="cnt" id="chCnt"></span><button class="btn sm hide" id="ackAll"></button></span></div>
-      <div class="chl" id="list"></div>
-    </section>
+    <header class="topbar"><div class="in">
+      <button class="btn sm menubtn" id="menu" aria-label="Menu">☰</button>
+      <h1 id="title">Overview<small id="subtitle"></small></h1>
+      <div class="seg" id="range" role="group" aria-label="Time range"><button data-r="6">6 h</button><button data-r="24">24 h</button><button data-r="72">3 d</button><button data-r="168">7 d</button><button data-r="720">30 d</button><button data-r="0">All</button></div>
+      <input class="search" id="q" type="search" placeholder="Search headlines, people, channels" aria-label="Search">
+      <div class="row" id="plats"></div>
+    </div></header>
+    <div class="page" id="view"></div>
   </div>
-  <footer>Auto-refreshes every 15 seconds. Labels (camp and tone) are the monitor's judgement — spot-check before you quote them.</footer>
 </div>
-
-<div id="edit" class="card panel drawer hide"></div>
+<div id="edit" class="card pad drawer hide"></div>
 <div id="toast" class="toast hide"></div>
 
 <script>
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeUrl=u=>/^https?:\/\//i.test(u||'')?u:'';
+const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
+const jget=(k,d)=>{try{return JSON.parse(ls.get(k))??d}catch{return d}};
 const PLAT={youtube:'YouTube',x:'X',instagram:'Instagram',facebook:'Facebook',tiktok:'TikTok',linkedin:'LinkedIn',telegram:'Telegram',reddit:'Reddit',other:'Other'};
 const ST={live:'Live now',new:'New activity',overdue:'Check due',unchecked:'Not checked',ok:'Up to date'};
 const RANK={live:0,new:1,overdue:2,unchecked:3,ok:4};
 const CAMPS=[['nda','NDA'],['opp','Opposition'],['oth','Others']];
-const KEY=''; // dashboard is open
-const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}}};
-let D={channels:[],auto:{},meta:null},F={status:'',tag:'',plat:'',q:'',camp:'',tone:'',range:+(ls.get('mw.range')||24)},sound=ls.get('mw.sound')==='1',prevSig=null,SYNC=null;
+const H=3600e3,DAY=86400e3;
+const IC={
+ overview:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+ feed:'<svg viewBox="0 0 24 24"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.2"/></svg>',
+ channels:'<svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="m9 10 5 2.5L9 15z"/><path d="M8 3l4 3 4-3"/></svg>',
+ analytics:'<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+ topics:'<svg viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg>',
+ stories:'<svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="m8 7 8 1M7 8l4 8M17 10l-4 6"/></svg>',
+ alerts:'<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 0 0 4 0"/></svg>',
+ reports:'<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg>',
+ settings:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5a7 7 0 0 0 0 2.4l-2 1.5 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg>'
+};
+const TABS=[['overview','Overview'],['feed','Live feed'],['channels','Channels'],['analytics','Analytics'],['topics','Topics & people'],['stories','Story tracker'],['alerts','Alerts'],['reports','Reports'],['settings','Settings']];
+
+/* ---------- knowledge: topics, people, parties ---------- */
+const TOPICS=[
+ ['SIR / voter rolls',/\b(sir|voter|blo|electoral|election commission|enrol|voters?\b)/i],
+ ['Goy Rakhonn Yatra',/goy rakh|rakhonn|rakhan/i],
+ ['Alliances & tie-ups',/alliance|tie-?up|pre-?poll|seat.?shar|coalition|joins? hands/i],
+ ['2027 Assembly polls',/2027|assembly poll|assembly election|candidate|contest(s|ing)? from|ticket/i],
+ ['Defections & joinings',/\bjoin(s|ed|ing)?\b|defect|quits?|switch(es|ed)? (to|over)|gharvapsi/i],
+ ['ST reservation / tribals',/\bst\b|utaa|reservation|tribal|adivasi|gawda|kunbi|velip/i],
+ ['Corruption & probes',/corrupt|scam|audit|probe|inquiry|irregularit|allege/i],
+ ['Land & mutation',/mutation|land|conversion|zoning|\btcp\b|encroach/i],
+ ['Tenders & Panaji projects',/tender|smart city|casino|captain of ports|\bcop\b|\bppp\b|terminal|people for pan/i],
+ ['Language & culture',/konkani|marathi|kannada|language|mann ki baat|shuddhikaran|inquisition/i],
+ ['Law & order',/attack|gundagardi|zuarinagar|cortalim|murder|arrest|police torture/i],
+ ['Mhadei & environment',/mhadei|mining|ethanol|environment|forest|coastal|\bmpa\b|beach/i],
+ ['Welfare & schemes',/scheme|subsidy|guarantee|₹\s?3,?000|monthly|bus pass|policy/i],
+ ['Transport & infrastructure',/traffic|bus|kadamba|road|bridge|airport|mopa/i]
+];
+const PARTIES=[['BJP',/\bbjp\b|bharatiya janata/i],['Congress',/\bcong(ress)?\b|\bINC\b/i],['AAP',/\baap\b|aam aadmi|kejriwal/i],['RGP',/\brgp\b|revolutionary goans|manoj parab/i],['GFP',/\bgfp\b|goa forward/i],['MGP',/\bmgp\b|maharashtrawadi|dhavalikar/i],['TMC',/\btmc\b|trinamool/i],['RSS',/\brss\b/i]];
+const PEOPLE=[['Pramod Sawant',/sawant|\bcm\b/i],['Vijai Sardesai',/sardesai/i],['Viresh Borkar',/borkar/i],['Digambar Kamat',/kamat/i],['Yuri Alemao',/alemao/i],['Amit Patkar',/patkar/i],['Manoj Parab',/parab/i],['Michael Lobo',/lobo/i],['Vishwajit Rane',/\brane\b|vishwajit/i],['Sudin Dhavalikar',/sudin|dhavalikar/i],['Rohan Khaunte',/khaunte/i],['Babush Monserrate',/babush|monserrate/i],['Utpal Parrikar',/utpal|parrikar/i],['Sanjay Barde',/barde/i],['Mariano Rodrigues',/mariano/i],['Samil Volvaiker',/volvaiker/i],['Roshan Redkar',/redkar/i],['Ajay Kholkar',/kholkar/i],['Damu Naik',/damu naik/i],['Capt. Viriato Fernandes',/viriato/i],['Arvind Kejriwal',/kejriwal/i],['Rahul Gandhi',/rahul gandhi/i],['Narendra Modi',/\bmodi\b/i]];
+const STOP=new Set('the a an and or of to in on for at by with from as is are was were be been it its this that these those after over into amid says said say seeks seek slams hits welcomes welcome urges claims claim goa goan goans news new about up out his her their our us we he she they who whom has have had will would can could may might not no than then also but if so do does did more most all any some other such only own same too very just'.split(' '));
+
+/* ---------- state ---------- */
+let D={channels:[],auto:{},meta:null},IT=[],ITMETA=jget('mw.starsLocal',{}),SRVITEMS=0;
+let F={range:+(ls.get('mw.range')??24),q:'',plat:'',camp:'',tone:'',chan:'',topic:'',person:'',star:false};
+let TAB=(location.hash.replace(/^#\/?/,'')||'overview').split('?')[0];
+if(!TABS.some(t=>t[0]===TAB))TAB='overview';
+let sound=ls.get('mw.sound')==='1',prevSig=null,SORT={k:'n',d:-1},ENR=null;
+const NOW=()=>Date.now();
 
 function theme(t){document.documentElement.dataset.theme=t;ls.set('mw.theme',t)}
 theme(ls.get('mw.theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
-$('#theme').onclick=()=>theme(document.documentElement.dataset.theme==='dark'?'light':'dark');
+$('#theme').onclick=()=>{theme(document.documentElement.dataset.theme==='dark'?'light':'dark');render()};
 
+/* ---------- helpers ---------- */
 function detect(u){try{const h=new URL(u).hostname.replace(/^www\./,'');if(/youtube\.com$|^youtu\.be$/.test(h))return'youtube';if(/instagram\.com$/.test(h))return'instagram';if(/(^|\.)(x|twitter)\.com$/.test(h))return'x';if(/facebook\.com$/.test(h))return'facebook'}catch{}return'other'}
 function nameFrom(u){try{const p=new URL(u).pathname.split('/').filter(Boolean);return(p[0]||'').replace(/^@/,'')||new URL(u).hostname}catch{return u}}
 function rel(t,now){if(!t)return'never';const s=Math.max(0,(now-t)/1000);if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' h ago';return Math.floor(s/86400)+' d ago'}
 function clock(t){return new Date(t).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
 function dayLabel(t,now){const d=new Date(t),n=new Date(now);const k=x=>x.toDateString();if(k(d)===k(n))return'Today';const y=new Date(n);y.setDate(y.getDate()-1);if(k(d)===k(y))return'Yesterday';return d.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'})}
+function dkey(t){const d=new Date(t);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 function api(path,body){return fetch(path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||r.status);return j})}
-function toast(t){const e=$('#toast');e.textContent=t;e.classList.remove('hide');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hide'),2600)}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.remove('hide');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hide'),2800)}
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+const PS={youtube:'YT',x:'X',instagram:'IG',facebook:'FB',tiktok:'TT',linkedin:'LI',telegram:'TG',reddit:'RD',other:''};
+function cn(id){const c=D.channels.find(c=>c.id===id);if(!c)return id;return c.name+(PS[c.platform]?' · '+PS[c.platform]:'')}
+const campName=k=>(CAMPS.find(x=>x[0]===k)||[,'Unlabelled'])[1];
+const toneTxt=t=>t==='pos'?'▲ Positive':t==='neg'?'▼ Negative':t==='twist'?'◆ Twisted':'';
+const fmtRange=r=>r===0?'all time':r>=720?'last 30 days':r>=168?'last 7 days':r>=72?'last 3 days':'last '+r+' h';
+function parseIncl(s){s=String(s||'').trim();if(!s)return{camp:'',tone:''};const l=s.toLowerCase();return{camp:/^nda/.test(l)?'nda':/^opp/.test(l)?'opp':/^oth/.test(l)?'oth':'',tone:/positive/.test(l)?'pos':/negative/.test(l)?'neg':/twist/.test(l)?'twist':''}}
+// net advantage: +1 favours NDA, -1 favours Opposition
+const fav=x=>x.camp==='nda'?(x.tone==='pos'?1:x.tone==='neg'?-1:0):x.camp==='opp'?(x.tone==='pos'?-1:x.tone==='neg'?1:0):0;
 
 function status(c,now){
   const a=D.auto[c.id];
-  if(a&&a.live)return'live';
-  if(c.flag==='live')return'live';
+  if(a&&a.live)return'live';if(c.flag==='live')return'live';
   if(a&&a.newVideo&&a.newVideo.detectedAt>(c.ackAt||0))return'new';
   if(c.flag==='new')return'new';
   if(isAuto(c,now))return'ok';
@@ -233,136 +306,546 @@ function status(c,now){
 }
 function isAuto(c,now){const a=D.auto[c.id];return c.platform==='youtube'&&a&&a.checkedAt&&now-a.checkedAt<20*60e3}
 
-/* ---- labels: "NDA Positive" / "[Opposition Negative] headline" ---- */
-function parseIncl(s){
-  s=String(s||'').trim();if(!s)return{camp:'',tone:''};
-  const l=s.toLowerCase();
-  const camp=/^nda/.test(l)?'nda':/^opp/.test(l)?'opp':/^oth/.test(l)?'oth':'';
-  const tone=/positive/.test(l)?'pos':/negative/.test(l)?'neg':/twist/.test(l)?'twist':'';
-  return{camp,tone};
+/* ---------- data: items, enrichment ---------- */
+function enrich(x){
+  const s=x.hl;
+  x.topics=TOPICS.filter(t=>t[1].test(s)).map(t=>t[0]);
+  x.parties=PARTIES.filter(t=>t[1].test(s)).map(t=>t[0]);
+  x.people=PEOPLE.filter(t=>t[1].test(s)).map(t=>t[0]);
+  x.ent=[...x.parties,...x.people];
+  x.tok=tokens(s);
+  return x;
 }
-function items(){
-  const out=[],seen=new Set();
-  for(const c of D.channels){
-    for(const h of (c.history||[])){
-      if(h.type==='checked')continue;
-      const note=String(h.note||'').trim();if(!note)continue;
-      const m=note.match(/^\[([^\]]+)\]\s*(.*)$/);
-      const lab=parseIncl(h.incl||(m&&m[1])||'');if(!lab.camp)continue; // political items only
-      const key=c.id+'|'+note;if(seen.has(key))continue;seen.add(key);
-      out.push({c,t:h.t||0,url:safeUrl(h.url),hl:(m?m[2]:note)||note,...lab,raw:h.incl||(m&&m[1])||''});
-    }
-  }
-  return out.sort((a,b)=>b.t-a.t);
+function tokens(s){return new Set(String(s).toLowerCase().replace(/[^a-z0-9ऀ-ॿ ]+/g,' ').split(/\s+/).filter(w=>w.length>2&&!STOP.has(w)).map(w=>w.replace(/s$/,'')))}
+function buildItems(srv){
+  const byId=new Map(),chById=new Map(D.channels.map(c=>[c.id,c]));
+  const add=(c,h,fromSrv)=>{
+    const lab=fromSrv?{camp:h.camp,tone:h.tone,hl:h.hl,raw:h.raw}:(()=>{const note=String(h.note||'').trim();const m=note.match(/^\[([^\]]+)\]\s*(.*)$/);const p=parseIncl(h.incl||(m&&m[1])||'');return{...p,hl:(m?m[2]:note)||note,raw:h.incl||(m&&m[1])||''}})();
+    if(!lab.camp||!lab.hl)return;
+    const id=fromSrv?h.id:c.id+'|'+h.t;
+    const prev=byId.get(id);
+    const url=safeUrl(h.url)||(prev&&prev.url)||'';
+    byId.set(id,{id,cid:fromSrv?h.cid:c.id,c:c||{id:h.cid,name:h.name,platform:h.platform,url:''},name:c?c.name:h.name,platform:c?c.platform:h.platform,t:Number(h.t)||0,url,hl:lab.hl,camp:lab.camp,tone:lab.tone,raw:lab.raw});
+  };
+  for(const c of D.channels)for(const h of (c.history||[])){if(h.type==='checked'||!h.t)continue;add(c,h,false)}
+  for(const h of srv||[])add(chById.get(h.cid),h,true);
+  // collapse identical headline from same channel logged twice
+  const seen=new Set(),out=[];
+  for(const x of [...byId.values()].sort((a,b)=>b.t-a.t)){const k=x.cid+'|'+x.hl.toLowerCase();if(seen.has(k))continue;seen.add(k);out.push(enrich(x))}
+  return out;
 }
-const campName=k=>(CAMPS.find(x=>x[0]===k)||[,'Unlabelled'])[1];
-const toneTxt=t=>t==='pos'?'▲ Positive':t==='neg'?'▼ Negative':t==='twist'?'◆ Twisted':'';
+const isStar=id=>!!(ITMETA[id]&&ITMETA[id].star);
+async function toggleStar(id){
+  const v=!isStar(id);ITMETA[id]={...(ITMETA[id]||{}),star:v};ls.set('mw.starsLocal',JSON.stringify(ITMETA));render();
+  try{await api('/api/items',{action:'meta',id,star:v})}catch{}
+}
 
+/* clusters: group the same story across channels */
+function clusters(items){
+  const list=[...items].sort((a,b)=>a.t-b.t),cl=[];
+  for(const x of list){
+    let best=null,bs=0;
+    for(const c of cl){
+      if(x.t-c.last>48*H)continue;
+      for(const m of c.items){
+        const inter=[...x.tok].filter(w=>m.tok.has(w)).length;
+        const sim=inter/Math.max(1,Math.min(x.tok.size,m.tok.size)),jac=inter/Math.max(1,new Set([...x.tok,...m.tok]).size);
+        const shareEnt=x.ent.some(e=>m.ent.includes(e));
+        const ok=(inter>=3&&sim>=.5)||jac>=.45||(inter>=2&&shareEnt&&sim>=.6);
+        if(ok&&sim>bs){bs=sim;best=c}
+      }
+    }
+    if(best){best.items.push(x);best.last=Math.max(best.last,x.t)}
+    else cl.push({items:[x],first:x.t,last:x.t});
+  }
+  for(const c of cl){
+    c.items.sort((a,b)=>a.t-b.t);
+    c.chans=[...new Set(c.items.map(i=>i.cid))];
+    c.hl=c.items.reduce((a,b)=>b.hl.length>a.hl.length&&b.hl.length<120?b:a,c.items[0]).hl;
+    c.camps=[...new Set(c.items.map(i=>i.camp))];
+    c.score=c.chans.length*10+c.items.length;
+    c.id=c.items[0].id;
+  }
+  return cl.sort((a,b)=>b.last-a.last);
+}
+
+/* ---------- loading ---------- */
 async function load(){
   try{
-    const j=await api('/api/state');D=j;render();
-    if(!j.channels.length&&!load.seeded){load.seeded=1;const s=await fetch('/seed.json').then(r=>r.json()).catch(()=>[]);if(s.length){await api('/api/channels',{action:'import',channels:s});toast('Loaded starter channels');return load()}}
+    const [s,i]=await Promise.all([api('/api/state'),api('/api/items').catch(()=>null)]);
+    D=s;
+    if(i){SRVITEMS=(i.items||[]).length;ITMETA={...ITMETA,...(i.meta||{})}}
+    IT=buildItems(i?i.items:[]);
+    if(!D.channels.length&&!load.seeded){load.seeded=1;const sd=await fetch('/seed.json').then(r=>r.json()).catch(()=>[]);if(sd.length){await api('/api/channels',{action:'import',channels:sd});toast('Loaded starter channels');return load()}}
+    checkAlerts();
+    const ae=document.activeElement;if(!(ae&&ae.closest&&ae.closest('#view')&&/input|textarea|select/i.test(ae.tagName)))render();
   }catch(e){
     $('#dot').className='dot bad';$('#pulseTxt').textContent='Can’t reach the server: '+e.message;
   }
 }
 
-function filtered(now){
-  const q=F.q;
-  const all=items();
-  const inRange=all.filter(x=>!F.range||now-x.t<F.range*3600e3);
-  const base=inRange.filter(x=>(!F.plat||x.c.platform===F.plat)&&(!F.q||(x.hl+' '+x.c.name).toLowerCase().includes(q)));
-  return{all,inRange,base};
+/* ---------- filtering ---------- */
+function scoped(now,opt={}){
+  const q=F.q.toLowerCase();
+  return IT.filter(x=>
+    (!F.range||now-x.t<F.range*H)&&(!F.plat||x.platform===F.plat)&&
+    (!q||(x.hl+' '+x.name+' '+x.ent.join(' ')+' '+x.topics.join(' ')).toLowerCase().includes(q))&&
+    (opt.ignoreCamp||!F.camp||x.camp===F.camp)&&(opt.ignoreCamp||!F.tone||x.tone===F.tone)&&
+    (!F.chan||x.cid===F.chan)&&(!F.topic||x.topics.includes(F.topic))&&(!F.person||x.ent.includes(F.person))&&(!F.star||isStar(x.id)));
 }
-function render(){
-  const now=Date.now();D.now=now;
-  const list=D.channels.map(c=>({c,s:status(c,now),a:D.auto[c.id]}));
-  const counts={live:0,new:0,overdue:0,unchecked:0,ok:0};list.forEach(x=>counts[x.s]++);
-  // pulse
-  const lastScan=Math.max(0,...D.channels.map(c=>c.lastChecked||0),(D.meta&&D.meta.lastRun)||0);
-  const age=lastScan?now-lastScan:null;
-  const cls=age===null?'warn':age>25*60e3?'bad':'ok';
-  $('#dot').className='dot '+cls;
-  $('#pulseTxt').textContent=age===null?'No scan yet':`Last scan ${rel(lastScan,now)}${age>25*60e3?' · scans may have paused':''} · ${D.channels.length} channels`;
-  document.title=(counts.live?`(${counts.live} LIVE) `:'')+'Goa Media Watch';
-  // political items
-  const {inRange,base}=filtered(now);
-  const vis=base.filter(x=>(!F.camp||x.camp===F.camp)&&(!F.tone||x.tone===F.tone));
-  // camp summary uses base (so selecting a camp doesn't hide the others)
-  const tot=base.length;
-  $('#totItems').textContent=tot;
-  $('#totLbl').textContent=`political item${tot===1?'':'s'} · ${F.range?'last '+(F.range>=168?'7 days':F.range+' h'):'all time'}`;
-  const mx=Math.max(1,...CAMPS.map(([k])=>base.filter(x=>x.camp===k).length));
-  $('#camps').innerHTML=CAMPS.map(([k,n])=>{
-    const a=base.filter(x=>x.camp===k),p=a.filter(x=>x.tone==='pos').length,g=a.filter(x=>x.tone==='neg').length,o=a.length-p-g;
-    const w=v=>(v/mx*100)+'%';
-    return`<div class="camp ${F.camp===k?'on':''}" data-camp="${k}" role="button" tabindex="0" aria-label="${n}: ${p} positive, ${g} negative">
-      <div class="nm"><span class="sw" style="background:var(--${k})"></span>${n}</div>
-      <div class="bars" title="${n}: ${p} positive · ${g} negative${o?' · '+o+' other':''}"><i style="width:${w(p)};background:var(--${k})"></i><i class="neg" style="width:${w(g)};background-color:var(--${k})"></i>${o?`<i style="width:${w(o)};background:var(--idle)"></i>`:''}</div>
-      <div class="n">${p}▲ ${g}▼</div></div>`}).join('');
-  // status kpis
-  $('#kpis').innerHTML=['live','new','overdue','unchecked','ok'].map(k=>`<button class="kpi ${F.status===k?'on':''}" data-s="${k}"><b>${counts[k]}</b><span><i class="sd ${k}" style="display:inline-block"></i>${ST[k]}</span></button>`).join('')
-    +`<button class="kpi" data-s="" style="grid-column:span 1"><b>${list.length}</b><span>All channels</span></button>`;
-  // filter chips
-  const plats=[...new Set(D.channels.map(c=>c.platform))];
-  $('#plats').innerHTML=plats.map(p=>`<button class="chip ${F.plat===p?'on':''}" data-p="${p}">${PLAT[p]||p}</button>`).join('');
-  $('#tones').innerHTML=[['pos','▲ Positive'],['neg','▼ Negative'],['twist','◆ Twisted']].map(([k,l])=>`<button class="chip ${F.tone===k?'on':''}" data-t="${k}">${l}</button>`).join('');
-  $('#clear').classList.toggle('hide',!(F.camp||F.tone||F.plat||F.q||F.status));
-  $('#range').querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.r===F.range));
-  // feed
-  $('#feedCnt').textContent=`${vis.length} shown`;
-  let html='',day='';
-  for(const x of vis.slice(0,120)){
-    const d=dayLabel(x.t,now);if(d!==day){day=d;html+=`<div class="daysep">${esc(d)}</div>`}
-    const u=x.url,fresh=now-x.t<2*3600e3,exact=!!x.url;
-    html+=`<a class="fi ${exact?'':'nolink'}" ${exact?`href="${esc(u)}" target="_blank" rel="noopener"`:'aria-disabled="true"'}><span class="stripe" style="background:var(--${x.camp||'idle'})"></span><div>
-      <div class="hl">${esc(x.hl)}</div>
-      <div class="m"><span class="badge ${x.camp||'none'}">${esc(campName(x.camp))}</span><span class="tone">${toneTxt(x.tone)}</span><span>${esc(x.c.name)}</span><span class="plat">${esc(PLAT[x.c.platform]||x.c.platform)}</span><span>${clock(x.t)} · ${rel(x.t,now)}</span>${fresh?'<span class="fresh">New</span>':''}<span class="go ${exact?'':'ch'}">${exact?'Open post ↗':'Post link not captured'}</span></div></div></a>`;
+function prevWindow(now){ // same-length window immediately before the selected range
+  if(!F.range)return[];const q=F.q.toLowerCase();
+  return IT.filter(x=>now-x.t>=F.range*H&&now-x.t<2*F.range*H&&(!F.plat||x.platform===F.plat)&&(!q||(x.hl+' '+x.name).toLowerCase().includes(q)));
+}
+const delta=(a,b)=>b?`<span class="${a>=b?'up':'down'}">${a>=b?'▲':'▼'} ${Math.abs(a-b)}</span> vs previous`:'';
+
+/* ---------- svg charts ---------- */
+function stackedBars(buckets,{h=190,unit}={}){
+  const w=640,pl=28,pb=22,pt=8,iw=w-pl-4,ih=h-pb-pt;
+  const mx=Math.max(1,...buckets.map(b=>b.nda+b.opp+b.oth));
+  const bw=iw/buckets.length;let g='';
+  const ticks=[0,.5,1].map(f=>Math.round(mx*f));
+  ticks.forEach(t=>{const y=pt+ih-(t/mx)*ih;g+=`<line class="gl" x1="${pl}" x2="${w-2}" y1="${y}" y2="${y}"/><text x="${pl-5}" y="${y+3}" text-anchor="end">${t}</text>`});
+  buckets.forEach((b,i)=>{
+    let y=pt+ih;const x=pl+i*bw+bw*.14,ww=bw*.72;
+    [['nda',b.nda],['opp',b.opp],['oth',b.oth]].forEach(([k,v])=>{if(!v)return;const hh=v/mx*ih;y-=hh;g+=`<rect x="${x}" y="${y}" width="${ww}" height="${hh}" rx="2" fill="var(--${k})"><title>${esc(b.label)} · ${campName(k)}: ${v}</title></rect>`});
+    if(buckets.length<=12||i%Math.ceil(buckets.length/10)===0)g+=`<text x="${x+ww/2}" y="${h-6}" text-anchor="middle">${esc(b.short)}</text>`;
+  });
+  return`<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Political items over time">${g}</svg>`;
+}
+function lineChart(points,{h=170,lo=-1,hi=1}={}){
+  const w=640,pl=34,pb=22,pt=8,iw=w-pl-8,ih=h-pb-pt;
+  const y=v=>pt+ih-((v-lo)/(hi-lo))*ih;let g='';
+  [-1,-.5,0,.5,1].forEach(v=>{g+=`<line class="gl" x1="${pl}" x2="${w-6}" y1="${y(v)}" y2="${y(v)}" ${v===0?'style="stroke:var(--mute)"':''}/><text x="${pl-5}" y="${y(v)+3}" text-anchor="end">${v>0?'+':''}${v}</text>`});
+  const n=points.length,x=i=>pl+(n===1?iw/2:i/(n-1)*iw);
+  const pts=points.map((p,i)=>p.v==null?null:[x(i),y(p.v),p]);
+  let d='';pts.forEach(p=>{if(p)d+=(d?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)});
+  if(d)g+=`<path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round"/>`;
+  pts.forEach(p=>{if(p)g+=`<circle cx="${p[0]}" cy="${p[1]}" r="3.6" fill="${p[2].v>0?'var(--nda)':p[2].v<0?'var(--opp)':'var(--mute)'}"><title>${esc(p[2].label)}: ${p[2].v>0?'+':''}${p[2].v.toFixed(2)} (${p[2].n} items)</title></circle>`});
+  points.forEach((p,i)=>{if(n<=12||i%Math.ceil(n/10)===0)g+=`<text x="${x(i)}" y="${h-6}" text-anchor="middle">${esc(p.short)}</text>`});
+  g+=`<text x="${pl+4}" y="${pt+9}" style="fill:var(--nda)">▲ favours NDA</text><text x="${pl+4}" y="${h-pb-4}" style="fill:var(--opp)">▼ favours Opposition</text>`;
+  return`<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Net advantage over time">${g}</svg>`;
+}
+function sparkline(vals,color='var(--accent)'){
+  const w=200,h=36,mx=Math.max(1,...vals),n=vals.length;if(!n)return'';
+  const pts=vals.map((v,i)=>[(n===1?w/2:i/(n-1)*w),h-3-(v/mx)*(h-8)]);
+  const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('');
+  return`<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}L${w} ${h}L0 ${h}Z" fill="${color}" opacity=".12"/><path d="${d}" fill="none" stroke="${color}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+}
+function hbars(rows,{max,color='var(--accent)',fmt=v=>v}={}){
+  const mx=max||Math.max(1,...rows.map(r=>r.v));
+  return rows.map(r=>`<div class="li"><div class="grow"><div class="nm" title="${esc(r.label)}">${esc(r.label)}</div><div class="mini" style="margin-top:4px"><i style="width:${r.v/mx*100}%;background:${r.color||color}"></i></div></div><div class="cnt">${fmt(r.v)}</div></div>`).join('');
+}
+function buckets(items,now){
+  const hourly=F.range&&F.range<=24,out=[];
+  if(hourly){
+    const n=F.range;
+    for(let i=n-1;i>=0;i--){const t0=now-(i+1)*H,t1=now-i*H;out.push({t0,t1,label:new Date(t1).toLocaleString([], {day:'numeric',month:'short',hour:'numeric'}),short:new Date(t1).toLocaleTimeString([], {hour:'numeric'}),nda:0,opp:0,oth:0,its:[]})}
+  }else{
+    const span=F.range?Math.ceil(F.range/24):Math.min(30,Math.max(7,Math.ceil((now-Math.min(now,...items.map(i=>i.t)))/DAY)+1));
+    const d0=new Date(now);d0.setHours(0,0,0,0);
+    for(let i=span-1;i>=0;i--){const a=new Date(d0);a.setDate(a.getDate()-i);const b=new Date(a);b.setDate(b.getDate()+1);out.push({t0:+a,t1:+b,label:a.toLocaleDateString([], {weekday:'short',day:'numeric',month:'short'}),short:a.toLocaleDateString([], {day:'numeric',month:'short'}),nda:0,opp:0,oth:0,its:[]})}
   }
-  $('#feed').innerHTML=html||`<div class="empty"><b>No political items here yet</b>${F.range&&inRange.length===0?'Try a wider time range — scans run every 12 minutes, 8 am to 10 pm.':'Nothing matches these filters.'}</div>`;
-  // channels
-  let ch=list.filter(x=>(!F.status||x.s===F.status)&&(!F.plat||x.c.platform===F.plat)&&(!F.q||(x.c.name+' '+x.c.url+' '+(x.c.note||'')).toLowerCase().includes(F.q)));
-  ch.sort((a,b)=>RANK[a.s]-RANK[b.s]||a.c.name.localeCompare(b.c.name));
-  $('#chCnt').textContent=`${ch.length} of ${list.length}`;
-  const manual=ch.filter(x=>!isAuto(x.c,now)&&x.s!=='ok'||x.s==='new'||x.s==='live');
-  const ab=$('#ackAll');ab.classList.toggle('hide',!manual.length);ab.textContent=`✓ Mark ${manual.length} checked`;ab.dataset.ids=JSON.stringify(manual.map(x=>x.c.id));
-  $('#list').innerHTML=ch.length?ch.map(chRow(now)).join(''):'<div class="empty"><b>No channels match</b>Clear filters to see all.</div>';
-  // alert sound
-  const sig=items().filter(x=>now-x.t<30*60e3).map(x=>x.t).join(',')+list.filter(x=>x.s==='live').map(x=>x.c.id).join(',');
-  if(prevSig!==null&&sig!==prevSig&&sound)beep();prevSig=sig;
+  for(const x of items){const b=out.find(b=>x.t>=b.t0&&x.t<b.t1);if(b){b[x.camp]++;b.its.push(x)}}
+  return out;
 }
-const chRow=now=>({c,s,a})=>{
-  const u=safeUrl(c.url),auto=isAuto(c,now);
-  const lc=(c.inclination||'');const p=parseIncl(lc);
-  return`<div class="ch"><span class="sd ${s}" title="${ST[s]}"></span>
-  <div style="min-width:0"><div class="t">${esc(c.name)}</div>
-  <div class="s"><span class="plat">${esc(PLAT[c.platform]||c.platform)}</span><span class="stt ${s}">${ST[s]}</span>${p.camp?`<span class="badge ${p.camp}" style="padding:0 7px;font-size:11px">${campName(p.camp)}</span>`:''}<span>${auto?'auto ':''}${rel(auto?a.checkedAt:c.lastChecked,now)}</span></div></div>
-  <div class="a">${u?`<a class="ico" href="${esc(u)}" target="_blank" rel="noopener" title="Open channel" aria-label="Open ${esc(c.name)}">↗</a>`:''}<button class="ico" data-ack="${esc(c.id)}" title="Mark checked" aria-label="Mark ${esc(c.name)} checked">✓</button><button class="ico" data-edit="${esc(c.id)}" title="Manage" aria-label="Manage ${esc(c.name)}">⚙</button></div></div>`;
+
+/* ---------- reusable fragments ---------- */
+function itemRow(x,now,i){
+  const fresh=now-x.t<2*H,u=x.url;
+  return`<div class="fi" style="animation-delay:${Math.min(i,12)*18}ms"><span class="stripe" style="background:var(--${x.camp})"></span><div style="min-width:0">
+    ${u?`<a class="hl" href="${esc(u)}" target="_blank" rel="noopener">${esc(x.hl)}</a>`:`<span class="hl">${esc(x.hl)}</span>`}
+    <div class="m"><span class="badge ${x.camp}">${esc(campName(x.camp))}</span><span class="tone">${toneTxt(x.tone)}</span><a href="#/channels" data-chan="${esc(x.cid)}" style="text-decoration:none">${esc(x.name)}</a><span class="plat">${esc(PLAT[x.platform]||x.platform)}</span><span>${clock(x.t)} · ${rel(x.t,now)}</span>${fresh?'<span class="fresh">New</span>':''}
+    ${x.topics.slice(0,2).map(t=>`<a class="tag" href="#/topics" data-topic="${esc(t)}" style="text-decoration:none">${esc(t)}</a>`).join('')}</div></div>
+    <div class="acts"><button class="ico ${isStar(x.id)?'on':''}" data-star="${esc(x.id)}" title="Star" aria-label="Star item">${isStar(x.id)?'★':'☆'}</button>${u?`<a class="ico" href="${esc(u)}" target="_blank" rel="noopener" title="Open post" aria-label="Open post">↗</a>`:`<span class="ico" title="Post link not captured" style="opacity:.4">–</span>`}</div></div>`;
+}
+function campBlock(items){
+  const mx=Math.max(1,...CAMPS.map(([k])=>items.filter(x=>x.camp===k).length));
+  return CAMPS.map(([k,n])=>{
+    const a=items.filter(x=>x.camp===k),p=a.filter(x=>x.tone==='pos').length,g=a.filter(x=>x.tone==='neg').length,o=a.length-p-g,w=v=>(v/mx*100)+'%';
+    return`<div class="camp ${F.camp===k?'on':''}" data-camp="${k}" role="button" tabindex="0" aria-label="${n}: ${p} positive, ${g} negative"><div class="nm"><span class="sw" style="background:var(--${k})"></span>${n}</div>
+    <div class="bars" title="${n}: ${p} positive · ${g} negative${o?' · '+o+' other':''}"><i style="width:${w(p)};background:var(--${k})"></i><i class="neg" style="width:${w(g)};background-color:var(--${k})"></i>${o?`<i style="width:${w(o)};background:var(--idle)"></i>`:''}</div><div class="n">${p}▲ ${g}▼</div></div>`}).join('')
+  +`<div class="legend"><span><i></i>Positive</span><span><i class="neg"></i>Negative</span><span>Click a camp to filter</span></div>`;
+}
+function sourceHealth(now){
+  const out=[];
+  for(const p of [...new Set(D.channels.map(c=>c.platform))]){
+    const cs=D.channels.filter(c=>c.platform===p&&(c.url||'').length);
+    const last=Math.max(0,...cs.map(c=>Math.max(c.lastChecked||0,(D.auto[c.id]||{}).checkedAt||0)));
+    out.push({p,n:cs.length,last,stale:!last||now-last>2*H});
+  }
+  return out.sort((a,b)=>b.stale-a.stale);
+}
+function pageHead(t,sub){$('#title').innerHTML=esc(t)+(sub?`<small>${sub}</small>`:'')}
+function filterNote(){
+  const chips=[];
+  if(F.chan)chips.push(['chan','Channel: '+cn(F.chan)])
+  if(F.topic)chips.push(['topic','Topic: '+F.topic]);if(F.person)chips.push(['person','Mentions: '+F.person]);
+  if(F.camp)chips.push(['camp','Camp: '+campName(F.camp)]);if(F.tone)chips.push(['tone','Tone: '+toneTxt(F.tone).replace(/^\S+ /,'')]);if(F.star)chips.push(['star','Starred only']);
+  if(!chips.length)return'';
+  return`<div class="row noprint" style="margin-bottom:12px"><span class="cnt">Active filters:</span>${chips.map(([k,l])=>`<button class="chip on" data-unf="${k}">${esc(l)} ✕</button>`).join('')}<button class="btn sm ghost" data-unf="all">Clear all</button></div>`;
+}
+
+/* ================= VIEWS ================= */
+const V={};
+
+V.overview=(now)=>{
+  const its=scoped(now,{ignoreCamp:true}),prev=prevWindow(now);
+  const bk=buckets(its,now);
+  const adv=its.reduce((a,x)=>a+fav(x),0),advTot=its.filter(x=>fav(x)!==0).length,advPrev=prev.reduce((a,x)=>a+fav(x),0);
+  const cls=clusters(IT.filter(x=>!F.range||now-x.t<Math.max(F.range,24)*H)).filter(c=>c.chans.length>1).sort((a,b)=>b.score-a.score||b.last-a.last);
+  const list=D.channels.map(c=>({c,s:status(c,now)}));
+  const newN=list.filter(x=>x.s==='new').length,liveN=list.filter(x=>x.s==='live').length;
+  const health=sourceHealth(now),stale=health.filter(h=>h.stale);
+  const chCount={};its.forEach(x=>chCount[x.cid]=(chCount[x.cid]||0)+1);
+  const topCh=Object.entries(chCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const topicCount={};its.forEach(x=>x.topics.forEach(t=>topicCount[t]=(topicCount[t]||0)+1));
+  const topTopics=Object.entries(topicCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const lean=advTot?Math.round(adv/advTot*100):0;
+  const attention=[];
+  if(liveN)attention.push(`<b>${liveN}</b> channel${liveN>1?'s':''} live now`);
+  if(newN)attention.push(`<b>${newN}</b> channel${newN>1?'s have':' has'} unacknowledged activity <a href="#/channels" data-status="new">review</a>`);
+  stale.forEach(h=>attention.push(`<b>${esc(PLAT[h.p]||h.p)}</b> has not been scanned ${h.last?'since '+rel(h.last,now):'yet'} (${h.n} channels) — figures for it may be incomplete`));
+  const alog=jget('mw.alertLog',[]).filter(a=>now-a.t<DAY);
+  if(alog.length)attention.push(`<b>${alog.length}</b> alert${alog.length>1?'s':''} triggered in the last 24 h <a href="#/alerts">view</a>`);
+  return`
+  <div class="grid g4" style="margin-bottom:14px">
+    <div class="card kpi"><div class="lbl">Political items</div><div class="val">${its.length}</div><div class="dl">${F.range?delta(its.length,prev.length):fmtRange(F.range)}</div>${sparkline(bk.map(b=>b.nda+b.opp+b.oth))}</div>
+    <div class="card kpi"><div class="lbl">Net advantage</div><div class="val" style="color:var(--${lean>0?'nda':lean<0?'opp':'ink'})">${lean>0?'+':''}${lean}</div><div class="dl">${advTot?`${lean>0?'Coverage favours NDA':lean<0?'Coverage favours Opposition':'Balanced'} · ${advTot} scored items`:'No scored items yet'}</div></div>
+    <div class="card kpi"><div class="lbl">Stories on multiple channels</div><div class="val">${cls.length}</div><div class="dl">${cls[0]?esc(cls[0].hl.slice(0,56))+'…':'Nothing is spreading right now'}</div></div>
+    <div class="card kpi"><div class="lbl">Channel status</div><div class="val">${list.length}</div><div class="dl"><span class="${liveN?'down':''}">${liveN} live</span> · ${newN} new · ${list.filter(x=>x.s==='overdue').length} due</div></div>
+  </div>
+  <div class="card pad" style="margin-bottom:14px"><div class="hd"><h2>Needs attention</h2></div>
+    ${attention.length?`<div style="display:grid;gap:8px">${attention.map(a=>`<div class="${/scanned/.test(a)?'warnbox':'okbox'}" style="${/scanned/.test(a)?'':'border-color:var(--line);background:var(--panel2);color:var(--ink)'}">${a}</div>`).join('')}</div>`:'<div class="okbox">All sources scanned recently and nothing waiting on you.</div>'}
+  </div>
+  <div class="grid g21" style="margin-bottom:14px">
+    <div class="card pad"><div class="hd"><h2>Coverage over time</h2><span class="sub">${fmtRange(F.range)}</span></div>${stackedBars(bk)}
+      <div class="legend">${CAMPS.map(([k,n])=>`<span><i style="background:var(--${k})"></i>${n}</span>`).join('')}</div></div>
+    <div class="card pad"><div class="hd"><h2>Balance by camp</h2></div>${campBlock(its)}</div>
+  </div>
+  <div class="grid g3" style="margin-bottom:14px">
+    <div class="card pad"><div class="hd"><h2>Most active channels</h2></div>${topCh.length?hbars(topCh.map(([id,n])=>({label:cn(id),v:n}))):'<div class="empty">No items in range</div>'}</div>
+    <div class="card pad"><div class="hd"><h2>Trending topics</h2><a href="#/topics" class="sub">all</a></div>${topTopics.length?hbars(topTopics.map(([t,n])=>({label:t,v:n}))):'<div class="empty">No topics detected</div>'}</div>
+    <div class="card pad"><div class="hd"><h2>Spreading across channels</h2><a href="#/stories" class="sub">tracker</a></div>${cls.slice(0,4).map(c=>`<div class="li"><div class="grow"><div class="nm" title="${esc(c.hl)}">${esc(c.hl)}</div><div class="cnt">${c.chans.length} channels · ${rel(c.first,now)}</div></div></div>`).join('')||'<div class="empty">No multi-channel stories</div>'}</div>
+  </div>
+  <div class="card"><div class="hd pad" style="margin:0;padding-bottom:4px"><h2>Latest political items</h2><a href="#/feed" class="sub">open live feed</a></div>
+    <div style="padding:0 10px 10px">${its.slice(0,6).map((x,i)=>itemRow(x,now,i)).join('')||'<div class="empty"><b>No political items in this range</b>Try a wider time range.</div>'}</div></div>`;
 };
 
+V.feed=(now)=>{
+  const its=scoped(now);
+  let html='',day='';
+  its.slice(0,200).forEach((x,i)=>{const d=dayLabel(x.t,now);if(d!==day){day=d;html+=`<div class="daysep">${esc(d)}</div>`}html+=itemRow(x,now,i)});
+  const chans=[...new Set(IT.map(x=>x.cid))].map(id=>[id,cn(id)]).sort((a,b)=>a[1].localeCompare(b[1]));
+  return`<div class="row noprint" style="margin-bottom:12px">
+    ${CAMPS.map(([k,n])=>`<button class="chip ${F.camp===k?'on':''}" data-camp="${k}"><span class="sw" style="background:var(--${k})"></span>${n}</button>`).join('')}
+    <span class="cnt">|</span>
+    ${[['pos','▲ Positive'],['neg','▼ Negative'],['twist','◆ Twisted']].map(([k,l])=>`<button class="chip ${F.tone===k?'on':''}" data-t="${k}">${l}</button>`).join('')}
+    <button class="chip ${F.star?'on':''}" data-flag="star">★ Starred</button>
+    <select id="chanSel" style="width:auto;padding:5px 8px"><option value="">All channels</option>${chans.map(([id,n])=>`<option value="${esc(id)}" ${F.chan===id?'selected':''}>${esc(n)}</option>`).join('')}</select>
+    <span style="flex:1"></span><button class="btn sm" id="csvBtn">⬇ Export CSV</button></div>
+  ${filterNote()}
+  <div class="card"><div class="hd pad" style="margin:0;padding-bottom:4px"><h2>Political feed</h2><span class="cnt">${its.length} shown · ${fmtRange(F.range)}</span></div>
+  <div style="padding:0 10px 10px">${html||`<div class="empty"><b>No political items here</b>Nothing matches these filters. Scans run roughly every 12 minutes, 8 am to 10 pm.</div>`}</div></div>`;
+};
+
+V.channels=(now)=>{
+  const its=scoped(now,{ignoreCamp:true});
+  const rows=D.channels.map(c=>{
+    const mine=its.filter(x=>x.cid===c.id),a=D.auto[c.id];
+    const nda=mine.filter(x=>x.camp==='nda').length,opp=mine.filter(x=>x.camp==='opp').length,oth=mine.filter(x=>x.camp==='oth').length;
+    const sc=mine.filter(x=>fav(x)!==0),adv=sc.length?sc.reduce((s,x)=>s+fav(x),0)/sc.length:null;
+    const last=mine.length?Math.max(...mine.map(x=>x.t)):0;
+    return{c,s:status(c,now),n:mine.length,nda,opp,oth,adv,last,chk:isAuto(c,now)?a.checkedAt:c.lastChecked||0,name:c.name.toLowerCase(),plat:c.platform};
+  }).filter(r=>(!F.plat||r.c.platform===F.plat)&&(!F.q||(r.c.name+' '+r.c.url).toLowerCase().includes(F.q.toLowerCase())&&true));
+  const k=SORT.k;rows.sort((a,b)=>{const av=k==='adv'?(a.adv??-9):a[k],bv=k==='adv'?(b.adv??-9):b[k];if(k==='s')return(RANK[a.s]-RANK[b.s])*SORT.d*-1;return(av>bv?1:av<bv?-1:0)*SORT.d||a.name.localeCompare(b.name)});
+  const th=(key,l,cls='')=>`<th class="${cls}" data-sort="${key}">${l}${SORT.k===key?(SORT.d>0?' ▲':' ▼'):''}</th>`;
+  const mx=Math.max(1,...rows.map(r=>r.n));
+  const manual=rows.filter(x=>!isAuto(x.c,now)&&x.s!=='ok'||x.s==='new'||x.s==='live');
+  return`<div class="row noprint" style="margin-bottom:12px"><span class="cnt">${rows.length} channels · items counted for ${fmtRange(F.range)}</span><span style="flex:1"></span>
+    ${manual.length?`<button class="btn sm" id="ackAll" data-ids='${esc(JSON.stringify(manual.map(x=>x.c.id)))}'>✓ Mark ${manual.length} checked</button>`:''}
+    <button class="btn pri sm" id="addBtn2">+ Add channels</button></div>
+  <div class="card"><div class="tscroll"><table class="t"><thead><tr>${th('name','Channel')}${th('plat','Platform')}${th('s','Status')}${th('n','Items','num')}<th class="nos">Camp mix</th>${th('adv','Lean')}${th('last','Last political')}${th('chk','Last scanned')}<th class="nos"></th></tr></thead><tbody>
+  ${rows.map(r=>{const c=r.c,u=safeUrl(c.url);
+    return`<tr><td><b>${esc(c.name)}</b></td><td><span class="plat">${esc(PLAT[c.platform]||c.platform)}</span></td><td><span class="stt ${r.s}">${ST[r.s]}</span></td>
+    <td class="num"><a href="#/feed" data-chan="${esc(c.id)}" style="text-decoration:none;font-weight:600">${r.n}</a></td>
+    <td><div class="mini" title="NDA ${r.nda} · Opposition ${r.opp} · Others ${r.oth}" style="width:${Math.max(18,r.n/mx*120)}px"><i style="width:${pct(r.nda,r.n)}%;background:var(--nda)"></i><i style="width:${pct(r.opp,r.n)}%;background:var(--opp)"></i><i style="width:${pct(r.oth,r.n)}%;background:var(--oth)"></i></div></td>
+    <td>${r.adv==null?'<span class="cnt">–</span>':`<div class="lean" title="${r.adv>0?'Favours NDA':r.adv<0?'Favours Opposition':'Balanced'} (${r.adv.toFixed(2)})"><i style="${r.adv>=0?`left:50%;width:${r.adv*50}%;background:var(--nda)`:`right:50%;width:${-r.adv*50}%;background:var(--opp)`}"></i></div>`}</td>
+    <td class="cnt">${r.last?rel(r.last,now):'–'}</td><td class="cnt">${r.chk?rel(r.chk,now):'never'}</td>
+    <td style="white-space:nowrap">${u?`<a class="ico" style="display:inline-grid" href="${esc(u)}" target="_blank" rel="noopener" title="Open channel">↗</a> `:''}<button class="ico" style="display:inline-grid" data-ack="${esc(c.id)}" title="Mark checked">✓</button> <button class="ico" style="display:inline-grid" data-edit="${esc(c.id)}" title="Manage">⚙</button></td></tr>`}).join('')}
+  </tbody></table></div></div>
+  <div id="addHost"></div>`;
+};
+
+V.analytics=(now)=>{
+  const its=scoped(now,{ignoreCamp:true}),bk=buckets(its,now);
+  const pts=bk.map(b=>{const sc=b.its.filter(x=>fav(x)!==0);return{label:b.label,short:b.short,n:sc.length,v:sc.length?sc.reduce((s,x)=>s+fav(x),0)/sc.length:null}});
+  const hours=Array(24).fill(0);its.forEach(x=>hours[new Date(x.t).getHours()]++);
+  const hmx=Math.max(1,...hours);
+  const platC={};its.forEach(x=>platC[x.platform]=(platC[x.platform]||0)+1);
+  const cols=[['nda','pos','NDA ▲'],['nda','neg','NDA ▼'],['opp','pos','Opp ▲'],['opp','neg','Opp ▼'],['oth','pos','Oth ▲'],['oth','neg','Oth ▼'],['','twist','Twisted']];
+  const byCh={};its.forEach(x=>{(byCh[x.cid]=byCh[x.cid]||[]).push(x)});
+  const hrows=Object.entries(byCh).sort((a,b)=>b[1].length-a[1].length).slice(0,14);
+  const cell=(arr,c,t)=>arr.filter(x=>(c?x.camp===c:true)&&x.tone===t).length;
+  const cm=Math.max(1,...hrows.flatMap(([,a])=>cols.map(([c,t])=>cell(a,c,t))));
+  // first movers
+  const cls=clusters(its).filter(c=>c.chans.length>1);
+  const fm={};cls.forEach(c=>{const f=c.items[0];const o=fm[f.cid]=fm[f.cid]||{n:0,lag:[]};o.n++;c.items.slice(1).forEach(i=>{if(i.cid!==f.cid)o.lag.push((i.t-f.t)/60000)})});
+  const fmr=Object.entries(fm).sort((a,b)=>b[1].n-a[1].n).slice(0,8);
+  const med=a=>{if(!a.length)return null;const s=[...a].sort((x,y)=>x-y);return s[Math.floor(s.length/2)]};
+  const fmt=m=>m==null?'–':m<60?Math.round(m)+' min':(m/60).toFixed(1)+' h';
+  // camp share trend
+  const tot=its.length||1;
+  return`<div class="grid g2" style="margin-bottom:14px">
+    <div class="card pad"><div class="hd"><h2>Volume by camp</h2><span class="sub">${F.range&&F.range<=24?'per hour':'per day'}</span></div>${stackedBars(bk)}<div class="legend">${CAMPS.map(([k,n])=>`<span><i style="background:var(--${k})"></i>${n}</span>`).join('')}</div></div>
+    <div class="card pad"><div class="hd"><h2>Net advantage trend</h2><span class="sub">−1 Opposition … +1 NDA</span></div>${lineChart(pts)}
+      <div class="legend"><span>Each point = average of scored items in that period. NDA positive and Opposition negative count towards NDA; the reverse counts towards Opposition. Tone labels are judgement calls.</span></div></div>
+  </div>
+  <div class="grid g2" style="margin-bottom:14px">
+    <div class="card pad"><div class="hd"><h2>When news breaks (hour of day)</h2><span class="sub">local time</span></div>
+      <svg class="chart" viewBox="0 0 640 150" role="img" aria-label="Items by hour">${hours.map((v,i)=>{const h=v/hmx*110;return`<rect x="${12+i*26}" y="${124-h}" width="20" height="${h}" rx="3" fill="var(--accent)" opacity="${.35+.65*v/hmx}"><title>${i}:00 – ${v} items</title></rect><text x="${22+i*26}" y="142" text-anchor="middle">${i%3===0?i:''}</text>${v?`<text x="${22+i*26}" y="${120-h}" text-anchor="middle">${v}</text>`:''}`}).join('')}</svg></div>
+    <div class="card pad"><div class="hd"><h2>Share of coverage</h2></div>
+      ${CAMPS.map(([k,n])=>{const c=its.filter(x=>x.camp===k).length;return`<div class="li"><span class="sw" style="background:var(--${k})"></span><div class="grow"><div class="nm">${n}</div><div class="mini" style="margin-top:4px"><i style="width:${pct(c,tot)}%;background:var(--${k})"></i></div></div><div class="cnt">${c} · ${pct(c,tot)}%</div></div>`}).join('')}
+      <div class="hd" style="margin-top:14px"><h2>By platform</h2></div>
+      ${Object.entries(platC).sort((a,b)=>b[1]-a[1]).map(([p,n])=>`<div class="li"><span class="plat">${esc(PLAT[p]||p)}</span><div class="grow"><div class="mini"><i style="width:${pct(n,tot)}%;background:var(--accent)"></i></div></div><div class="cnt">${n} · ${pct(n,tot)}%</div></div>`).join('')||'<div class="empty">No data</div>'}
+    </div>
+  </div>
+  <div class="card pad" style="margin-bottom:14px"><div class="hd"><h2>Channel × camp heatmap</h2><span class="sub">top ${hrows.length} channels by volume</span></div>
+    ${hrows.length?`<div class="heat" style="grid-template-columns:minmax(120px,1.4fr) repeat(${cols.length},minmax(48px,1fr))"><div class="c h r"></div>${cols.map(c=>`<div class="c h">${c[2]}</div>`).join('')}
+    ${hrows.map(([id,a])=>`<div class="c r" title="${esc(cn(id))}">${esc(cn(id))}</div>${cols.map(([c,t])=>{const v=cell(a,c,t),col=c?`var(--${c})`:'var(--tw)';return`<div class="c" style="${v?`background:color-mix(in srgb,${col} ${15+v/cm*65}%,var(--panel));color:var(--ink);font-weight:600`:''}">${v||''}</div>`}).join('')}`).join('')}</div>`:'<div class="empty">No data in range</div>'}</div>
+  <div class="card pad"><div class="hd"><h2>Who breaks stories first</h2><span class="sub">stories picked up by 2+ channels</span></div>
+    ${fmr.length?`<table class="t"><thead><tr><th class="nos">#</th><th class="nos">Channel</th><th class="nos num">Stories first</th><th class="nos num">Median lag of followers</th></tr></thead><tbody>${fmr.map(([id,o],i)=>`<tr><td class="cnt">${i+1}</td><td><b>${esc(cn(id))}</b></td><td class="num">${o.n}</td><td class="num">${fmt(med(o.lag))}</td></tr>`).join('')}</tbody></table>`:'<div class="empty"><b>Not enough overlap yet</b>This fills in once the same story is logged by several channels.</div>'}</div>`;
+};
+
+V.topics=(now)=>{
+  const its=scoped(now,{ignoreCamp:true}),prev=prevWindow(now);
+  const count=(arr,key)=>{const o={};arr.forEach(x=>x[key].forEach(t=>{const e=o[t]=o[t]||{n:0,pos:0,neg:0,nda:0,opp:0,oth:0,last:0};e.n++;if(x.tone==='pos')e.pos++;if(x.tone==='neg')e.neg++;e[x.camp]++;e.last=Math.max(e.last,x.t)}));return o};
+  const T=count(its,'topics'),Tp=count(prev,'topics'),P=count(its,'parties'),Pe=count(its,'people');
+  const row=(name,e,prevN,kind)=>`<tr data-${kind}="${esc(name)}" style="cursor:pointer"><td><b>${esc(name)}</b></td><td class="num">${e.n}</td><td class="num">${prevN==null?'':(e.n-prevN>0?`<span class="up">▲ ${e.n-prevN}</span>`:e.n-prevN<0?`<span class="down">▼ ${prevN-e.n}</span>`:'–')}</td>
+    <td><div class="mini" style="width:100px"><i style="width:${pct(e.nda,e.n)}%;background:var(--nda)"></i><i style="width:${pct(e.opp,e.n)}%;background:var(--opp)"></i><i style="width:${pct(e.oth,e.n)}%;background:var(--oth)"></i></div></td>
+    <td class="num"><span class="up">${e.pos}▲</span> <span class="down">${e.neg}▼</span></td><td class="cnt">${rel(e.last,now)}</td></tr>`;
+  const tbl=(title,obj,kind,prevO,lim)=>{const rows=Object.entries(obj).sort((a,b)=>b[1].n-a[1].n).slice(0,lim);return`<div class="card pad"><div class="hd"><h2>${title}</h2><span class="sub">click a row to open the feed filtered</span></div>${rows.length?`<div class="tscroll"><table class="t"><thead><tr><th class="nos">Name</th><th class="nos num">Items</th><th class="nos num">Change</th><th class="nos">Camp mix</th><th class="nos num">Tone</th><th class="nos">Latest</th></tr></thead><tbody>${rows.map(([n,e])=>row(n,e,prevO?(prevO[n]||{n:0}).n:null,kind)).join('')}</tbody></table></div>`:'<div class="empty">Nothing detected in this range.</div>'}</div>`};
+  const uncovered=its.filter(x=>!x.topics.length).length;
+  return`<div class="grid g2" style="margin-bottom:14px">${tbl('Topics',T,'topic',Tp,14)}${tbl('Parties &amp; organisations',P,'person',null,8)}</div>
+  ${tbl('People mentioned',Pe,'person',null,16)}
+  <div class="legend" style="margin-top:10px"><span>Topics and names are detected from headline keywords. ${uncovered} of ${its.length} items matched no topic. The dictionary lives in the page and is easy to extend.</span></div>`;
+};
+
+V.stories=(now)=>{
+  const its=scoped(now,{ignoreCamp:true}).filter(x=>!F.camp||x.camp===F.camp);
+  const cls=clusters(its).sort((a,b)=>b.last-a.last);
+  const multi=cls.filter(c=>c.chans.length>1).sort((a,b)=>b.score-a.score||b.last-a.last),single=cls.filter(c=>c.chans.length<2);
+  const card=c=>`<div class="cl"><div class="hl">${esc(c.hl)}</div>
+    <div class="row" style="margin-bottom:8px">${c.camps.map(k=>`<span class="badge ${k}">${campName(k)}</span>`).join('')}<span class="cnt">${c.chans.length} channel${c.chans.length>1?'s':''} · ${c.items.length} post${c.items.length>1?'s':''}</span><span class="cnt">first ${rel(c.first,now)}${c.last-c.first>0?' · spread over '+(((c.last-c.first)/60000)<60?Math.round((c.last-c.first)/60000)+' min':((c.last-c.first)/H).toFixed(1)+' h'):''}</span></div>
+    <div class="src">${c.items.map((i,n)=>`<${i.url?`a href="${esc(i.url)}" target="_blank" rel="noopener"`:'span class="x"'} title="${esc(i.hl)}">${n===0?'<b>first</b> ':''}${esc(i.name)} <span class="plat">${esc(PLAT[i.platform]||i.platform)}</span> <span class="cnt">${clock(i.t)}</span></${i.url?'a':'span'}>`).join('')}</div></div>`;
+  return`<div class="grid g12">
+    <div><div class="hd"><h2>Spreading — on 2+ channels</h2><span class="cnt">${multi.length}</span></div>${multi.map(card).join('')||'<div class="card empty"><b>No multi-channel stories in range</b>Widen the time range.</div>'}</div>
+    <div><div class="hd"><h2>Single-channel stories</h2><span class="cnt">${single.length}</span></div>${single.slice(0,40).map(c=>`<div class="li"><span class="stripe sw" style="background:var(--${c.items[0].camp})"></span><div class="grow"><div class="nm" title="${esc(c.hl)}">${c.items[0].url?`<a href="${esc(c.items[0].url)}" target="_blank" rel="noopener" style="text-decoration:none">${esc(c.hl)}</a>`:esc(c.hl)}</div><div class="cnt">${esc(c.items[0].name)} · ${rel(c.first,now)}</div></div></div>`).join('')||'<div class="empty">None</div>'}</div></div>
+  <div class="legend" style="margin-top:12px"><span>Stories are grouped by headline similarity within a 48-hour window. It is a heuristic — two different stories can occasionally merge.</span></div>`;
+};
+
+/* alerts */
+const RULE_TYPES={keyword:'Headline contains',entity:'Person / party mentioned',topic:'Topic detected',cluster:'Story on N+ channels',camp:'Camp + tone'};
+function rules(){return jget('mw.rules',[])}
+function saveRules(r){ls.set('mw.rules',JSON.stringify(r))}
+function matchRule(r,x){
+  const v=(r.value||'').toLowerCase();
+  if(r.type==='keyword')return v&&x.hl.toLowerCase().includes(v);
+  if(r.type==='entity')return v&&x.ent.some(e=>e.toLowerCase().includes(v));
+  if(r.type==='topic')return v&&x.topics.some(e=>e.toLowerCase()===v);
+  if(r.type==='camp'){const[c,t]=(r.value||'').split(':');return x.camp===c&&(!t||x.tone===t)}
+  return false;
+}
+function checkAlerts(){
+  const rs=rules();if(!rs.length){ls.set('mw.alertSeen',String(NOW()));return}
+  const seen=+(ls.get('mw.alertSeen')||0)||NOW();
+  const log=jget('mw.alertLog',[]),have=new Set(log.map(a=>a.key));let hits=0;
+  const fresh=IT.filter(x=>x.t>seen);
+  for(const r of rs){
+    if(r.type==='cluster'){
+      const n=+r.value||3;
+      for(const c of clusters(IT.filter(x=>NOW()-x.t<48*H)).filter(c=>c.chans.length>=n)){const key=r.id+'|c|'+c.id;if(have.has(key))continue;have.add(key);log.unshift({key,t:NOW(),rule:r.name,hl:c.hl,url:(c.items[0]||{}).url||'',ch:c.chans.length});hits++}
+    }else for(const x of fresh)if(matchRule(r,x)){const key=r.id+'|'+x.id;if(have.has(key))continue;have.add(key);log.unshift({key,t:NOW(),rule:r.name,hl:x.hl,url:x.url,ch:1,name:x.name});hits++}
+  }
+  if(hits){
+    ls.set('mw.alertLog',JSON.stringify(log.slice(0,100)));toast(`${hits} alert${hits>1?'s':''} triggered`);if(sound)beep();
+    try{if('Notification' in window&&Notification.permission==='granted')new Notification('Goa Media Watch',{body:log[0].rule+': '+log[0].hl})}catch{}
+  }
+  const mxT=Math.max(seen,...IT.map(x=>x.t),0);ls.set('mw.alertSeen',String(mxT));
+}
+V.alerts=(now)=>{
+  const rs=rules(),log=jget('mw.alertLog',[]);
+  return`<div class="grid g12">
+  <div class="card pad"><div class="hd"><h2>New alert rule</h2></div>
+    <label>Name</label><input type="text" id="rN" placeholder="e.g. Sawant mentioned">
+    <label>When</label><select id="rT">${Object.entries(RULE_TYPES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+    <div id="rVWrap"></div>
+    <div class="row" style="margin-top:14px"><button class="btn pri" id="rAdd">Add rule</button></div>
+    <div class="legend" style="margin-top:12px"><span>Rules are checked each time new items arrive while this page is open. They are saved in this browser. Enable <button class="btn sm" id="notif">browser notifications</button> to get pop-ups.</span></div></div>
+  <div>
+    <div class="card pad" style="margin-bottom:14px"><div class="hd"><h2>Your rules</h2><span class="cnt">${rs.length}</span></div>
+      ${rs.map(r=>`<div class="li"><div class="grow"><div class="nm">${esc(r.name)}</div><div class="cnt">${esc(RULE_TYPES[r.type])}: ${esc(r.type==='camp'?r.value.replace(':',' · '):r.value)}</div></div><button class="ico" data-rdel="${esc(r.id)}" title="Delete rule">✕</button></div>`).join('')||'<div class="empty">No rules yet — add one on the left.</div>'}</div>
+    <div class="card pad"><div class="hd"><h2>Triggered</h2>${log.length?'<button class="btn sm" id="alogClr">Clear</button>':''}</div>
+      ${log.slice(0,30).map(a=>`<div class="li"><div class="grow"><div class="nm" title="${esc(a.hl)}">${a.url?`<a href="${esc(a.url)}" target="_blank" rel="noopener" style="text-decoration:none">${esc(a.hl)}</a>`:esc(a.hl)}</div><div class="cnt">${esc(a.rule)}${a.ch>1?' · '+a.ch+' channels':''}${a.name?' · '+esc(a.name):''} · ${rel(a.t,now)}</div></div></div>`).join('')||'<div class="empty">Nothing triggered yet.</div>'}</div>
+  </div></div>`;
+};
+function ruleValueField(){
+  const t=$('#rT').value,w=$('#rVWrap');
+  if(t==='topic')w.innerHTML=`<label>Topic</label><select id="rV">${TOPICS.map(x=>`<option>${esc(x[0])}</option>`).join('')}</select>`;
+  else if(t==='entity')w.innerHTML=`<label>Name</label><input type="text" id="rV" list="ents" placeholder="Sawant, BJP, Sardesai…"><datalist id="ents">${[...PARTIES,...PEOPLE].map(x=>`<option value="${esc(x[0])}">`).join('')}</datalist>`;
+  else if(t==='cluster')w.innerHTML=`<label>Minimum channels</label><input type="number" id="rV" min="2" max="12" value="3">`;
+  else if(t==='camp')w.innerHTML=`<label>Camp and tone</label><select id="rV">${CAMPS.flatMap(([k,n])=>[[k+':pos',n+' · positive'],[k+':neg',n+' · negative'],[k+':',n+' · any']]).map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}<option value="nda:twist">NDA · twisted</option></select>`;
+  else w.innerHTML=`<label>Text</label><input type="text" id="rV" placeholder="e.g. mining, SIR, defection">`;
+}
+
+/* reports */
+function reportData(now,span){
+  const t0=span==='today'?new Date(now).setHours(0,0,0,0):span==='yesterday'?new Date(now).setHours(0,0,0,0)-DAY:now-(span==='week'?7:1)*DAY;
+  const t1=span==='yesterday'?t0+DAY:now;
+  const its=IT.filter(x=>x.t>=t0&&x.t<t1&&(!F.plat||x.platform===F.plat));
+  return{its,t0,t1,span};
+}
+function reportBuild(now,span){
+  const{its,t0,t1}=reportData(now,span),title={today:'Today',yesterday:'Yesterday',day:'Last 24 hours',week:'Last 7 days'}[span];
+  const cs=k=>its.filter(x=>x.camp===k);
+  const topics={},people={};its.forEach(x=>{x.topics.forEach(t=>topics[t]=(topics[t]||0)+1);x.ent.forEach(t=>people[t]=(people[t]||0)+1)});
+  const top=(o,n)=>Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,n);
+  const cls=clusters(its).filter(c=>c.chans.length>1).sort((a,b)=>b.score-a.score).slice(0,6);
+  const adv=its.filter(x=>fav(x)!==0),lean=adv.length?Math.round(adv.reduce((s,x)=>s+fav(x),0)/adv.length*100):0;
+  const health=sourceHealth(now).filter(h=>h.stale);
+  const notable=[...its].sort((a,b)=>(isStar(b.id)-isStar(a.id))||b.t-a.t).slice(0,12);
+  const md=[`# Goa political media brief — ${title}`,`_${new Date(t0).toLocaleString()} → ${new Date(t1).toLocaleString()}_`,'',
+   `**${its.length} political items** across ${new Set(its.map(x=>x.cid)).size} channels. NDA ${cs('nda').length} (▲${cs('nda').filter(x=>x.tone==='pos').length} ▼${cs('nda').filter(x=>x.tone==='neg').length}), Opposition ${cs('opp').length} (▲${cs('opp').filter(x=>x.tone==='pos').length} ▼${cs('opp').filter(x=>x.tone==='neg').length}), Others ${cs('oth').length}. Net advantage ${lean>0?'+':''}${lean} (${lean>0?'favours NDA':lean<0?'favours Opposition':'balanced'}).`,'',
+   '## Top topics',...top(topics,6).map(([t,n])=>`- ${t}: ${n}`),'','## Most mentioned',...top(people,8).map(([t,n])=>`- ${t}: ${n}`),'',
+   '## Stories on several channels',...(cls.length?cls.map(c=>`- ${c.hl} (${c.chans.length} channels, first: ${c.items[0].name})`):['- none']),'',
+   '## Notable items',...notable.map(x=>`- [${campName(x.camp)}${x.tone?' '+(x.tone==='pos'?'+':x.tone==='neg'?'−':'~'):''}] ${x.hl} — ${x.name}${x.url?' — '+x.url:''}`),'',
+   ...(health.length?['## Data gaps',...health.map(h=>`- ${PLAT[h.p]||h.p} not scanned recently — figures incomplete`)]:[]),'',
+   '_Camp and tone labels are the monitor’s judgement; verify before quoting._'].join('\n');
+  const html=`<h1>Goa political media brief</h1><p class="cnt">${esc(title)} · ${new Date(t0).toLocaleString()} → ${new Date(t1).toLocaleString()}</p>
+   <p><b>${its.length}</b> political items across <b>${new Set(its.map(x=>x.cid)).size}</b> channels. <span class="badge nda">NDA ${cs('nda').length}</span> <span class="badge opp">Opposition ${cs('opp').length}</span> <span class="badge oth">Others ${cs('oth').length}</span> Net advantage <b>${lean>0?'+':''}${lean}</b> (${lean>0?'favours NDA':lean<0?'favours Opposition':'balanced'}).</p>
+   <h3>Top topics</h3><ul>${top(topics,6).map(([t,n])=>`<li>${esc(t)} — ${n}</li>`).join('')||'<li>none</li>'}</ul>
+   <h3>Most mentioned</h3><ul>${top(people,8).map(([t,n])=>`<li>${esc(t)} — ${n}</li>`).join('')||'<li>none</li>'}</ul>
+   <h3>Stories on several channels</h3><ul>${cls.map(c=>`<li>${esc(c.hl)} <span class="cnt">(${c.chans.length} channels, first: ${esc(c.items[0].name)})</span></li>`).join('')||'<li>none</li>'}</ul>
+   <h3>Notable items</h3><ul>${notable.map(x=>`<li><span class="badge ${x.camp}">${esc(campName(x.camp))}</span> ${x.url?`<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.hl)}</a>`:esc(x.hl)} <span class="cnt">— ${esc(x.name)}, ${clock(x.t)}</span></li>`).join('')||'<li>none</li>'}</ul>
+   ${health.length?`<h3>Data gaps</h3><ul>${health.map(h=>`<li>${esc(PLAT[h.p]||h.p)} was not scanned recently — figures for it are incomplete.</li>`).join('')}</ul>`:''}
+   <p class="cnt" style="margin-top:20px">Camp and tone labels are the monitor’s judgement; verify before quoting.</p>`;
+  return{md,html,title};
+}
+let REP='day';
+V.reports=(now)=>{
+  const r=reportBuild(now,REP);
+  return`<div class="row noprint" style="margin-bottom:12px"><div class="seg" id="repSpan">${[['today','Today'],['yesterday','Yesterday'],['day','Last 24 h'],['week','Last 7 days']].map(([k,l])=>`<button data-rep="${k}" class="${REP===k?'on':''}">${l}</button>`).join('')}</div><span style="flex:1"></span>
+   <button class="btn sm" id="repCopy">Copy as text</button><button class="btn sm" id="repMd">⬇ Download .md</button><button class="btn sm" id="repCsv">⬇ CSV of items</button><button class="btn pri sm" id="repPrint">Print / save PDF</button></div>
+   <div class="card report" id="repBody">${r.html}</div>`;
+};
+
+V.settings=(now)=>{
+  const sdata=sourceHealth(now);
+  return`<div class="grid g2">
+  <div class="card pad"><div class="hd"><h2>Add channels</h2></div><label>One link per line — optional name first: <code>Name, https://…</code></label>
+    <textarea id="addTxt" placeholder="https://www.youtube.com/@channel&#10;Goa Daily, https://x.com/goadaily"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn pri" id="addGo">Add</button><span class="cnt" id="addMsg"></span></div></div>
+  <div class="card pad"><div class="hd"><h2>Preferences</h2></div>
+    <div class="li"><div class="grow"><div class="nm">Alert sound</div><div class="cnt">Beep when new political items arrive</div></div><button class="btn sm" id="snd2">${sound?'On':'Off'}</button></div>
+    <div class="li"><div class="grow"><div class="nm">Theme</div><div class="cnt">Light or dark</div></div><button class="btn sm" id="theme2">Switch</button></div>
+    <div class="li"><div class="grow"><div class="nm">Browser notifications</div><div class="cnt">${'Notification' in window?Notification.permission:'unsupported'}</div></div><button class="btn sm" id="notif2">Enable</button></div>
+    <div class="hd" style="margin-top:16px"><h2>Data</h2></div>
+    <div class="li"><div class="grow"><div class="nm">Logged items</div><div class="cnt">${IT.length} political items (${SRVITEMS} stored permanently on the server, the rest from channel history)</div></div></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="expCsv">⬇ Items CSV</button><button class="btn sm" id="expJson">⬇ Full backup (JSON)</button></div></div>
+  <div class="card pad"><div class="hd"><h2>Source health</h2></div>
+    ${sdata.map(h=>`<div class="li"><span class="sd ${h.stale?'overdue':'ok'}"></span><div class="grow"><div class="nm">${esc(PLAT[h.p]||h.p)}</div><div class="cnt">${h.n} channels · ${h.last?'last scanned '+rel(h.last,now):'never scanned'}</div></div><span class="stt ${h.stale?'overdue':'ok'}">${h.stale?'Stale':'Healthy'}</span></div>`).join('')}</div>
+  <div class="card pad"><div class="hd"><h2>About the numbers</h2></div><div class="cnt" style="font-family:var(--sans);font-size:13px;line-height:1.6">
+   Camp and tone come from the monitor’s reading of each headline or caption, not from a measured source. “Net advantage” scores each labelled item +1 when it helps the NDA (NDA positive, Opposition negative), −1 when it helps the Opposition, and averages. Topics and people are matched from headline keywords. Story grouping uses headline similarity. Treat all of these as indicators and spot-check before quoting.</div></div>
+  </div>`;
+};
+
+/* ================= render + events ================= */
+function render(){
+  const now=NOW();D.now=now;
+  const list=D.channels.map(c=>({c,s:status(c,now)}));
+  const counts={live:0,new:0};list.forEach(x=>{if(counts[x.s]!==undefined)counts[x.s]++});
+  // pulse
+  const lastScan=Math.max(0,...D.channels.map(c=>c.lastChecked||0),(D.meta&&D.meta.lastRun)||0),age=lastScan?now-lastScan:null;
+  $('#dot').className='dot '+(age===null?'warn':age>25*60e3?'bad':'ok');
+  $('#pulseTxt').innerHTML=age===null?'No scan yet':`Last scan ${rel(lastScan,now)}<br><span style="opacity:.7">${D.channels.length} channels · ${IT.length} items logged${age>25*60e3?' · scans may have paused':''}</span>`;
+  document.title=(counts.live?`(${counts.live} LIVE) `:'')+'Goa Media Watch';
+  // nav
+  const alertN=jget('mw.alertLog',[]).filter(a=>now-a.t<DAY).length;
+  $('#nav').innerHTML=TABS.map(([k,l])=>{
+    let bd='';if(k==='channels'&&counts.new+counts.live)bd=`<span class="bd">${counts.new+counts.live}</span>`;
+    if(k==='feed'){const n=IT.filter(x=>now-x.t<2*H).length;if(n)bd=`<span class="bd soft">${n}</span>`}
+    if(k==='alerts'&&alertN)bd=`<span class="bd">${alertN}</span>`;
+    return`<button data-tab="${k}" class="${TAB===k?'on':''}" ${TAB===k?'aria-current="page"':''}>${IC[k]}<span>${l}</span>${bd}</button>`}).join('');
+  // header controls
+  $('#range').querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.r===F.range));
+  const plats=[...new Set(D.channels.map(c=>c.platform))];
+  $('#plats').innerHTML=plats.map(p=>`<button class="chip ${F.plat===p?'on':''}" data-p="${p}">${PLAT[p]||p}</button>`).join('');
+  const T=TABS.find(t=>t[0]===TAB)[1],n=scoped(now,{ignoreCamp:true}).length;
+  const subs={overview:`${n} items · ${fmtRange(F.range)}`,feed:'Every labelled political item, newest first',channels:'Scorecard per source',analytics:'Volume, lean and timing',topics:'What is being talked about and who',stories:'The same story across channels',alerts:'Get told when it matters',reports:'Briefs you can share',settings:'Channels, preferences and data'};
+  pageHead(T,subs[TAB]);
+  const keep=document.activeElement&&document.activeElement.id==='q';
+  const scroll=window.scrollY,view=$('#view');
+  view.innerHTML=V[TAB](now);
+  if(TAB==='alerts'){ruleValueField();$('#rT').onchange=ruleValueField}
+  window.scrollTo(0,scroll);
+  // alert sound for fresh items
+  const sig=IT.filter(x=>now-x.t<30*60e3).map(x=>x.id).join(',')+list.filter(x=>x.s==='live').map(x=>x.c.id).join(',');
+  if(prevSig!==null&&sig!==prevSig&&sound)beep();prevSig=sig;
+}
+function go(tab){TAB=tab;location.hash='#/'+tab;$('#side').classList.remove('open');window.scrollTo(0,0);render()}
+window.addEventListener('hashchange',()=>{const t=(location.hash.replace(/^#\/?/,'')||'overview').split('?')[0];if(TABS.some(x=>x[0]===t)&&t!==TAB){TAB=t;render()}});
 function beep(){try{const x=new (window.AudioContext||window.webkitAudioContext)(),o=x.createOscillator(),g=x.createGain();o.connect(g);g.connect(x.destination);o.frequency.value=880;g.gain.setValueAtTime(.2,x.currentTime);g.gain.exponentialRampToValueAtTime(.001,x.currentTime+.6);o.start();o.stop(x.currentTime+.6)}catch{}}
+function dl(name,text,type='text/plain'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click()}
+function csvOf(items){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';return[['Time','Channel','Platform','Camp','Tone','Topics','People/parties','Headline','Link']].concat(items.map(x=>[new Date(x.t).toISOString(),x.name,PLAT[x.platform]||x.platform,campName(x.camp),x.tone,x.topics.join('; '),x.ent.join('; '),x.hl,x.url||''])).map(r=>r.map(q).join(',')).join('\n')}
 
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-s],[data-p],[data-t],[data-camp],[data-ack],[data-edit],[data-r],[data-v]');if(!t)return;
-  const d=t.dataset;
-  if(d.camp){F.camp=F.camp===d.camp?'':d.camp;render()}
-  else if(d.s!==undefined){F.status=F.status===d.s?'':d.s;render()}
-  else if(d.p){F.plat=F.plat===d.p?'':d.p;render()}
-  else if(d.t){F.tone=F.tone===d.t?'':d.t;render()}
-  else if(d.r!==undefined){F.range=+d.r;ls.set('mw.range',d.r);render()}
-  else if(d.v){document.querySelectorAll('#mtabs button').forEach(b=>b.classList.toggle('on',b===t));$('#secFeed').classList.toggle('hidem',d.v!=='feed');$('#secChan').classList.toggle('hidem',d.v!=='chan')}
-  else if(d.ack){await api('/api/channels',{action:'ack',id:d.ack});toast('Marked as checked');load()}
-  else if(d.edit)openEdit(d.edit);
+  const t=e.target.closest('[data-tab],[data-s],[data-p],[data-t],[data-camp],[data-ack],[data-edit],[data-r],[data-star],[data-chan],[data-topic],[data-person],[data-unf],[data-flag],[data-sort],[data-rep],[data-rdel],[data-status],#rAdd,#csvBtn,#ackAll,#addBtn2,#addGo,#snd2,#theme2,#notif,#notif2,#alogClr,#repCopy,#repMd,#repCsv,#repPrint,#expCsv,#expJson,#menu');
+  if(!t)return;const d=t.dataset;
+  if(t.id==='menu')return $('#side').classList.toggle('open');
+  if(d.tab)return go(d.tab);
+  if(d.r!==undefined){F.range=+d.r;ls.set('mw.range',d.r);return render()}
+  if(d.p){F.plat=F.plat===d.p?'':d.p;return render()}
+  if(d.camp){F.camp=F.camp===d.camp?'':d.camp;return render()}
+  if(d.t){F.tone=F.tone===d.t?'':d.t;return render()}
+  if(d.flag==='star'){F.star=!F.star;return render()}
+  if(d.star)return toggleStar(d.star);
+  if(d.chan!==undefined){e.preventDefault();F.chan=d.chan;return go('feed')}
+  if(d.topic){e.preventDefault();F.topic=d.topic;return go('feed')}
+  if(d.person){F.person=d.person;return go('feed')}
+  if(d.status){return go('channels')}
+  if(d.unf){if(d.unf==='all')F={...F,camp:'',tone:'',chan:'',topic:'',person:'',star:false};else F[{chan:'chan',topic:'topic',person:'person',camp:'camp',tone:'tone',star:'star'}[d.unf]]=d.unf==='star'?false:'';return render()}
+  if(d.sort){SORT=SORT.k===d.sort?{k:d.sort,d:-SORT.d}:{k:d.sort,d:d.sort==='name'||d.sort==='plat'?1:-1};return render()}
+  if(d.ack){await api('/api/channels',{action:'ack',id:d.ack});toast('Marked as checked');return load()}
+  if(d.edit)return openEdit(d.edit);
+  if(d.rep){REP=d.rep;return render()}
+  if(d.rdel){saveRules(rules().filter(r=>r.id!==d.rdel));return render()}
+  switch(t.id){
+   case'csvBtn':return dl('political-items.csv',csvOf(scoped(NOW())),'text/csv');
+   case'ackAll':{const ids=JSON.parse(t.dataset.ids||'[]');if(!ids.length||!confirm(`Mark ${ids.length} channels as checked now?`))return;await api('/api/channels',{action:'ack',ids});toast('Marked '+ids.length+' as checked');return load()}
+   case'addBtn2':return go('settings');
+   case'addGo':return addChannels();
+   case'snd2':return $('#snd').click();
+   case'theme2':return $('#theme').click();
+   case'notif':case'notif2':try{const p=await Notification.requestPermission();toast('Notifications '+p)}catch{toast('Not supported in this browser')}return render();
+   case'rAdd':{const type=$('#rT').value,val=($('#rV').value||'').trim(),name=($('#rN').value||'').trim()||RULE_TYPES[type]+': '+val;if(!val&&type!=='camp')return toast('Enter a value for the rule');saveRules([...rules(),{id:'r'+Date.now().toString(36),name,type,value:val}]);ls.set('mw.alertSeen',String(NOW()));toast('Rule added');return render()}
+   case'alogClr':ls.set('mw.alertLog','[]');return render();
+   case'repCopy':{const r=reportBuild(NOW(),REP);try{await navigator.clipboard.writeText(r.md);toast('Copied')}catch{toast('Copy blocked — use Download')}return}
+   case'repMd':{const r=reportBuild(NOW(),REP);return dl('brief-'+REP+'.md',r.md,'text/markdown')}
+   case'repCsv':{const{its}=reportData(NOW(),REP);return dl('items-'+REP+'.csv',csvOf(its),'text/csv')}
+   case'repPrint':return window.print();
+   case'expCsv':return dl('political-items.csv',csvOf(IT),'text/csv');
+   case'expJson':return dl('media-watch-backup.json',JSON.stringify({exported:new Date().toISOString(),channels:D.channels,items:IT.map(({c,tok,...x})=>x)},null,1),'application/json');
+  }
 });
-document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset&&e.target.dataset.camp){e.preventDefault();e.target.click()}if(e.key==='Escape')$('#edit').classList.add('hide')});
-$('#clear').onclick=()=>{F={...F,status:'',tag:'',plat:'',q:'',camp:'',tone:''};$('#q').value='';render()};
-$('#q').oninput=e=>{F.q=e.target.value.toLowerCase();render()};
-$('#ackAll').onclick=async e=>{const ids=JSON.parse(e.target.dataset.ids||'[]');if(!ids.length)return;if(!confirm(`Mark ${ids.length} channels as checked now?`))return;await api('/api/channels',{action:'ack',ids});toast('Marked '+ids.length+' as checked');load()};
-$('#snd').onclick=()=>{sound=!sound;ls.set('mw.sound',sound?'1':'0');$('#snd').textContent='🔔 Sound '+(sound?'on':'off');if(sound)beep()};
+document.addEventListener('click',e=>{const r=e.target.closest('tr[data-topic],tr[data-person]');if(r&&!e.target.closest('a,button')){if(r.dataset.topic)F.topic=r.dataset.topic;else F.person=r.dataset.person;go('feed')}});
+document.addEventListener('change',e=>{if(e.target.id==='chanSel'){F.chan=e.target.value;render()}});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset&&e.target.dataset.camp&&e.target.getAttribute('role')==='button'){e.preventDefault();e.target.click()}if(e.key==='Escape')$('#edit').classList.add('hide');
+  if(e.key==='/'&&!/input|textarea|select/i.test(e.target.tagName)){e.preventDefault();$('#q').focus()}
+  if(!/input|textarea|select/i.test(e.target.tagName)&&!e.metaKey&&!e.ctrlKey&&/^[1-9]$/.test(e.key)){const t=TABS[+e.key-1];if(t)go(t[0])}});
+$('#q').oninput=e=>{F.q=e.target.value;clearTimeout($('#q').tm);$('#q').tm=setTimeout(()=>{render()},160)};
+$('#snd').onclick=()=>{sound=!sound;ls.set('mw.sound',sound?'1':'0');$('#snd').textContent='🔔 Sound '+(sound?'on':'off');if(sound)beep();if(TAB==='settings')render()};
 $('#snd').textContent='🔔 Sound '+(sound?'on':'off');
-$('#addBtn').onclick=()=>$('#addPanel').classList.toggle('hide');
-$('#addCancel').onclick=()=>$('#addPanel').classList.add('hide');
-$('#addGo').onclick=async()=>{
+async function addChannels(){
   const have=new Set(D.channels.map(c=>c.url.toLowerCase().replace(/\/(videos|streams)?\/?$/,'')));
   const out=[];let dup=0;
   for(const line of $('#addTxt').value.split('\n')){
@@ -374,31 +857,25 @@ $('#addGo').onclick=async()=>{
   }
   if(!out.length){$('#addMsg').textContent=dup?`${dup} already on the board.`:'No valid links found.';return}
   await api('/api/channels',{action:'import',channels:out});
-  $('#addTxt').value='';$('#addMsg').textContent='';$('#addPanel').classList.add('hide');toast(`Added ${out.length}${dup?` (${dup} already there)`:''}`);load();
-};
+  toast(`Added ${out.length}${dup?` (${dup} already there)`:''}`);load();
+}
 function openEdit(id){
   const c=D.channels.find(x=>x.id===id);if(!c)return;const e=$('#edit');
   e.innerHTML=`<div class="row" style="justify-content:space-between"><b>Manage channel</b><button class="ico" id="eC" aria-label="Close">✕</button></div>
-  <label>Name</label><input id="eN" value="${esc(c.name)}">
-  <label>Link</label><input id="eU" value="${esc(c.url)}">
-  <div class="grid2"><div><label>Platform</label><select id="eP">${Object.keys(PLAT).map(p=>`<option value="${p}" ${p===c.platform?'selected':''}>${PLAT[p]}</option>`).join('')}</select></div>
-  <div><label>Check every (hours)</label><input id="eI" type="number" min="0.25" step="0.25" value="${c.intervalH||6}"></div></div>
-  <label>Tag</label><input id="eT" value="${esc(c.tag||'')}">
-  <label>Note</label><input id="eNo" value="${esc(c.note||'')}">
+  <label>Name</label><input type="text" id="eN" value="${esc(c.name)}">
+  <label>Link</label><input type="text" id="eU" value="${esc(c.url)}">
+  <div class="grid g2"><div><label>Platform</label><select id="eP">${Object.keys(PLAT).map(p=>`<option value="${p}" ${p===c.platform?'selected':''}>${PLAT[p]}</option>`).join('')}</select></div>
+  <div><label>Check every (hours)</label><input type="number" id="eI" min="0.25" step="0.25" value="${c.intervalH||6}"></div></div>
+  <label>Tag</label><input type="text" id="eT" value="${esc(c.tag||'')}">
+  <label>Note</label><input type="text" id="eNo" value="${esc(c.note||'')}">
   <label>Flag by hand</label><select id="eF"><option value="none">None</option><option value="new" ${c.flag==='new'?'selected':''}>New activity</option><option value="live" ${c.flag==='live'?'selected':''}>Live now</option></select>
-  <div class="row" style="margin-top:14px"><button class="btn pri" id="eS">Save</button><button class="btn" id="eD" style="margin-left:auto;color:var(--live)">Remove</button></div>`;
+  <div class="row" style="margin-top:14px"><button class="btn pri" id="eS">Save</button><button class="btn bad" id="eD" style="margin-left:auto">Remove</button></div>`;
   e.classList.remove('hide');
   $('#eC').onclick=()=>e.classList.add('hide');
   $('#eS').onclick=async()=>{await api('/api/channels',{action:'upsert',channel:{id,name:$('#eN').value,url:$('#eU').value,platform:$('#eP').value,intervalH:$('#eI').value,tag:$('#eT').value,note:$('#eNo').value,flag:$('#eF').value}});e.classList.add('hide');toast('Saved');load()};
   $('#eD').onclick=async()=>{if(!confirm('Remove "'+c.name+'" from the board?'))return;await api('/api/channels',{action:'delete',id});e.classList.add('hide');toast('Removed');load()};
 }
-$('#csv').onclick=()=>{
-  const now=Date.now(),q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
-  const rows=[['Time','Channel','Platform','Camp','Tone','Headline','Link']].concat(items().map(x=>[new Date(x.t).toISOString(),x.c.name,PLAT[x.c.platform]||x.c.platform,campName(x.camp),x.tone,x.hl,x.url||'']));
-  const blob=new Blob([rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='political-items.csv';a.click();
-};
-load();setInterval(load,15000);setInterval(()=>{if(D.channels.length)render()},60000);
+load();setInterval(()=>{if(!document.hidden)load()},20000);setInterval(()=>{if(D.channels.length&&!document.hidden&&!/input|textarea|select/i.test(document.activeElement.tagName))render()},60000);
 </script>
 </body>
 </html>

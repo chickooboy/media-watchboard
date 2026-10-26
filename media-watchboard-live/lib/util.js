@@ -141,7 +141,7 @@ export async function telegram(text) {
   } catch { return false; }
 }
 
-export const KEYS = { channels: 'mw:channels', auto: 'mw:auto', meta: 'mw:meta', items: 'mw:items', itemmeta: 'mw:itemmeta' };
+export const KEYS = { channels: 'mw:channels', auto: 'mw:auto', meta: 'mw:meta', items: 'mw:items', itemmeta: 'mw:itemmeta', writeups: 'mw:writeups' };
 
 // Parse a board label like "NDA Positive" or a note like "[Opposition Negative] headline".
 export function parseLabel(h) {

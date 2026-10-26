@@ -396,6 +396,7 @@ const CAMPS=[['nda','NDA'],['opp','Opposition'],['oth','Others']];
 const H=3600e3,DAY=86400e3;
 const IC={
  overview:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+ writeups:'<svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>',
  feed:'<svg viewBox="0 0 24 24"><path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.2"/></svg>',
  channels:'<svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="m9 10 5 2.5L9 15z"/><path d="M8 3l4 3 4-3"/></svg>',
  analytics:'<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
@@ -405,7 +406,7 @@ const IC={
  reports:'<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg>',
  settings:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5a7 7 0 0 0 0 2.4l-2 1.5 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg>'
 };
-const TABS=[['overview','Overview'],['feed','Live feed'],['channels','Channels'],['analytics','Analytics'],['topics','Topics & people'],['stories','Story tracker'],['alerts','Alerts'],['reports','Reports'],['settings','Settings']];
+const TABS=[['overview','Overview'],['feed','Live feed'],['writeups','Write-ups'],['channels','Channels'],['analytics','Analytics'],['topics','Topics & people'],['stories','Story tracker'],['alerts','Alerts'],['reports','Reports'],['settings','Settings']];
 
 /* ---------- knowledge: topics, people, parties ---------- */
 const TOPICS=[
@@ -429,6 +430,7 @@ const PEOPLE=[['Pramod Sawant',/sawant|\bcm\b/i],['Vijai Sardesai',/sardesai/i],
 const STOP=new Set('the a an and or of to in on for at by with from as is are was were be been it its this that these those after over into amid says said say seeks seek slams hits welcomes welcome urges claims claim goa goan goans news new about up out his her their our us we he she they who whom has have had will would can could may might not no than then also but if so do does did more most all any some other such only own same too very just'.split(' '));
 
 /* ---------- state ---------- */
+let WU=[],WD='';
 let D={channels:[],auto:{},meta:null},IT=[],ITMETA=jget('mw.starsLocal',{}),SRVITEMS=0;
 let F={range:+(ls.get('mw.range')??24),q:'',plat:'',camp:'',tone:'',chan:'',topic:'',person:'',star:false};
 let TAB=(location.hash.replace(/^#\/?/,'')||'overview').split('?')[0];
@@ -537,8 +539,8 @@ function clusters(items){
 /* ---------- loading ---------- */
 async function load(){
   try{
-    const [s,i]=await Promise.all([api('/api/state'),api('/api/items').catch(()=>null)]);
-    D=s;
+    const [s,i,w]=await Promise.all([api('/api/state'),api('/api/items').catch(()=>null),api('/api/writeups').catch(()=>null)]);
+    D=s;if(w)WU=w.writeups||[];
     if(i){SRVITEMS=(i.items||[]).length;ITMETA={...ITMETA,...(i.meta||{})}}
     IT=buildItems(i?i.items:[]);
     if(!D.channels.length&&!load.seeded){load.seeded=1;const sd=await fetch('/seed.json').then(r=>r.json()).catch(()=>[]);if(sd.length){await api('/api/channels',{action:'import',channels:sd});toast('Loaded starter channels');return load()}}
@@ -712,6 +714,28 @@ V.feed=(now)=>{
   ${filterNote()}
   <div class="card"><div class="hd pad" style="margin:0;padding-bottom:4px"><h2>Political feed</h2><span class="cnt">${its.length} shown · ${fmtRange(F.range)}</span></div>
   <div style="padding:0 10px 10px">${html||`<div class="empty"><b>No political items here</b>Nothing matches these filters. Scans run roughly every 12 minutes, 8 am to 10 pm.</div>`}</div></div>`;
+};
+
+const wuText=w=>w.title+'\n\n'+w.points.map((p,i)=>(i+1)+'. '+p).join('\n\n');
+const wuDate=w=>w.date||new Date(w.t).toISOString().slice(0,10);
+const wuDateLabel=d=>{const x=new Date(d+'T12:00:00');return x.toLocaleDateString([], {weekday:'long',day:'numeric',month:'long',year:'numeric'})};
+V.writeups=(now)=>{
+  const dates=[...new Set(WU.map(wuDate))].sort().reverse();
+  if(!WD||!dates.includes(WD))WD=dates[0]||'';
+  const list=WU.filter(w=>wuDate(w)===WD&&(!F.camp||w.camp===F.camp)).sort((a,b)=>b.t-a.t);
+  const cards=list.map(w=>`<article class="card wu" style="margin-bottom:12px;padding:16px 18px">
+    <div class="m" style="margin-bottom:6px"><span class="badge ${w.camp}">${esc(campName(w.camp))}</span><span class="tone">${toneTxt(w.tone)}</span><span>${clock(w.t)}</span></div>
+    <h3 style="margin:2px 0 10px;font-size:16px;line-height:1.35">${esc(w.title)}</h3>
+    <ol style="margin:0 0 10px 18px;padding:0;line-height:1.55">${w.points.map(p=>`<li style="margin-bottom:8px">${esc(p)}</li>`).join('')}</ol>
+    ${w.check?`<div style="font-size:12px;opacity:.75;margin-bottom:8px">✎ To confirm: ${esc(w.check)}</div>`:''}
+    <div class="row noprint" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn sm" data-wcopy="${esc(w.id)}">Copy write-up</button>
+    <span class="cnt">Source: ${w.sources.map(s=>s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`:esc(s.name)).join(' · ')}</span></div></article>`).join('');
+  return`<div class="row noprint" style="margin-bottom:12px;gap:8px;flex-wrap:wrap;align-items:center">
+    <select id="wDate" style="width:auto;padding:5px 8px">${dates.map(d=>`<option value="${d}" ${d===WD?'selected':''}>${esc(wuDateLabel(d))}</option>`).join('')}</select>
+    ${CAMPS.map(([k,n])=>`<button class="chip ${F.camp===k?'on':''}" data-camp="${k}"><span class="sw" style="background:var(--${k})"></span>${n}</button>`).join('')}
+    <span class="cnt">${list.length} write-ups</span><span style="flex:1"></span>
+    <button class="btn sm" id="wAll">Copy all</button><button class="btn sm" id="repPrint">Print</button></div>
+  ${cards||`<div class="empty"><b>No write-ups yet</b>Write-ups appear here for each political story.</div>`}`;
 };
 
 V.channels=(now)=>{
@@ -957,7 +981,7 @@ function render(){
   const plats=[...new Set(D.channels.map(c=>c.platform))];
   $('#plats').innerHTML=plats.map(p=>`<button class="chip ${F.plat===p?'on':''}" data-p="${p}">${PLAT[p]||p}</button>`).join('');
   const T=TABS.find(t=>t[0]===TAB)[1],n=scoped(now,{ignoreCamp:true}).length;
-  const subs={overview:`${n} items · ${fmtRange(F.range)}`,feed:'Every labelled political item, newest first',channels:'Scorecard per source',analytics:'Volume, lean and timing',topics:'What is being talked about and who',stories:'The same story across channels',alerts:'Get told when it matters',reports:'Briefs you can share',settings:'Channels, preferences and data'};
+  const subs={overview:`${n} items · ${fmtRange(F.range)}`,feed:'Every labelled political item, newest first',writeups:'Formal write-ups for each political story, ready to share',channels:'Scorecard per source',analytics:'Volume, lean and timing',topics:'What is being talked about and who',stories:'The same story across channels',alerts:'Get told when it matters',reports:'Briefs you can share',settings:'Channels, preferences and data'};
   pageHead(T,subs[TAB]);
   const keep=document.activeElement&&document.activeElement.id==='q';
   const scroll=window.scrollY,view=$('#view');
@@ -983,13 +1007,16 @@ function unlockAudio(){const x=audioCtx();if(x&&x.state!=='running')x.resume().t
 ['pointerdown','keydown','touchstart'].forEach(e=>window.addEventListener(e,unlockAudio,{passive:true}));
 setInterval(soundGate,2000);
 function beep(){try{const x=audioCtx();if(!x)return;if(x.state!=='running'){x.resume();soundGate();return}const t=x.currentTime;[0,.28].forEach(d=>{const o=x.createOscillator(),g=x.createGain();o.connect(g);g.connect(x.destination);o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(.25,t+d);g.gain.exponentialRampToValueAtTime(.001,t+d+.22);o.start(t+d);o.stop(t+d+.24)})}catch{}}
+function copyTxt(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Copied'),()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Copied')}catch{toast('Copy failed')}a.remove()})}
 function dl(name,text,type='text/plain'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click()}
 function csvOf(items){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';return[['Time','Channel','Platform','Camp','Tone','Topics','People/parties','Headline','Link']].concat(items.map(x=>[new Date(x.t).toISOString(),x.name,PLAT[x.platform]||x.platform,campName(x.camp),x.tone,x.topics.join('; '),x.ent.join('; '),x.hl,x.url||''])).map(r=>r.map(q).join(',')).join('\n')}
 
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-tab],[data-s],[data-p],[data-t],[data-camp],[data-ack],[data-edit],[data-r],[data-star],[data-chan],[data-topic],[data-person],[data-unf],[data-flag],[data-sort],[data-rep],[data-rdel],[data-status],#rAdd,#csvBtn,#ackAll,#addBtn2,#addGo,#snd2,#theme2,#notif,#notif2,#alogClr,#repCopy,#repMd,#repCsv,#repPrint,#expCsv,#expJson,#menu');
+  const t=e.target.closest('[data-tab],[data-s],[data-p],[data-t],[data-camp],[data-ack],[data-edit],[data-r],[data-star],[data-chan],[data-topic],[data-person],[data-unf],[data-flag],[data-sort],[data-rep],[data-rdel],[data-status],#rAdd,#csvBtn,[data-wcopy],#wAll,#ackAll,#addBtn2,#addGo,#snd2,#theme2,#notif,#notif2,#alogClr,#repCopy,#repMd,#repCsv,#repPrint,#expCsv,#expJson,#menu');
   if(!t)return;const d=t.dataset;
   if(t.id==='menu')return $('#side').classList.toggle('open');
+  if(d.wcopy){const w=WU.find(x=>x.id===d.wcopy);if(w)copyTxt(wuText(w));return}
+  if(t.id==='wAll'){const l=WU.filter(w=>wuDate(w)===WD&&(!F.camp||w.camp===F.camp)).sort((a,b)=>b.t-a.t);copyTxt(l.map(wuText).join('\n\n\n'));return}
   if(d.tab)return go(d.tab);
   if(d.r!==undefined){F.range=+d.r;ls.set('mw.range',d.r);return render()}
   if(d.p){F.plat=F.plat===d.p?'':d.p;return render()}
@@ -1026,7 +1053,7 @@ document.addEventListener('click',async e=>{
   }
 });
 document.addEventListener('click',e=>{const r=e.target.closest('tr[data-topic],tr[data-person]');if(r&&!e.target.closest('a,button')){if(r.dataset.topic)F.topic=r.dataset.topic;else F.person=r.dataset.person;go('feed')}});
-document.addEventListener('change',e=>{if(e.target.id==='chanSel'){F.chan=e.target.value;render()}});
+document.addEventListener('change',e=>{if(e.target.id==='chanSel'){F.chan=e.target.value;render()}if(e.target.id==='wDate'){WD=e.target.value;render()}});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset&&e.target.dataset.camp&&e.target.getAttribute('role')==='button'){e.preventDefault();e.target.click()}if(e.key==='Escape')$('#edit').classList.add('hide');
   if(e.key==='/'&&!/input|textarea|select/i.test(e.target.tagName)){e.preventDefault();$('#q').focus()}
   if(!/input|textarea|select/i.test(e.target.tagName)&&!e.metaKey&&!e.ctrlKey&&/^[1-9]$/.test(e.key)){const t=TABS[+e.key-1];if(t)go(t[0])}});

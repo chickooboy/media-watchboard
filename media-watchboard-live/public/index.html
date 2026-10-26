@@ -618,13 +618,19 @@ function buckets(items,now){
 }
 
 /* ---------- reusable fragments ---------- */
+function wuBtn(x){
+  const w=WU.find(v=>v.id===x.id);
+  if(w&&w.status==='pending')return`<button class="ico" disabled title="Write-up requested, being prepared" style="width:auto;padding:0 8px;font-size:12px;opacity:.7">⏳ Pending</button>`;
+  if(w)return`<a class="ico" href="#/writeups" data-wgo="${esc(x.id)}" title="Open write-up" style="width:auto;padding:0 8px;font-size:12px;text-decoration:none">✎ View</a>`;
+  return`<button class="ico" data-wreq="${esc(x.id)}" title="Generate a formal write-up for this story" style="width:auto;padding:0 8px;font-size:12px">✎ Write-up</button>`;
+}
 function itemRow(x,now,i){
   const fresh=now-x.t<2*H,u=x.url;
   return`<div class="fi" style="animation-delay:${Math.min(i,12)*18}ms"><span class="stripe" style="background:var(--${x.camp})"></span><div style="min-width:0">
     ${u?`<a class="hl" href="${esc(u)}" target="_blank" rel="noopener">${esc(x.hl)}</a>`:`<span class="hl">${esc(x.hl)}</span>`}
     <div class="m"><span class="badge ${x.camp}">${esc(campName(x.camp))}</span><span class="tone">${toneTxt(x.tone)}</span><a href="#/channels" data-chan="${esc(x.cid)}" style="text-decoration:none">${esc(x.name)}</a><span class="plat">${esc(PLAT[x.platform]||x.platform)}</span><span>${clock(x.t)} · ${rel(x.t,now)}</span>${fresh?'<span class="fresh">New</span>':''}
     ${x.topics.slice(0,2).map(t=>`<a class="tag" href="#/topics" data-topic="${esc(t)}" style="text-decoration:none">${esc(t)}</a>`).join('')}</div></div>
-    <div class="acts"><button class="ico ${isStar(x.id)?'on':''}" data-star="${esc(x.id)}" title="Star" aria-label="Star item">${isStar(x.id)?'★':'☆'}</button>${u?`<a class="ico" href="${esc(u)}" target="_blank" rel="noopener" title="Open post" aria-label="Open post">↗</a>`:`<span class="ico" title="Post link not captured" style="opacity:.4">–</span>`}</div></div>`;
+    <div class="acts">${wuBtn(x)}<button class="ico ${isStar(x.id)?'on':''}" data-star="${esc(x.id)}" title="Star" aria-label="Star item">${isStar(x.id)?'★':'☆'}</button>${u?`<a class="ico" href="${esc(u)}" target="_blank" rel="noopener" title="Open post" aria-label="Open post">↗</a>`:`<span class="ico" title="Post link not captured" style="opacity:.4">–</span>`}</div></div>`;
 }
 function campBlock(items){
   const mx=Math.max(1,...CAMPS.map(([k])=>items.filter(x=>x.camp===k).length));
@@ -724,12 +730,13 @@ V.writeups=(now)=>{
   if(!WD||!dates.includes(WD))WD=dates[0]||'';
   const list=WU.filter(w=>wuDate(w)===WD&&(!F.camp||w.camp===F.camp)).sort((a,b)=>b.t-a.t);
   const cards=list.map(w=>`<article class="card wu" style="margin-bottom:12px;padding:16px 18px">
+    ${w.status==='pending'?`<div class="m" style="margin-bottom:6px"><span class="badge ${w.camp}">${esc(campName(w.camp))}</span><span class="tone">${toneTxt(w.tone)}</span><span>${clock(w.t)}</span></div><h3 style="margin:2px 0 8px;font-size:16px;line-height:1.35">${esc(w.title)}</h3><div class="cnt">⏳ Requested. The write-up is being prepared and will appear here.</div></article>`:`
     <div class="m" style="margin-bottom:6px"><span class="badge ${w.camp}">${esc(campName(w.camp))}</span><span class="tone">${toneTxt(w.tone)}</span><span>${clock(w.t)}</span></div>
     <h3 style="margin:2px 0 10px;font-size:16px;line-height:1.35">${esc(w.title)}</h3>
     <ol style="margin:0 0 10px 18px;padding:0;line-height:1.55">${w.points.map(p=>`<li style="margin-bottom:8px">${esc(p)}</li>`).join('')}</ol>
     ${w.check?`<div style="font-size:12px;opacity:.75;margin-bottom:8px">✎ To confirm: ${esc(w.check)}</div>`:''}
     <div class="row noprint" style="gap:8px;flex-wrap:wrap;align-items:center"><button class="btn sm" data-wcopy="${esc(w.id)}">Copy write-up</button>
-    <span class="cnt">Source: ${w.sources.map(s=>s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`:esc(s.name)).join(' · ')}</span></div></article>`).join('');
+    <span class="cnt">Source: ${w.sources.map(s=>s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`:esc(s.name)).join(' · ')}</span></div></article>`}`).join('');
   return`<div class="row noprint" style="margin-bottom:12px;gap:8px;flex-wrap:wrap;align-items:center">
     <select id="wDate" style="width:auto;padding:5px 8px">${dates.map(d=>`<option value="${d}" ${d===WD?'selected':''}>${esc(wuDateLabel(d))}</option>`).join('')}</select>
     ${CAMPS.map(([k,n])=>`<button class="chip ${F.camp===k?'on':''}" data-camp="${k}"><span class="sw" style="background:var(--${k})"></span>${n}</button>`).join('')}
@@ -1012,9 +1019,15 @@ function dl(name,text,type='text/plain'){const a=document.createElement('a');a.h
 function csvOf(items){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';return[['Time','Channel','Platform','Camp','Tone','Topics','People/parties','Headline','Link']].concat(items.map(x=>[new Date(x.t).toISOString(),x.name,PLAT[x.platform]||x.platform,campName(x.camp),x.tone,x.topics.join('; '),x.ent.join('; '),x.hl,x.url||''])).map(r=>r.map(q).join(',')).join('\n')}
 
 document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-tab],[data-s],[data-p],[data-t],[data-camp],[data-ack],[data-edit],[data-r],[data-star],[data-chan],[data-topic],[data-person],[data-unf],[data-flag],[data-sort],[data-rep],[data-rdel],[data-status],#rAdd,#csvBtn,[data-wcopy],#wAll,#ackAll,#addBtn2,#addGo,#snd2,#theme2,#notif,#notif2,#alogClr,#repCopy,#repMd,#repCsv,#repPrint,#expCsv,#expJson,#menu');
+  const t=e.target.closest('[data-tab],[data-s],[data-p],[data-t],[data-camp],[data-ack],[data-edit],[data-r],[data-star],[data-chan],[data-topic],[data-person],[data-unf],[data-flag],[data-sort],[data-rep],[data-rdel],[data-status],#rAdd,#csvBtn,[data-wcopy],[data-wreq],[data-wgo],#wAll,#ackAll,#addBtn2,#addGo,#snd2,#theme2,#notif,#notif2,#alogClr,#repCopy,#repMd,#repCsv,#repPrint,#expCsv,#expJson,#menu');
   if(!t)return;const d=t.dataset;
   if(t.id==='menu')return $('#side').classList.toggle('open');
+  if(d.wgo){const w=WU.find(x=>x.id===d.wgo);if(w)WD=wuDate(w);return go('writeups')}
+  if(d.wreq){const x=IT.find(v=>v.id===d.wreq);if(!x)return;t.disabled=true;t.textContent='⏳ Requesting…';
+    const date=new Date(x.t+5.5*36e5).toISOString().slice(0,10);
+    try{await api('/api/writeups',{action:'request',id:x.id,title:x.hl,t:x.t,date,camp:x.camp,tone:x.tone,sources:[{name:x.name+' ('+(PLAT[x.platform]||x.platform)+')',url:x.url||''}]});
+      WU.push({id:x.id,status:'pending',title:x.hl,t:x.t,date,camp:x.camp,tone:x.tone,points:[],sources:[]});render()}
+    catch(err){t.disabled=false;t.textContent='✎ Write-up';alert('Could not request write-up: '+err.message)}return}
   if(d.wcopy){const w=WU.find(x=>x.id===d.wcopy);if(w)copyTxt(wuText(w));return}
   if(t.id==='wAll'){const l=WU.filter(w=>wuDate(w)===WD&&(!F.camp||w.camp===F.camp)).sort((a,b)=>b.t-a.t);copyTxt(l.map(wuText).join('\n\n\n'));return}
   if(d.tab)return go(d.tab);

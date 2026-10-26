@@ -22,6 +22,22 @@ export default async function handler(req, res) {
       await hdel(KEYS.writeups, id);
       return res.status(200).json({ ok: true });
     }
+    if (b.action === 'request') {
+      // User clicked "Write-up" on a live-feed item: queue it as pending; the assistant fills it in.
+      const id = clean(b.id, 120);
+      if (!id || !b.title) return res.status(400).json({ error: 'id and title required' });
+      const all = await hgetall(KEYS.writeups);
+      const have = all[id];
+      if (have && (have.status !== 'pending' || have.points?.length)) return res.status(200).json({ ok: true, existing: true });
+      const rec = {
+        id, status: 'pending', requestedAt: Date.now(), date: clean(b.date, 12), t: Number(b.t) || Date.now(),
+        camp: ['nda', 'opp', 'oth'].includes(b.camp) ? b.camp : '', tone: ['pos', 'neg', 'twist'].includes(b.tone) ? b.tone : '',
+        title: clean(b.title, 240), points: [],
+        sources: (Array.isArray(b.sources) ? b.sources : []).slice(0, 8).map(s => ({ name: clean(s && s.name, 80), url: clean(s && s.url, 500) })),
+      };
+      await hset(KEYS.writeups, id, rec);
+      return res.status(200).json({ ok: true });
+    }
     if (b.action === 'set') {
       const list = (Array.isArray(b.writeups) ? b.writeups : []).slice(0, 200);
       let written = 0;

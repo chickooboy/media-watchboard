@@ -305,6 +305,59 @@ table.t th{background:color-mix(in srgb,var(--panel2) 85%,transparent);backdrop-
 #view>*:nth-child(2){animation-delay:.05s}#view>*:nth-child(3){animation-delay:.1s}#view>*:nth-child(4){animation-delay:.15s}#view>*:nth-child(5){animation-delay:.2s}
 @media print{body::before,body::after{display:none}.card{backdrop-filter:none}}
 @media (prefers-reduced-motion:reduce){#view>*{animation:none}}
+
+/* ===== v4: finish & polish (visual only) ===== */
+:root{--sans:'Inter',system-ui,sans-serif}
+*{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--faint) 55%,transparent) transparent}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--faint) 45%,transparent);border-radius:99px;border:2px solid transparent;background-clip:padding-box}::-webkit-scrollbar-thumb:hover{background:color-mix(in srgb,var(--accent2) 70%,transparent);background-clip:padding-box;border:2px solid transparent}
+html{background:var(--bg)}
+:root:not([data-theme=dark]){--bg:#eef0f8;--panel:#fbfbff}
+/* sidebar polish */
+.side{overflow:hidden}
+.side::before{background:radial-gradient(280px 220px at 0 0,rgba(129,140,248,.38),transparent 70%),radial-gradient(240px 200px at 100% 100%,rgba(236,72,153,.16),transparent 70%)}
+.nav button.on svg{filter:drop-shadow(0 0 6px rgba(165,172,255,.9))}
+.nav button{transition:background .18s,color .18s,transform .18s}
+.nav button:hover{transform:translateX(2px)}
+.pulse{background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 10px 24px -12px rgba(0,0,0,.6)}
+/* real platform glyphs */
+.plat.youtube::before,.plat.instagram::before,.plat.x::before{width:13px;height:13px;border-radius:4px;background-size:100% 100%;background-repeat:no-repeat}
+.plat.youtube::before{background-color:#ff1a1a;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 13'%3E%3Cpath d='M5 4l4 2.5L5 9z' fill='white'/%3E%3C/svg%3E")}
+.plat.instagram::before{background:linear-gradient(135deg,#feda75,#fa7e1e 28%,#d62976 55%,#962fbf 78%,#4f5bd5);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 13' fill='none' stroke='white' stroke-width='1.1'%3E%3Crect x='3' y='3' width='7' height='7' rx='2'/%3E%3Ccircle cx='6.5' cy='6.5' r='1.5'/%3E%3C/svg%3E"),linear-gradient(135deg,#feda75,#fa7e1e 28%,#d62976 55%,#962fbf 78%,#4f5bd5)}
+.plat.x::before{background-color:#0b0d12;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 13'%3E%3Cpath d='M3.5 3.5l6 6M9.5 3.5l-6 6' stroke='white' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E")}
+:root[data-theme=dark] .plat.x::before{background-color:#e9ecf7;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 13'%3E%3Cpath d='M3.5 3.5l6 6M9.5 3.5l-6 6' stroke='%230b0d12' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E")}
+/* camp stripes & badges: gradient */
+.fi .stripe{background-image:linear-gradient(180deg,rgba(255,255,255,.35),transparent 60%)}
+.badge.nda{background:linear-gradient(180deg,#fff4e8,var(--nda-bg))}.badge.opp{background:linear-gradient(180deg,#eef3ff,var(--opp-bg))}.badge.oth{background:linear-gradient(180deg,#e9fbf4,var(--oth-bg))}
+:root[data-theme=dark] .badge.nda,:root[data-theme=dark] .badge.opp,:root[data-theme=dark] .badge.oth{background-image:none}
+.tag{background:linear-gradient(180deg,color-mix(in srgb,var(--accent-soft) 70%,#fff),var(--accent-soft));box-shadow:0 0 0 1px color-mix(in srgb,var(--accent2) 18%,transparent) inset}
+:root[data-theme=dark] .tag{background:var(--accent-soft)}
+/* hover feedback & focus */
+.card{transition:box-shadow .25s,transform .25s,border-color .25s}
+.kpi:hover{transform:translateY(-3px)}
+.kpi.card:hover::before{filter:saturate(1.3) brightness(1.1)}
+.camp:hover{transform:translateX(2px)}
+.btn:active,.chip:active,.seg button:active,.ico:active{transform:translateY(1px) scale(.98)}
+.chip.on,.seg button.on{text-shadow:0 1px 0 rgba(0,0,0,.18)}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%238b93ae' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+/* section title accent */
+.hd h2::before{width:5px;height:14px;box-shadow:0 0 10px -1px var(--accent2)}
+.daysep{color:var(--accent);opacity:.85}
+/* tables */
+table.t tbody tr:hover td:first-child{box-shadow:3px 0 0 var(--accent2) inset}
+.chcell b{letter-spacing:-.2px}
+/* heatmap cells soft glow */
+.heat .c[style*="background"]{box-shadow:0 4px 10px -6px rgba(20,26,51,.45)}
+/* report: paper look */
+.report{background:linear-gradient(180deg,#fff,#fbfbff)!important;border:1px solid var(--line2);box-shadow:var(--sh2)}
+:root[data-theme=dark] .report{background:linear-gradient(180deg,#141a3a,#10163a)!important}
+.report h1{background:linear-gradient(90deg,var(--ink),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* skeleton shimmer on first load */
+.sk{border-radius:16px;background:linear-gradient(100deg,var(--panel2) 30%,color-mix(in srgb,var(--panel2) 55%,#fff) 50%,var(--panel2) 70%);background-size:220% 100%;animation:sh 1.3s linear infinite;border:1px solid var(--line)}
+@keyframes sh{from{background-position:120% 0}to{background-position:-120% 0}}
+.skg{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:18px}
+@media(max-width:860px){.skg{grid-template-columns:1fr 1fr}}
+/* page-load reveal for topbar title */
+.topbar h1{animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
 </style>
 </head>
 <body>
@@ -520,10 +573,10 @@ function stackedBars(buckets,{h=190,unit}={}){
   ticks.forEach(t=>{const y=pt+ih-(t/mx)*ih;g+=`<line class="gl" x1="${pl}" x2="${w-2}" y1="${y}" y2="${y}"/><text x="${pl-5}" y="${y+3}" text-anchor="end">${t}</text>`});
   buckets.forEach((b,i)=>{
     let y=pt+ih;const x=pl+i*bw+bw*.14,ww=bw*.72;
-    [['nda',b.nda],['opp',b.opp],['oth',b.oth]].forEach(([k,v])=>{if(!v)return;const hh=v/mx*ih;y-=hh;g+=`<rect x="${x}" y="${y}" width="${ww}" height="${hh}" rx="3" fill="var(--${k})"><title>${esc(b.label)} · ${campName(k)}: ${v}</title></rect>`});
+    [['nda',b.nda],['opp',b.opp],['oth',b.oth]].forEach(([k,v])=>{if(!v)return;const hh=v/mx*ih;y-=hh;g+=`<rect x="${x}" y="${y}" width="${ww}" height="${hh}" rx="4" fill="url(#gb-${k})"><title>${esc(b.label)} · ${campName(k)}: ${v}</title></rect>`});
     if(buckets.length<=12||i%Math.ceil(buckets.length/10)===0)g+=`<text x="${x+ww/2}" y="${h-6}" text-anchor="middle">${esc(b.short)}</text>`;
   });
-  return`<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Political items over time">${g}</svg>`;
+  return`<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Political items over time"><defs><linearGradient id="gb-nda" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--nda)"/><stop offset="1" style="stop-color:var(--nda);stop-opacity:.68"/></linearGradient><linearGradient id="gb-opp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--opp)"/><stop offset="1" style="stop-color:var(--opp);stop-opacity:.68"/></linearGradient><linearGradient id="gb-oth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--oth)"/><stop offset="1" style="stop-color:var(--oth);stop-opacity:.68"/></linearGradient><linearGradient id="gb-accent" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--accent);stop-opacity:.68"/></linearGradient></defs>${g}</svg>`;
 }
 function lineChart(points,{h=170,lo=-1,hi=1}={}){
   const w=640,pl=34,pb=22,pt=8,iw=w-pl-8,ih=h-pb-pt;
@@ -532,11 +585,11 @@ function lineChart(points,{h=170,lo=-1,hi=1}={}){
   const n=points.length,x=i=>pl+(n===1?iw/2:i/(n-1)*iw);
   const pts=points.map((p,i)=>p.v==null?null:[x(i),y(p.v),p]);
   let d='';pts.forEach(p=>{if(p)d+=(d?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)});
-  if(d)g+=`<path d="${d}" fill="none" stroke="var(--accent2)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>`;
+  if(d)g+=`<path d="${d}" fill="none" stroke="var(--accent2)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" filter="url(#glow)"/>`;
   pts.forEach(p=>{if(p)g+=`<circle cx="${p[0]}" cy="${p[1]}" r="4.2" stroke="var(--panel)" stroke-width="2" fill="${p[2].v>0?'var(--nda)':p[2].v<0?'var(--opp)':'var(--mute)'}"><title>${esc(p[2].label)}: ${p[2].v>0?'+':''}${p[2].v.toFixed(2)} (${p[2].n} items)</title></circle>`});
   points.forEach((p,i)=>{if(n<=12||i%Math.ceil(n/10)===0)g+=`<text x="${x(i)}" y="${h-6}" text-anchor="middle">${esc(p.short)}</text>`});
   g+=`<text x="${pl+4}" y="${pt+9}" style="fill:var(--nda)">▲ favours NDA</text><text x="${pl+4}" y="${h-pb-4}" style="fill:var(--opp)">▼ favours Opposition</text>`;
-  return`<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Net advantage over time">${g}</svg>`;
+  return`<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Net advantage over time"><defs><filter id="glow" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>${g}</svg>`;
 }
 function sparkline(vals,color='var(--accent)'){
   const w=200,h=36,mx=Math.max(1,...vals),n=vals.length;if(!n)return'';
@@ -715,7 +768,7 @@ V.analytics=(now)=>{
   </div>
   <div class="grid g2" style="margin-bottom:14px">
     <div class="card pad"><div class="hd"><h2>When news breaks (hour of day)</h2><span class="sub">local time</span></div>
-      <svg class="chart" viewBox="0 0 640 150" role="img" aria-label="Items by hour">${hours.map((v,i)=>{const h=v/hmx*110;return`<rect x="${12+i*26}" y="${124-h}" width="20" height="${h}" rx="3" fill="var(--accent)" opacity="${.35+.65*v/hmx}"><title>${i}:00 – ${v} items</title></rect><text x="${22+i*26}" y="142" text-anchor="middle">${i%3===0?i:''}</text>${v?`<text x="${22+i*26}" y="${120-h}" text-anchor="middle">${v}</text>`:''}`}).join('')}</svg></div>
+      <svg class="chart" viewBox="0 0 640 150" role="img" aria-label="Items by hour"><defs><linearGradient id="gb-nda" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--nda)"/><stop offset="1" style="stop-color:var(--nda);stop-opacity:.68"/></linearGradient><linearGradient id="gb-opp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--opp)"/><stop offset="1" style="stop-color:var(--opp);stop-opacity:.68"/></linearGradient><linearGradient id="gb-oth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--oth)"/><stop offset="1" style="stop-color:var(--oth);stop-opacity:.68"/></linearGradient><linearGradient id="gb-accent" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--accent);stop-opacity:.68"/></linearGradient></defs>${hours.map((v,i)=>{const h=v/hmx*110;return`<rect x="${12+i*26}" y="${124-h}" width="20" height="${h}" rx="4" fill="url(#gb-accent)" opacity="${.35+.65*v/hmx}"><title>${i}:00 – ${v} items</title></rect><text x="${22+i*26}" y="142" text-anchor="middle">${i%3===0?i:''}</text>${v?`<text x="${22+i*26}" y="${120-h}" text-anchor="middle">${v}</text>`:''}`}).join('')}</svg></div>
     <div class="card pad"><div class="hd"><h2>Share of coverage</h2></div>
       ${CAMPS.map(([k,n])=>{const c=its.filter(x=>x.camp===k).length;return`<div class="li"><span class="sw" style="background:var(--${k})"></span><div class="grow"><div class="nm">${n}</div><div class="mini" style="margin-top:4px"><i style="width:${pct(c,tot)}%;background:var(--${k})"></i></div></div><div class="cnt">${c} · ${pct(c,tot)}%</div></div>`}).join('')}
       <div class="hd" style="margin-top:14px"><h2>By platform</h2></div>
@@ -910,13 +963,15 @@ function render(){
   const scroll=window.scrollY,view=$('#view');
   view.innerHTML=V[TAB](now);
   if(TAB==='alerts'){ruleValueField();$('#rT').onchange=ruleValueField}
-  decorate();
+  decorate();countUp();
   window.scrollTo(0,scroll);
   // alert sound for fresh items
   const sig=IT.filter(x=>now-x.t<30*60e3).map(x=>x.id).join(',')+list.filter(x=>x.s==='live').map(x=>x.c.id).join(',');
   if(prevSig!==null&&sig!==prevSig&&sound)beep();prevSig=sig;
 }
-function go(tab){TAB=tab;location.hash='#/'+tab;$('#side').classList.remove('open');window.scrollTo(0,0);render()}
+let COUNT=true;
+function countUp(){if(!COUNT)return;COUNT=false;if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;document.querySelectorAll('#view .kpi .val').forEach(e=>{const m=e.textContent.trim().match(/^([+-]?)(\d+)$/);if(!m)return;const to=+m[2],sg=m[1],t0=performance.now();const step=t=>{const p=Math.min(1,(t-t0)/700),v=Math.round(to*(1-Math.pow(1-p,3)));e.textContent=sg+v;if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
+function go(tab){COUNT=true;TAB=tab;location.hash='#/'+tab;$('#side').classList.remove('open');window.scrollTo(0,0);render()}
 window.addEventListener('hashchange',()=>{const t=(location.hash.replace(/^#\/?/,'')||'overview').split('?')[0];if(TABS.some(x=>x[0]===t)&&t!==TAB){TAB=t;render()}});
 function beep(){try{const x=new (window.AudioContext||window.webkitAudioContext)(),o=x.createOscillator(),g=x.createGain();o.connect(g);g.connect(x.destination);o.frequency.value=880;g.gain.setValueAtTime(.2,x.currentTime);g.gain.exponentialRampToValueAtTime(.001,x.currentTime+.6);o.start();o.stop(x.currentTime+.6)}catch{}}
 function dl(name,text,type='text/plain'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click()}
@@ -999,6 +1054,7 @@ function openEdit(id){
   $('#eS').onclick=async()=>{await api('/api/channels',{action:'upsert',channel:{id,name:$('#eN').value,url:$('#eU').value,platform:$('#eP').value,intervalH:$('#eI').value,tag:$('#eT').value,note:$('#eNo').value,flag:$('#eF').value}});e.classList.add('hide');toast('Saved');load()};
   $('#eD').onclick=async()=>{if(!confirm('Remove "'+c.name+'" from the board?'))return;await api('/api/channels',{action:'delete',id});e.classList.add('hide');toast('Removed');load()};
 }
+$('#view').innerHTML='<div class="skg"><div class="sk" style="height:150px"></div><div class="sk" style="height:150px"></div><div class="sk" style="height:150px"></div><div class="sk" style="height:150px"></div></div><div class="sk" style="height:300px"></div>';
 load();setInterval(()=>{if(!document.hidden)load()},20000);setInterval(()=>{if(D.channels.length&&!document.hidden&&!/input|textarea|select/i.test(document.activeElement.tagName))render()},60000);
 </script>
 </body>

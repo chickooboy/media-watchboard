@@ -1025,7 +1025,8 @@ document.addEventListener('click',async e=>{
   if(d.wgo){const w=WU.find(x=>x.id===d.wgo);if(w)WD=wuDate(w);return go('writeups')}
   if(d.wreq){const x=IT.find(v=>v.id===d.wreq);if(!x)return;t.disabled=true;t.textContent='⏳ Requesting…';
     const date=new Date(x.t+5.5*36e5).toISOString().slice(0,10);
-    try{await api('/api/writeups',{action:'request',id:x.id,title:x.hl,t:x.t,date,camp:x.camp,tone:x.tone,sources:[{name:x.name+' ('+(PLAT[x.platform]||x.platform)+')',url:x.url||''}]});
+    try{const rr=await api('/api/writeups',{action:'request',id:x.id,title:x.hl,t:x.t,date,camp:x.camp,tone:x.tone,sources:[{name:x.name+' ('+(PLAT[x.platform]||x.platform)+')',url:x.url||''}]});
+      if(rr&&rr.done){const g=await api('/api/writeups');WU=g.writeups||WU;return render()}
       WU.push({id:x.id,status:'pending',title:x.hl,t:x.t,date,camp:x.camp,tone:x.tone,points:[],sources:[]});render()}
     catch(err){t.disabled=false;t.textContent='✎ Write-up';alert('Could not request write-up: '+err.message)}return}
   if(d.wcopy){const w=WU.find(x=>x.id===d.wcopy);if(w)copyTxt(wuText(w));return}

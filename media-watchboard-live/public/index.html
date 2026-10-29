@@ -358,6 +358,23 @@ table.t tbody tr:hover td:first-child{box-shadow:3px 0 0 var(--accent2) inset}
 @media(max-width:860px){.skg{grid-template-columns:1fr 1fr}}
 /* page-load reveal for topbar title */
 .topbar h1{animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
+/* ---------- issue tracker ---------- */
+.isgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:14px}
+.isc{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:9px;padding:16px 18px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);min-width:0;transition:transform .15s,border-color .15s}
+.isc:hover{transform:translateY(-2px);border-color:var(--accent2)}
+.isc:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+.isc.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--sh)}
+.isc .t{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.isc .t b{font-size:15px;letter-spacing:-.2px}.isc .t span{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+.isc .spark{width:100%;height:36px;display:block}
+.isadd{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.isadd input{border:1px solid var(--line2);background:var(--panel);border-radius:10px;padding:8px 12px;font-size:13px;width:290px;max-width:100%}
+.iskw{font:500 11.5px var(--mono);color:var(--faint);margin-bottom:4px}
+.isbadges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.mixbar{display:flex;height:6px;border-radius:99px;overflow:hidden;background:var(--panel2)}
+.mixbar i{display:block;height:100%}
+.tbadge{display:inline-flex;font-weight:700;font-size:11.5px;padding:3px 10px;border-radius:99px;width:fit-content}
+.tbadge.up{background:var(--nda-bg);color:var(--nda)}.tbadge.down{background:var(--oth-bg);color:var(--oth)}.tbadge.flat{background:var(--idle-bg);color:var(--idle)}
 </style>
 </head>
 <body>
@@ -401,12 +418,13 @@ const IC={
  channels:'<svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="13" rx="2.5"/><path d="m9 10 5 2.5L9 15z"/><path d="M8 3l4 3 4-3"/></svg>',
  analytics:'<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
  topics:'<svg viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/></svg>',
+ issues:'<svg viewBox="0 0 24 24"><path d="M3 17l6-7 4 3 8-9"/><path d="M15 4h6v6"/></svg>',
  stories:'<svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="m8 7 8 1M7 8l4 8M17 10l-4 6"/></svg>',
  alerts:'<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 0 0 4 0"/></svg>',
  reports:'<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg>',
  settings:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.7a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5a7 7 0 0 0 0 2.4l-2 1.5 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.7a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z"/></svg>'
 };
-const TABS=[['overview','Overview'],['feed','Live feed'],['writeups','Write-ups'],['channels','Channels'],['analytics','Analytics'],['topics','Topics & people'],['stories','Story tracker'],['alerts','Alerts'],['reports','Reports'],['settings','Settings']];
+const TABS=[['overview','Overview'],['feed','Live feed'],['writeups','Write-ups'],['channels','Channels'],['analytics','Analytics'],['topics','Topics & people'],['issues','Issue tracker'],['stories','Story tracker'],['alerts','Alerts'],['reports','Reports'],['settings','Settings']];
 
 /* ---------- knowledge: topics, people, parties ---------- */
 const TOPICS=[
@@ -827,6 +845,84 @@ V.topics=(now)=>{
   <div class="legend" style="margin-top:10px"><span>Topics and names are detected from headline keywords. ${uncovered} of ${its.length} items matched no topic. The dictionary lives in the page and is easy to extend.</span></div>`;
 };
 
+/* ---------- Issue tracker ---------- */
+const ISSUES0=[
+ ['Smart meters','smart meter','smart meter'],
+ ['SIR and voter rolls','SIR, voter roll, voter survey, EVM, ECI','\\bS\\.?I\\.?R\\b|voter roll|voter survey|election officers|EVM|\\bECI\\b'],
+ ['ST reservation','ST, UTAA, tribal','\\bST\\b|UTAA|tribal|Tawadkar'],
+ ['Marathi and Konkani','Marathi, Konkani, Rajbhasha','marathi|konkani|rajbhasha|kannada'],
+ ['Alliance and tickets','alliance, seat-sharing, ticket','alliance|seat-sharing|seat sharing|ticket|candidate'],
+ ['AAP Rs 3,000 guarantee','3,000, Kejriwal, AAP Ki Chai','3,?000|Kejriwal|AAP Ki Chai'],
+ ['Sunburn row','Sunburn','sunburn'],
+ ['Vasco market fire','Vasco, fire','vasco.*(fire|market)|market fire']
+];
+let ISSX=jget('mw.issuesX',[]),ISEL=ls.get('mw.issueSel')||'Smart meters';
+function issueList(){
+  const mk=(n,kw,src,custom)=>{let re;try{re=new RegExp(src,'i')}catch{re=/$^/}return{n,kw,re,custom}};
+  return[...ISSUES0.map(a=>mk(a[0],a[1],a[2],false)),...ISSX.map(a=>mk(a.n,a.kw,a.src,true))];
+}
+function issueStat(is,its,bk){
+  const items=its.filter(x=>is.re.test(x.hl));
+  const c={nda:0,opp:0,oth:0,tw:0};items.forEach(x=>{if(x.tone==='twist')c.tw++;else c[x.camp]++});
+  const b2=bk.map(b=>({...b,nda:0,opp:0,oth:0,its:[]}));
+  items.forEach(x=>{const b=b2.find(b=>x.t>=b.t0&&x.t<b.t1);if(b){b[x.camp]++;b.its.push(x)}});
+  const vals=b2.map(b=>b.nda+b.opp+b.oth),h=Math.floor(vals.length/2);
+  const early=vals.slice(0,h).reduce((a,v)=>a+v,0),late=vals.slice(h).reduce((a,v)=>a+v,0);
+  return{items,c,b2,vals,early,late,tr:late>early?'up':late<early?'down':'flat'};
+}
+const trendTxt=s=>s.tr==='up'?`▲ Heating up (${s.late} vs ${s.early})`:s.tr==='down'?`▼ Cooling (${s.late} vs ${s.early})`:`● Steady (${s.late} vs ${s.early})`;
+V.issues=(now)=>{
+  const its=scoped(now,{ignoreCamp:true}),bk=buckets(its,now);
+  const all=issueList().map(i=>({...i,s:issueStat(i,its,bk)}));
+  if(!all.some(i=>i.n===ISEL))ISEL=all[0].n;
+  const cur=all.find(i=>i.n===ISEL),s=cur.s;
+  const tot=all.reduce((a,i)=>a+i.s.items.length,0);
+  const heat=all.filter(i=>i.s.tr==='up'&&i.s.items.length);
+  const top=[...all].sort((a,b)=>b.s.items.length-a.s.items.length)[0];
+  const mover=[...all].sort((a,b)=>(b.s.late-b.s.early)-(a.s.late-a.s.early))[0];
+  const ln=(s.c.nda+s.c.opp)?(s.c.nda>s.c.opp?['nda','NDA-side leads']:s.c.opp>s.c.nda?['opp','Opposition-side leads']:['oth','Camps level']):['oth','No camp lean'];
+  const first=s.items.length?Math.min(...s.items.map(x=>x.t)):0,last=s.items.length?Math.max(...s.items.map(x=>x.t)):0;
+  const read=s.items.length?`${s.items.length} stories, ${dayLabel(first,now).toLowerCase()==='today'?'today':'from '+new Date(first).toLocaleDateString([], {day:'numeric',month:'short'})}${last!==first?' to '+new Date(last).toLocaleDateString([], {day:'numeric',month:'short'}):''}. ${s.c.nda} on the NDA side, ${s.c.opp} on the Opposition side, ${s.c.oth} on other angles, ${s.c.tw} unconfirmed.`:'No story matches this issue in the selected period.';
+  const byCh={};s.items.forEach(x=>byCh[x.cid]=(byCh[x.cid]||0)+1);
+  const chs=Object.entries(byCh).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const pc={youtube:0,x:0,instagram:0};s.items.forEach(x=>{if(x.platform in pc)pc[x.platform]++});
+  const mx=(o,t)=>Math.max(1,t);
+  return`
+  <div class="grid g4" style="margin-bottom:14px">
+    <div class="card kpi"><div class="lbl">Issues tracked</div><div class="val">${all.length}</div><div class="dl">${tot} matching stories · ${fmtRange(F.range)}</div></div>
+    <div class="card kpi"><div class="lbl">Heating up</div><div class="val">${heat.length}</div><div class="dl">${heat.length?esc(heat.map(h=>h.n).slice(0,2).join(', ')):'None rising'}</div></div>
+    <div class="card kpi"><div class="lbl">Most covered</div><div class="val">${top.s.items.length}</div><div class="dl">${esc(top.n)}</div></div>
+    <div class="card kpi"><div class="lbl">Biggest mover</div><div class="val">${mover.s.late-mover.s.early>0?'+':''}${mover.s.late-mover.s.early}</div><div class="dl">${esc(mover.n)} · later vs earlier half</div></div>
+  </div>
+  <div class="isadd"><input id="issueIn" placeholder="Track a new issue: words, e.g. Mhadei, data centre" aria-label="Words to track"><button class="btn pri" id="issueAdd">Track</button><span class="cnt">Matches are made on headline words and saved in this browser.</span></div>
+  <div class="isgrid">${all.map(i=>{const t=Math.max(1,i.s.items.length);return`<button class="isc ${i.n===cur.n?'on':''}" data-issue="${esc(i.n)}"><div class="t"><b>${esc(i.n)}</b><span>${i.s.items.length}</span></div>${sparkline(i.s.vals)}<div class="mixbar" aria-hidden="true"><i style="width:${i.s.c.nda/t*100}%;background:var(--nda)"></i><i style="width:${i.s.c.opp/t*100}%;background:var(--opp)"></i><i style="width:${i.s.c.oth/t*100}%;background:var(--oth)"></i><i style="width:${i.s.c.tw/t*100}%;background:var(--tw)"></i></div><span class="tbadge ${i.s.tr}">${i.s.items.length?trendTxt(i.s):'No stories'}</span></button>`}).join('')}</div>
+  <div class="card pad" style="margin-bottom:14px">
+    <div class="hd"><h2>${esc(cur.n)}</h2>${cur.custom?'<button class="btn sm ghost" id="issueRm" data-n="'+esc(cur.n)+'">Stop tracking</button>':''}</div>
+    <div class="iskw">Matches: ${esc(cur.kw)}</div>
+    <div class="isbadges"><span class="tbadge ${s.tr}">${s.items.length?trendTxt(s):'No stories'}</span><span class="badge ${ln[0]}">${ln[1]}</span></div>
+    <p style="margin:0 0 14px;color:var(--mute)">${esc(read)}</p>
+    <div class="grid g21"><div><div class="hd"><h2>Stories over time</h2></div>${stackedBars(s.b2)}<div class="legend">${CAMPS.map(([k,n])=>`<span><i style="background:var(--${k})"></i>${n}</span>`).join('')}</div></div>
+    <div><div class="hd"><h2>Who is carrying it</h2></div>${chs.length?hbars(chs.map(([id,n])=>({label:cn(id),v:n}))):'<div class="empty">No channel yet</div>'}
+      <div class="legend" style="margin-top:12px"><span>YouTube <b>${pc.youtube}</b></span><span>X <b>${pc.x}</b></span><span>Instagram <b>${pc.instagram}</b></span></div></div></div>
+  </div>
+  <div class="card"><div class="hd pad" style="margin:0;padding-bottom:4px"><h2>Stories on this issue</h2><span class="sub">newest first</span></div>
+    <div style="padding:0 10px 10px">${[...s.items].sort((a,b)=>b.t-a.t).slice(0,40).map((x,i)=>itemRow(x,now,i)).join('')||'<div class="empty"><b>Nothing in this range</b>Try a wider time range, or new scans will add stories as they match.</div>'}</div></div>`;
+};
+document.addEventListener('click',e=>{
+  const c=e.target.closest('[data-issue]');
+  if(c){ISEL=c.dataset.issue;ls.set('mw.issueSel',ISEL);render();return}
+  if(e.target.id==='issueAdd'){issueAdd();return}
+  if(e.target.id==='issueRm'){const n=e.target.dataset.n;ISSX=ISSX.filter(x=>x.n!==n);ls.set('mw.issuesX',JSON.stringify(ISSX));ISEL='Smart meters';render()}
+});
+document.addEventListener('keydown',e=>{if(e.target.id==='issueIn'&&e.key==='Enter'){e.preventDefault();issueAdd()}});
+function issueAdd(){
+  const el=document.getElementById('issueIn');const v=(el&&el.value||'').trim();if(!v)return;
+  const words=v.split(/[,;]+/).map(x=>x.trim()).filter(Boolean);
+  const src=words.map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|');
+  if(![...ISSUES0.map(a=>a[0]),...ISSX.map(a=>a.n)].some(n=>n.toLowerCase()===v.toLowerCase())){ISSX.push({n:v,kw:words.join(', '),src});ls.set('mw.issuesX',JSON.stringify(ISSX))}
+  ISEL=v;ls.set('mw.issueSel',ISEL);render();
+}
+
 V.stories=(now)=>{
   const its=scoped(now,{ignoreCamp:true}).filter(x=>!F.camp||x.camp===F.camp);
   const cls=clusters(its).sort((a,b)=>b.last-a.last);
@@ -988,7 +1084,7 @@ function render(){
   const plats=[...new Set(D.channels.map(c=>c.platform))];
   $('#plats').innerHTML=plats.map(p=>`<button class="chip ${F.plat===p?'on':''}" data-p="${p}">${PLAT[p]||p}</button>`).join('');
   const T=TABS.find(t=>t[0]===TAB)[1],n=scoped(now,{ignoreCamp:true}).length;
-  const subs={overview:`${n} items · ${fmtRange(F.range)}`,feed:'Every labelled political item, newest first',writeups:'Formal write-ups for each political story, ready to share',channels:'Scorecard per source',analytics:'Volume, lean and timing',topics:'What is being talked about and who',stories:'The same story across channels',alerts:'Get told when it matters',reports:'Briefs you can share',settings:'Channels, preferences and data'};
+  const subs={issues:'Running issues followed across every channel: volume, lean and direction',overview:`${n} items · ${fmtRange(F.range)}`,feed:'Every labelled political item, newest first',writeups:'Formal write-ups for each political story, ready to share',channels:'Scorecard per source',analytics:'Volume, lean and timing',topics:'What is being talked about and who',stories:'The same story across channels',alerts:'Get told when it matters',reports:'Briefs you can share',settings:'Channels, preferences and data'};
   pageHead(T,subs[TAB]);
   const keep=document.activeElement&&document.activeElement.id==='q';
   const scroll=window.scrollY,view=$('#view');

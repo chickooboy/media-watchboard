@@ -25,6 +25,7 @@ function build(c, old = {}) {
     lastChecked: num(c.lastChecked),
     lastActivity: num(c.lastActivity),
     history: Array.isArray(c.history) ? c.history.slice(0, 20) : [],
+    repeats: Array.isArray(c.repeats) ? c.repeats.slice(0, 30) : (old.repeats || []),
     probe: c.probe && typeof c.probe === 'object' ? c.probe : null,
     createdAt: num(c.createdAt) || old.createdAt || Date.now(),
     // keep Vercel-side acknowledgement unless the Claude board raised a newer activity
@@ -49,15 +50,16 @@ export default async function handler(req, res) {
       const next = build(c, all[id] || {});
       await hset(KEYS.channels, id, next);
       written++;
-      for (const h of next.history) {
+      const entries = [...next.history.map(h => ({ h, rep: false })), ...(next.repeats || []).map(h => ({ h, rep: true }))];
+      for (const { h, rep } of entries) {
         if (!h || h.type === 'checked' || !h.t) continue;
         const lab = parseLabel(h);
         if (!lab.camp || !lab.hl) continue;
-        const iid = `${id}|${h.t}`;
+        const iid = rep ? `${id}|${h.t}|r` : `${id}|${h.t}`;
         const prev = known[iid];
         const url = clean(h.url, 500);
-        if (prev && prev.url === url) continue;
-        const rec = { id: iid, cid: id, name: next.name, platform: next.platform, t: Number(h.t), hl: clean(lab.hl, 240), camp: lab.camp, tone: lab.tone, raw: clean(lab.raw, 40), url, seen: prev?.seen || Date.now() };
+        if (prev && prev.url === url && !!prev.rep === rep) continue;
+        const rec = { id: iid, cid: id, name: next.name, platform: next.platform, t: Number(h.t), hl: clean(lab.hl, 240), camp: lab.camp, tone: lab.tone, raw: clean(lab.raw, 40), url, seen: prev?.seen || Date.now(), ...(rep ? { rep: true, dupOf: clean(h.dupOf, 300) } : {}) };
         await hset(KEYS.items, iid, rec);
         known[iid] = rec;
         logged++;

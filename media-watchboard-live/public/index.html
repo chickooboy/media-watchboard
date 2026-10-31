@@ -507,16 +507,16 @@ function buildItems(srv){
   const add=(c,h,fromSrv)=>{
     const lab=fromSrv?{camp:h.camp,tone:h.tone,hl:h.hl,raw:h.raw}:(()=>{const note=String(h.note||'').trim();const m=note.match(/^\[([^\]]+)\]\s*(.*)$/);const p=parseIncl(h.incl||(m&&m[1])||'');return{...p,hl:(m?m[2]:note)||note,raw:h.incl||(m&&m[1])||''}})();
     if(!lab.camp||!lab.hl)return;
-    const id=fromSrv?h.id:c.id+'|'+h.t;
+    const id=fromSrv?h.id:c.id+'|'+h.t+(h.type==='repeat'?'|r':'');
     const prev=byId.get(id);
     const url=safeUrl(h.url)||(prev&&prev.url)||'';
-    byId.set(id,{id,cid:fromSrv?h.cid:c.id,c:c||{id:h.cid,name:h.name,platform:h.platform,url:''},name:c?c.name:h.name,platform:c?c.platform:h.platform,t:Number(h.t)||0,url,hl:lab.hl,camp:lab.camp,tone:lab.tone,raw:lab.raw});
+    byId.set(id,{id,cid:fromSrv?h.cid:c.id,c:c||{id:h.cid,name:h.name,platform:h.platform,url:''},name:c?c.name:h.name,platform:c?c.platform:h.platform,t:Number(h.t)||0,url,hl:lab.hl,camp:lab.camp,tone:lab.tone,raw:lab.raw,rep:!!(h.rep||h.type==='repeat'),dupOf:h.dupOf||''});
   };
-  for(const c of D.channels)for(const h of (c.history||[])){if(h.type==='checked'||!h.t)continue;add(c,h,false)}
+  for(const c of D.channels)for(const h of [...(c.history||[]),...(c.repeats||[])]){if(h.type==='checked'||!h.t)continue;add(c,h,false)}
   for(const h of srv||[])add(chById.get(h.cid),h,true);
   // collapse identical headline from same channel logged twice
   const seen=new Set(),out=[];
-  for(const x of [...byId.values()].sort((a,b)=>b.t-a.t)){const k=x.cid+'|'+x.hl.toLowerCase();if(seen.has(k))continue;seen.add(k);out.push(enrich(x))}
+  for(const x of [...byId.values()].sort((a,b)=>b.t-a.t)){const k=x.cid+'|'+x.hl.toLowerCase()+'|'+(x.rep?1:0);if(seen.has(k))continue;seen.add(k);out.push(enrich(x))}
   return out;
 }
 const isStar=id=>!!(ITMETA[id]&&ITMETA[id].star);
@@ -576,7 +576,7 @@ function scoped(now,opt={}){
     (!F.range||now-x.t<F.range*H)&&(!F.plat||x.platform===F.plat)&&
     (!q||(x.hl+' '+x.name+' '+x.ent.join(' ')+' '+x.topics.join(' ')).toLowerCase().includes(q))&&
     (opt.ignoreCamp||!F.camp||x.camp===F.camp)&&(opt.ignoreCamp||!F.tone||x.tone===F.tone)&&
-    (!F.chan||x.cid===F.chan)&&(!F.topic||x.topics.includes(F.topic))&&(!F.person||x.ent.includes(F.person))&&(!F.star||isStar(x.id)));
+    (!opt.noRep||!x.rep)&&(!F.chan||x.cid===F.chan)&&(!F.topic||x.topics.includes(F.topic))&&(!F.person||x.ent.includes(F.person))&&(!F.star||isStar(x.id)));
 }
 function prevWindow(now){ // same-length window immediately before the selected range
   if(!F.range)return[];const q=F.q.toLowerCase();
@@ -646,7 +646,7 @@ function itemRow(x,now,i){
   const fresh=now-x.t<2*H,u=x.url;
   return`<div class="fi" style="animation-delay:${Math.min(i,12)*18}ms"><span class="stripe" style="background:var(--${x.camp})"></span><div style="min-width:0">
     ${u?`<a class="hl" href="${esc(u)}" target="_blank" rel="noopener">${esc(x.hl)}</a>`:`<span class="hl">${esc(x.hl)}</span>`}
-    <div class="m"><span class="badge ${x.camp}">${esc(campName(x.camp))}</span><span class="tone">${toneTxt(x.tone)}</span><a href="#/channels" data-chan="${esc(x.cid)}" style="text-decoration:none">${esc(x.name)}</a><span class="plat">${esc(PLAT[x.platform]||x.platform)}</span><span>${clock(x.t)} · ${rel(x.t,now)}</span>${fresh?'<span class="fresh">New</span>':''}
+    <div class="m"><span class="badge ${x.camp}">${esc(campName(x.camp))}</span><span class="tone">${toneTxt(x.tone)}</span>${x.rep?'<span class="tag" title="Repeat of an earlier story — counted in analytics, not in the live feed">↻ repeat</span>':''}<a href="#/channels" data-chan="${esc(x.cid)}" style="text-decoration:none">${esc(x.name)}</a><span class="plat">${esc(PLAT[x.platform]||x.platform)}</span><span>${clock(x.t)} · ${rel(x.t,now)}</span>${fresh?'<span class="fresh">New</span>':''}
     ${x.topics.slice(0,2).map(t=>`<a class="tag" href="#/topics" data-topic="${esc(t)}" style="text-decoration:none">${esc(t)}</a>`).join('')}</div></div>
     <div class="acts">${wuBtn(x)}<button class="ico ${isStar(x.id)?'on':''}" data-star="${esc(x.id)}" title="Star" aria-label="Star item">${isStar(x.id)?'★':'☆'}</button>${u?`<a class="ico" href="${esc(u)}" target="_blank" rel="noopener" title="Open post" aria-label="Open post">↗</a>`:`<span class="ico" title="Post link not captured" style="opacity:.4">–</span>`}</div></div>`;
 }
@@ -720,14 +720,14 @@ V.overview=(now)=>{
     <div class="card pad"><div class="hd"><h2>Spreading across channels</h2><a href="#/stories" class="sub">tracker</a></div>${cls.slice(0,4).map(c=>`<div class="li"><div class="grow"><div class="nm" title="${esc(c.hl)}">${esc(c.hl)}</div><div class="cnt">${c.chans.length} channels · ${rel(c.first,now)}</div></div></div>`).join('')||'<div class="empty">No multi-channel stories</div>'}</div>
   </div>
   <div class="card"><div class="hd pad" style="margin:0;padding-bottom:4px"><h2>Latest political items</h2><a href="#/feed" class="sub">open live feed</a></div>
-    <div style="padding:0 10px 10px">${its.slice(0,6).map((x,i)=>itemRow(x,now,i)).join('')||'<div class="empty"><b>No political items in this range</b>Try a wider time range.</div>'}</div></div>`;
+    <div style="padding:0 10px 10px">${its.filter(x=>!x.rep).slice(0,6).map((x,i)=>itemRow(x,now,i)).join('')||'<div class="empty"><b>No political items in this range</b>Try a wider time range.</div>'}</div></div>`;
 };
 
 V.feed=(now)=>{
-  const its=scoped(now);
+  const its=scoped(now,{noRep:true});
   let html='',day='';
   its.slice(0,200).forEach((x,i)=>{const d=dayLabel(x.t,now);if(d!==day){day=d;html+=`<div class="daysep">${esc(d)}</div>`}html+=itemRow(x,now,i)});
-  const chans=[...new Set(IT.map(x=>x.cid))].map(id=>[id,cn(id)]).sort((a,b)=>a[1].localeCompare(b[1]));
+  const chans=[...new Set(IT.filter(x=>!x.rep).map(x=>x.cid))].map(id=>[id,cn(id)]).sort((a,b)=>a[1].localeCompare(b[1]));
   return`<div class="row noprint" style="margin-bottom:12px">
     ${CAMPS.map(([k,n])=>`<button class="chip ${F.camp===k?'on':''}" data-camp="${k}"><span class="sw" style="background:var(--${k})"></span>${n}</button>`).join('')}
     <span class="cnt">|</span>
@@ -1076,7 +1076,7 @@ function render(){
   const alertN=jget('mw.alertLog',[]).filter(a=>now-a.t<DAY).length;
   $('#nav').innerHTML=TABS.map(([k,l])=>{
     let bd='';if(k==='channels'&&counts.new+counts.live)bd=`<span class="bd">${counts.new+counts.live}</span>`;
-    if(k==='feed'){const n=IT.filter(x=>now-x.t<2*H).length;if(n)bd=`<span class="bd soft">${n}</span>`}
+    if(k==='feed'){const n=IT.filter(x=>!x.rep&&now-x.t<2*H).length;if(n)bd=`<span class="bd soft">${n}</span>`}
     if(k==='alerts'&&alertN)bd=`<span class="bd">${alertN}</span>`;
     return`<button data-tab="${k}" class="${TAB===k?'on':''}" ${TAB===k?'aria-current="page"':''}>${IC[k]}<span>${l}</span>${bd}</button>`}).join('');
   // header controls
@@ -1093,7 +1093,7 @@ function render(){
   decorate();countUp();
   window.scrollTo(0,scroll);
   // alert sound for fresh items
-  const freshIds=[...IT.filter(x=>now-x.t<30*60e3).map(x=>'i:'+x.id),...list.filter(x=>x.s==='live').map(x=>'l:'+x.c.id)];
+  const freshIds=[...IT.filter(x=>!x.rep&&now-x.t<30*60e3).map(x=>'i:'+x.id),...list.filter(x=>x.s==='live').map(x=>'l:'+x.c.id)];
   if(seenIds!==null&&sound&&freshIds.some(i=>!seenIds.has(i)))beep();
   seenIds=new Set([...(seenIds||[]),...freshIds]);
 }
